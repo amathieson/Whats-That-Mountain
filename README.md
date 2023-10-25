@@ -1,2 +1,2 @@
 # Whats-That-Mountain
-Adam Mathieson 2023 Honnors Project
+Adam Mathieson 2023 Honours Project
