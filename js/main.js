@@ -3,6 +3,7 @@ import compass_service from "./modules/compass_service.js";
 import pitch_service from "./modules/pitch_service.js";
 import logger from "./modules/logger.js";
 import location_service from "./modules/location_service.js";
+import MenuBar from "./components/MenuBar.js"
 
 document.getElementById("app").innerHTML = `
 Compass: <pre id="compassData"></pre>
@@ -13,6 +14,7 @@ GPS: <code id="gpsData"></code>
 <hr/>
 Gravity: <pre id="gravityData"></pre>
 <button id="btn">Start</button>
+<menu-bar></menu-bar>
 `;
 let output_gps = document.getElementById("gpsData");
 let output_compass = document.getElementById("compassData");
@@ -21,6 +23,7 @@ let output_gravity = document.getElementById("gravityData");
 let btn = document.getElementById("btn");
 btn.onclick = Initialise_Modules;
 logger.setLogLevel("ERROR");
+customElements.define("menu-bar", MenuBar);
 
 (function draw() {
     if (compass_service.getOrientation()) {
