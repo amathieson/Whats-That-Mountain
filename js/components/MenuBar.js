@@ -1,6 +1,8 @@
 export default class extends HTMLElement  {
     connectedCallback() {
-        // this.innerHTML = "<b>I'm an x-foo-with-markup!</b>";
+        // for (const element of this.children[1].childNodes) {
+        //
+        // }
     }
     constructor() {
         super();
@@ -10,7 +12,7 @@ menu-bar > .container {
     background: red;
     z-index: 5;
     width: 100vw;
-    top: calc(100vh - 48pt);
+    top: calc(100% - 48pt);
     height: 48pt;
     position: absolute;
     left: 0;
@@ -18,17 +20,12 @@ menu-bar > .container {
     justify-content: space-evenly;
 }
 menu-bar > .container > .button {
-display: flex;
-flex-direction: column;
-max-width: 25vw;
-align-items: center;
-gap: 2pt;
-margin: 2pt;
-}
-menu-bar > .container > .button > img {
-    max-height: 24pt;
-    width: 24pt;
-    aspect-ratio: 1;
+    display: grid;
+    max-width: 25vw;
+    grid-template-rows: 50% 20%;
+    margin: 2pt;
+    justify-items: center;
+    align-content: center;
 }
 menu-bar > .container > .button-large > img {
     max-height: min(48pt, 10vw);
@@ -48,23 +45,23 @@ menu-bar > .container > .button > span {
 </style>
 <div class="container">
     <div class="button">
-        <img alt="a" src="https://img.icons8.com/ffffff/ios/50/networking-manager.png"/>
-        <span>Title Title</span>
+        <i class="gg-user"></i>
+        <span>Tours</span>
     </div>
     <div class="button">
-        <img alt="a" src="https://img.icons8.com/ffffff/ios/50/networking-manager.png"/>
-        <span>Title Title</span>
+        <i class="gg-attribution"></i>
+        <span>Trails</span>
     </div>
-    <div class="button button-large">
-        <img alt="a" src="https://img.icons8.com/ffffff/ios/50/networking-manager.png"/>
-    </div>
-    <div class="button">
-        <img alt="a" src="https://img.icons8.com/ffffff/ios/50/networking-manager.png"/>
-        <span>Title Title</span>
+    <div class="button button-large" name="PrimaryButton">
+        <img alt="a" src="https://img.icons8.com/ffffff/ios/50/mountain.png"/>
     </div>
     <div class="button">
-        <img alt="a" src="https://img.icons8.com/ffffff/ios/50/networking-manager.png"/>
-        <span>Title Title</span>
+        <i class="gg-pin"></i>
+        <span>Pins</span>
+    </div>
+    <div class="button">
+        <i class="gg-more"></i>
+        <span>More</span>
     </div>
 </div>
 `;

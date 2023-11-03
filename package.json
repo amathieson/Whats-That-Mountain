@@ -10,5 +10,8 @@
   },
   "devDependencies": {
     "vite": "^4.4.5"
+  },
+  "dependencies": {
+    "css.gg": "^2.1.1"
   }
 }

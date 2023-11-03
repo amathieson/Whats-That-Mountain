@@ -1,4 +1,5 @@
 import '../style/style.css'
+import "css.gg/icons/icons.css"
 import compass_service from "./modules/compass_service.js";
 import pitch_service from "./modules/pitch_service.js";
 import logger from "./modules/logger.js";
