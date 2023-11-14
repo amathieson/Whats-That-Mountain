@@ -1,0 +1,64 @@
+@import "style/vars";
+
+menu-bar > .container {
+  background: $nav-color;
+  z-index: 5;
+  width: 100vw;
+  top: calc(100% - 48pt);
+  height: 48pt;
+  position: absolute;
+  left: 0;
+  display: flex;
+  justify-content: space-evenly;
+}
+menu-bar > .container > .button {
+  $btn-color: $nav-color;
+  display: grid;
+  max-width: 25vw;
+  grid-template-rows: 50% 20%;
+  justify-items: center;
+  align-content: center;
+  opacity: 1;
+  transition: background-color 250ms ease-out;
+  background: $nav-color;
+  padding: 2pt 1em;
+  cursor: pointer;
+}
+menu-bar > .container > .button-large.button {
+  cursor: default;
+}
+menu-bar > .container > .button-large > img {
+  max-height: min(48pt, 10vw);
+  width: min(48pt, 10vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: $nav-accent;
+  position: absolute;
+  z-index: 6;
+  bottom: 1.5em;
+  padding: 1em;
+  transition: background-color 250ms ease-out;
+  cursor: pointer;
+}
+menu-bar > .container > .button > span {
+  font-size: 12pt;
+  height: 12pt;
+}
+menu-bar > .container > .button > i {
+  align-self: center;
+  margin-bottom: 5pt;
+}
+
+menu-bar > .container > .button:hover:not(.button-large) {
+  background: adjust-color($nav-color, $lightness: -10%);
+}
+menu-bar > .container > .button:active:not(.button-large) {
+  background: adjust-color($nav-color, $lightness: 10%);
+}
+
+menu-bar > .container > .button-large.button > img:hover {
+  background: adjust-color($nav-accent, $lightness: -10%);
+}
+menu-bar > .container > .button-large.button > img:active {
+  background: adjust-color($nav-accent, $lightness: 10%);
+}
