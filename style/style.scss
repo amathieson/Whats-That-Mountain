@@ -1,5 +1,9 @@
 @import "vars";
 :root {
+  --primary-color: $deep-blue;
+}
+
+:root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -78,4 +82,19 @@ button:focus-visible {
 
 pre {
   text-align: left;
+}
+
+.debug-overlay {
+  max-width: 25vw;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0.6;
+  z-index: 2;
+}
+
+canvas[data-ref=main_canvas] {
+  position: absolute;
+  left: 0;
+  top: 0;
 }

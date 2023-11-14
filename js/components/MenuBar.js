@@ -29,5 +29,16 @@ export default class extends HTMLElement  {
     </div>
 </div>
 `;
+        this.querySelector("[data-ref=primaryButton]").addEventListener('click', () => {
+            // Emit a custom event named 'customButtonClick'
+            const event = new CustomEvent('action-button', {
+                bubbles: true,
+                detail: { }
+            });
+
+            // Dispatch the custom event from the custom element
+            this.dispatchEvent(event);
+        });
+
     }
 }
