@@ -18,7 +18,7 @@ document.getElementById("app").innerHTML = `
     <hr/>
     Gravity: <pre data-ref="gravityData"></pre>
     <hr/>
-    FPS: <pre data-ref="fpsData"></pre>
+    Rendering: <pre data-ref="fpsData"></pre>
 </div>
 <menu-bar data-ref="menu-bar"></menu-bar>
 `;
@@ -27,6 +27,7 @@ let output_compass = document.querySelector("[data-ref=compassData]");
 let output_gravity = document.querySelector("[data-ref=gravityData]");
 let output_fps = document.querySelector("[data-ref=fpsData]");
 let menu_bar = document.querySelector("[data-ref=menu-bar]");
+let last_canvas = undefined;
 menu_bar.addEventListener("action-button", Initialise_Modules);
 logger.setLogLevel("ERROR");
 customElements.define("menu-bar", MenuBar);
@@ -56,7 +57,7 @@ let lastFrame = 0;
     }
     render_service.animate();
     render_service.setCamera({x:0,y:0,z:5},new Euler(0,0,Math.sin(Date.now()/1000), 'XYZ'));
-    output_fps.textContent = Math.round(1000/(Date.now()-lastFrame) * 10) / 10;
+    output_fps.textContent = `${Math.round(1000/(Date.now()-lastFrame) * 10) / 10} FPS`;
     lastFrame = Date.now();
 
     // Execute function on each browser animation frame
@@ -69,5 +70,7 @@ function Initialise_Modules() {
     compass_service.initHandlers();
     pitch_service.initHandlers();
     location_service.initHandlers();
-    document.getElementById("app").appendChild(render_service.initialize());
+    if (last_canvas !== undefined)
+        document.getElementById("app").removeChild(last_canvas);
+    last_canvas = document.getElementById("app").appendChild(render_service.initialize());
 }

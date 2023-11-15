@@ -11,6 +11,8 @@ menu-bar > .container {
   left: 0;
   display: flex;
   justify-content: space-evenly;
+  transition: bottom 750ms ease-in-out;
+  box-shadow: $dark 0 -5px 5px;
 }
 menu-bar > .container > .button {
   $btn-color: $nav-color;
@@ -24,6 +26,7 @@ menu-bar > .container > .button {
   background: $nav-color;
   padding: 2pt 1em;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 menu-bar > .container > .button-large.button {
   cursor: default;
@@ -40,6 +43,7 @@ menu-bar > .container > .button-large > img {
   padding: 1em;
   transition: background-color 250ms ease-out;
   cursor: pointer;
+  box-shadow: $dark 0 0 10px;
 }
 menu-bar > .container > .button > span {
   font-size: 12pt;
@@ -62,4 +66,8 @@ menu-bar > .container > .button-large.button > img:hover {
 }
 menu-bar > .container > .button-large.button > img:active {
   background: adjust-color($nav-accent, $lightness: 10%);
+}
+
+menu-bar > .container.open {
+  bottom: 60vh;
 }

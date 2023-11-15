@@ -1,9 +1,4 @@
 export default class extends HTMLElement  {
-    connectedCallback() {
-        // for (const element of this.children[1].childNodes) {
-        //
-        // }
-    }
     constructor() {
         super();
         this.innerHTML = `
@@ -17,7 +12,7 @@ export default class extends HTMLElement  {
         <span>Trails</span>
     </div>
     <div class="button button-large" data-ref="primaryButton">
-        <img alt="a" src="https://img.icons8.com/ffffff/ios/50/mountain.png"/>
+        <img alt="a" src="https://img.icons8.com/F8F1FF/ios/64/mountain.png"/>
     </div>
     <div class="button" data-ref="pinsButton">
         <i class="gg-pin"></i>
@@ -35,10 +30,25 @@ export default class extends HTMLElement  {
                 bubbles: true,
                 detail: { }
             });
-
             // Dispatch the custom event from the custom element
             this.dispatchEvent(event);
+            this.firstElementChild.classList.remove("open");
         });
-
+        this.querySelectorAll(".button:not(.button-large)").forEach((el)=>{
+            el.addEventListener('click', () => {
+                // Emit a custom event named 'customButtonClick'
+                const event = new CustomEvent('button-click', {
+                    bubbles: true,
+                    detail: {el:el}
+                });
+                // Dispatch the custom event from the custom element
+                this.dispatchEvent(event);
+                if (el.getAttribute("data-ref") !== "moreButton" &&
+                    !this.firstElementChild.classList.contains("open")
+                ) {
+                    this.firstElementChild.classList.add("open");
+                }
+            });
+        });
     }
 }
