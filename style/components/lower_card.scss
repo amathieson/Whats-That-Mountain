@@ -1,0 +1,36 @@
+@import "style/vars";
+
+lower-card {
+  .container {
+    background: $dark;
+    color: $white;
+    z-index: 4;
+    width: 100vw;
+    bottom: -60vh;
+    height: 60vh;
+    position: absolute;
+    left: 0;
+    transition: bottom $menu-bar-time;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .cover {
+    transition: opacity $menu-bar-time;
+    background: $dark;
+    z-index: 3;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+  }
+
+  .cover.open {
+    opacity: 0.8;
+  }
+  .container.open {
+    bottom: 0;
+  }
+}

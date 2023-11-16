@@ -7,6 +7,7 @@ import location_service from "./modules/location_service.js";
 import MenuBar from "./components/MenuBar.js"
 import render_service from "./modules/render_service.js";
 import {Euler} from "three";
+import lower_card from "./components/lower_card.js";
 
 document.getElementById("app").innerHTML = `
 <div class="debug-overlay">
@@ -21,16 +22,23 @@ document.getElementById("app").innerHTML = `
     Rendering: <pre data-ref="fpsData"></pre>
 </div>
 <menu-bar data-ref="menu-bar"></menu-bar>
+<lower-card data-ref="lower-card"></lower-card>
 `;
 let output_gps = document.querySelector("[data-ref=gpsData]");
 let output_compass = document.querySelector("[data-ref=compassData]");
 let output_gravity = document.querySelector("[data-ref=gravityData]");
 let output_fps = document.querySelector("[data-ref=fpsData]");
 let menu_bar = document.querySelector("[data-ref=menu-bar]");
+let lower_cardEl = document.querySelector("[data-ref=lower-card]");
 let last_canvas = undefined;
 menu_bar.addEventListener("action-button", Initialise_Modules);
+menu_bar.addEventListener("button-click", (a)=>{
+    if (a.detail.el.getAttribute("data-ref") !== "moreButton")
+        lower_cardEl.setAttribute("open","")
+});
 logger.setLogLevel("ERROR");
 customElements.define("menu-bar", MenuBar);
+customElements.define("lower-card", lower_card);
 let lastFrame = 0;
 
 (function draw() {
@@ -67,6 +75,7 @@ let lastFrame = 0;
 
 
 function Initialise_Modules() {
+    lower_cardEl.removeAttribute("open");
     compass_service.initHandlers();
     pitch_service.initHandlers();
     location_service.initHandlers();

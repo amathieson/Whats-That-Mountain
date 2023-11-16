@@ -11,7 +11,7 @@ menu-bar > .container {
   left: 0;
   display: flex;
   justify-content: space-evenly;
-  transition: bottom 750ms ease-in-out;
+  transition: bottom $menu-bar-time;
   box-shadow: $dark 0 -5px 5px;
 }
 menu-bar > .container > .button {
