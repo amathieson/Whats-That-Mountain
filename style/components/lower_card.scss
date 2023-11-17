@@ -5,12 +5,12 @@ lower-card {
     color: $white;
     z-index: 4;
     width: 100vw;
-    bottom: -60vh;
+    bottom: 0;
     height: 0;
     position: absolute;
     left: 0;
-    transition: bottom $menu-bar-time;
-    overflow-y: auto;
+    transition: all $menu-bar-time;
+    overflow-y: hidden;
     overflow-x: hidden;
   }
 
@@ -24,16 +24,18 @@ lower-card {
     width: 100%;
     height: 100%;
     opacity: 0;
+    pointer-events: none;
   }
 
   //noinspection CssUnusedSymbol
   .cover.open {
     opacity: 0.8;
+    pointer-events: auto;
   }
 
   //noinspection CssUnusedSymbol
   .container.open {
-    bottom: 0;
     height: 60vh;
+    overflow-y: auto;
   }
 }

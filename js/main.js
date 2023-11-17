@@ -22,7 +22,7 @@ document.getElementById("app").innerHTML = `
     Rendering: <pre data-ref="fpsData"></pre>
 </div>
 <menu-bar data-ref="menu-bar"></menu-bar>
-<lower-card data-ref="lower-card"></lower-card>
+<lower-card data-ref="lower-card"><div class="placeholder">More Coming Soon!</div></lower-card>
 `;
 let output_gps = document.querySelector("[data-ref=gpsData]");
 let output_compass = document.querySelector("[data-ref=compassData]");
