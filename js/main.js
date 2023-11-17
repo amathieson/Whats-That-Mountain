@@ -64,7 +64,7 @@ let lastFrame = 0;
             location.coords.altitudeAccuracy*100)/100}m`;
     }
     render_service.animate();
-    render_service.setCamera({x:0,y:0,z:5},new Euler(0,0,Math.sin(Date.now()/1000), 'XYZ'));
+    // render_service.setCamera({x:0,y:0,z:5},new Euler(0,0,Math.sin(Date.now()/1000), 'XYZ'));
     output_fps.textContent = `${Math.round(1000/(Date.now()-lastFrame) * 10) / 10} FPS`;
     lastFrame = Date.now();
 
