@@ -1,10 +1,11 @@
 @import "style/vars";
 
+//noinspection CssUnusedSymbol
 menu-bar > .container {
   background: $nav-color;
   color: $white;
   z-index: 5;
-  width: 100vw;
+  width: 100%;
   bottom: 0;
   height: 48pt;
   position: absolute;
@@ -14,6 +15,8 @@ menu-bar > .container {
   transition: bottom $menu-bar-time;
   box-shadow: $dark 0 -5px 5px;
 }
+
+//noinspection CssUnusedSymbol
 menu-bar > .container > .button {
   $btn-color: $nav-color;
   display: grid;
@@ -27,9 +30,13 @@ menu-bar > .container > .button {
   padding: 2pt 1em;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+  overflow: hidden;
 }
+
+//noinspection CssUnusedSymbol
 menu-bar > .container > .button-large.button {
   cursor: default;
+  overflow: auto;
 }
 menu-bar > .container > .button-large > img {
   max-height: min(48pt, 10vw);
@@ -54,9 +61,12 @@ menu-bar > .container > .button > i {
   margin-bottom: 5pt;
 }
 
+//noinspection CssUnusedSymbol
 menu-bar > .container > .button:hover:not(.button-large) {
   background: adjust-color($nav-color, $lightness: -10%);
 }
+
+//noinspection CssUnusedSymbol
 menu-bar > .container > .button:active:not(.button-large) {
   background: adjust-color($nav-color, $lightness: 10%);
 }
@@ -68,6 +78,7 @@ menu-bar > .container > .button-large.button > img:active {
   background: adjust-color($nav-accent, $lightness: 10%);
 }
 
+//noinspection CssUnusedSymbol
 menu-bar > .container.open {
   bottom: 60vh;
 }

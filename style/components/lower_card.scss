@@ -27,9 +27,12 @@ lower-card {
     opacity: 0;
   }
 
+  //noinspection CssUnusedSymbol
   .cover.open {
     opacity: 0.8;
   }
+
+  //noinspection CssUnusedSymbol
   .container.open {
     bottom: 0;
     height: 60vh;
