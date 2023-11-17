@@ -32,9 +32,12 @@ let menu_bar = document.querySelector("[data-ref=menu-bar]");
 let lower_cardEl = document.querySelector("[data-ref=lower-card]");
 let last_canvas = undefined;
 menu_bar.addEventListener("action-button", Initialise_Modules);
+lower_cardEl.addEventListener("close", Initialise_Modules);
 menu_bar.addEventListener("button-click", (a)=>{
-    if (a.detail.el.getAttribute("data-ref") !== "moreButton")
-        lower_cardEl.setAttribute("open","")
+    if (a.detail.el.getAttribute("data-ref") !== "moreButton") {
+        menu_bar.setAttribute("open", "")
+        lower_cardEl.setAttribute("open", "")
+    }
 });
 logger.setLogLevel("ERROR");
 customElements.define("menu-bar", MenuBar);
@@ -75,6 +78,7 @@ let lastFrame = 0;
 
 
 function Initialise_Modules() {
+    menu_bar.removeAttribute("open");
     lower_cardEl.removeAttribute("open");
     compass_service.initHandlers();
     pitch_service.initHandlers();

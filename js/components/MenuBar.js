@@ -1,4 +1,12 @@
 export default class extends HTMLElement  {
+    static observedAttributes = ["open"];
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (name === "open" && newValue !== null) {
+            this.querySelector(".container").classList.add("open")
+        } else {
+            this.querySelector(".container").classList.remove("open")
+        }
+    }
     constructor() {
         super();
         this.innerHTML = `
@@ -32,7 +40,6 @@ export default class extends HTMLElement  {
             });
             // Dispatch the custom event from the custom element
             this.dispatchEvent(event);
-            this.firstElementChild.classList.remove("open");
         });
         this.querySelectorAll(".button:not(.button-large)").forEach((el)=>{
             el.addEventListener('click', () => {
@@ -43,11 +50,6 @@ export default class extends HTMLElement  {
                 });
                 // Dispatch the custom event from the custom element
                 this.dispatchEvent(event);
-                if (el.getAttribute("data-ref") !== "moreButton" &&
-                    !this.firstElementChild.classList.contains("open")
-                ) {
-                    this.firstElementChild.classList.add("open");
-                }
             });
         });
     }
