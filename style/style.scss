@@ -85,12 +85,14 @@ pre {
 }
 
 .debug-overlay {
-  max-width: 25vw;
   position: absolute;
   top: 0;
   left: 0;
   opacity: 0.6;
   z-index: 2;
+  color: $white;
+  background: $dark;
+  padding: 0.5em;
 }
 
 canvas[data-ref=main_canvas] {
