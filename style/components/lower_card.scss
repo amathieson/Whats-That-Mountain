@@ -7,7 +7,7 @@ lower-card {
     z-index: 4;
     width: 100vw;
     bottom: -60vh;
-    height: 60vh;
+    height: 0;
     position: absolute;
     left: 0;
     transition: bottom $menu-bar-time;
@@ -32,5 +32,6 @@ lower-card {
   }
   .container.open {
     bottom: 0;
+    height: 60vh;
   }
 }

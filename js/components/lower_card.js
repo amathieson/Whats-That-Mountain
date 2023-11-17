@@ -3,9 +3,9 @@ export default class extends HTMLElement  {
     constructor() {
         super();
         this.innerHTML = `
-<div class="container open">
+<div class="container">
 </div>
-<div class="cover open"></div>
+<div class="cover"></div>
 `;
     }
     attributeChangedCallback(name, oldValue, newValue) {
