@@ -38,4 +38,10 @@ lower-card {
     height: 60vh;
     overflow-y: auto;
   }
+  @media (prefers-color-scheme: light) {
+    .container {
+      background-color: $white;
+      color: $dark;
+    }
+  }
 }

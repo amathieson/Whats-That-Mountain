@@ -8,7 +8,6 @@ export default class extends HTMLElement  {
         this.innerHTML += `
         <div class="container">
             <div class="content">
-            TEST TEST
             </div>
         </div>
     `;

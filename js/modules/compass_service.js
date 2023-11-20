@@ -1,4 +1,4 @@
-import "../../bower_components/fulltilt/dist/fulltilt.js"
+import "@hughsk/fulltilt/dist/fulltilt.js"
 import "./logger.js"
 import logger from "./logger.js";
 export default {

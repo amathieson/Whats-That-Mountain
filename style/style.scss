@@ -48,19 +48,6 @@ h1 {
   text-align: center;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: $secondary;
-    background-color: $white;
-  }
-  a:hover {
-    color: adjust-color($primary, $lightness: 10%);
-  }
-  button {
-    background-color: adjust-color($white, $lightness: -10%);
-  }
-}
-
 pre {
   text-align: left;
 }
@@ -132,4 +119,25 @@ button.primary:active {
 }
 button.secondary:active {
   background-color: adjust-color($secondary, $lightness: -20%);
+}
+
+
+
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: $secondary;
+    background-color: $white;
+  }
+  a:hover {
+    color: adjust-color($primary, $lightness: 10%);
+  }
+  button {
+    background-color: adjust-color($white, $lightness: -10%);
+  }
+
+  .debug-overlay {
+    color: $dark;
+    background: $white;
+  }
 }

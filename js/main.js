@@ -25,7 +25,12 @@ document.getElementById("app").innerHTML = `
 <lower-card data-ref="lower-card">
     <div class="placeholder">More Coming Soon!</div>
 </lower-card>
-<popup-list data-ref="more-popup" pos="0,0"></popup-list>
+<popup-list data-ref="more-popup" pos="0,0">
+<ul>
+<li>Credits</li>
+<li>Tourist Board</li>
+</ul>
+</popup-list>
 `;
 let output_gps = document.querySelector("[data-ref=gpsData]");
 let output_compass = document.querySelector("[data-ref=compassData]");
