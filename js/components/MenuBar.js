@@ -42,11 +42,11 @@ export default class extends HTMLElement  {
             this.dispatchEvent(event);
         });
         this.querySelectorAll(".button:not(.button-large)").forEach((el)=>{
-            el.addEventListener('click', () => {
+            el.addEventListener('click', (e) => {
                 // Emit a custom event named 'customButtonClick'
                 const event = new CustomEvent('button-click', {
                     bubbles: true,
-                    detail: {el:el}
+                    detail: {el:el,ev:e}
                 });
                 // Dispatch the custom event from the custom element
                 this.dispatchEvent(event);

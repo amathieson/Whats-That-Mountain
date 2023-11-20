@@ -1,0 +1,37 @@
+@import "style/vars";
+popup-list {
+  .container {
+    background: $dark;
+    color: $white;
+    z-index: 6;
+    width: fit-content;
+    height: fit-content;
+    position: absolute;
+    transition: opacity 150ms ease-in-out;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    max-height: 25vh;
+    opacity: 0;
+  }
+
+  .cover {
+    z-index: 3;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  //noinspection CssUnusedSymbol
+  .container.open {
+    overflow-y: auto;
+    opacity: 1;
+  }
+  .container {
+    .content {
+    }
+  }
+}

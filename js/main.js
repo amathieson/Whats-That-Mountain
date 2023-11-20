@@ -7,6 +7,7 @@ import location_service from "./modules/location_service.js";
 import MenuBar from "./components/MenuBar.js"
 import render_service from "./modules/render_service.js";
 import lower_card from "./components/lower_card.js";
+import popup_list from "./components/popup_list.js";
 
 document.getElementById("app").innerHTML = `
 <div class="debug-overlay">
@@ -24,6 +25,7 @@ document.getElementById("app").innerHTML = `
 <lower-card data-ref="lower-card">
     <div class="placeholder">More Coming Soon!</div>
 </lower-card>
+<popup-list data-ref="more-popup" pos="0,0"></popup-list>
 `;
 let output_gps = document.querySelector("[data-ref=gpsData]");
 let output_compass = document.querySelector("[data-ref=compassData]");
@@ -31,6 +33,7 @@ let output_gravity = document.querySelector("[data-ref=gravityData]");
 let output_fps = document.querySelector("[data-ref=fpsData]");
 let menu_bar = document.querySelector("[data-ref=menu-bar]");
 let lower_cardEl = document.querySelector("[data-ref=lower-card]");
+let more_popup = document.querySelector("[data-ref=more-popup]");
 let last_canvas = undefined;
 menu_bar.addEventListener("action-button", Initialise_Modules);
 lower_cardEl.addEventListener("close", Initialise_Modules);
@@ -38,12 +41,25 @@ menu_bar.addEventListener("button-click", (a)=>{
     if (a.detail.el.getAttribute("data-ref") !== "moreButton") {
         menu_bar.setAttribute("open", "")
         lower_cardEl.setAttribute("open", "")
+    } else {
+        more_popup.setAttribute("pos", `${a.detail.ev.pageX},${a.detail.ev.pageY}`)
+        more_popup.setAttribute("open", "");
     }
 });
 logger.setLogLevel("ERROR");
 customElements.define("menu-bar", MenuBar);
 customElements.define("lower-card", lower_card);
+customElements.define("popup-list", popup_list);
 let lastFrame = 0;
+
+// Add a click event listener to the document
+document.addEventListener('click', function (event) {
+    // Check if the clicked element is not inside the div
+    if (more_popup.hasAttribute("open") && !more_popup.contains(event.target) && event.target !== more_popup) {
+        if (`${event.pageX},${event.pageY}` !== more_popup.getAttribute("pos"))
+            more_popup.removeAttribute("open");
+    }
+});
 
 (function draw() {
     if (compass_service.getOrientation()) {
