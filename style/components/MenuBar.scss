@@ -63,19 +63,19 @@ menu-bar > .container > .button > i {
 
 //noinspection CssUnusedSymbol
 menu-bar > .container > .button:hover:not(.button-large) {
-  background: adjust-color($nav-color, $lightness: -10%);
+  background: adjust-color($nav-color, $lightness: +10%);
 }
 
 //noinspection CssUnusedSymbol
 menu-bar > .container > .button:active:not(.button-large) {
-  background: adjust-color($nav-color, $lightness: 10%);
+  background: adjust-color($nav-color, $lightness: -20%);
 }
 
 menu-bar > .container > .button-large.button > img:hover {
-  background: adjust-color($nav-accent, $lightness: -10%);
+  background: adjust-color($nav-accent, $lightness: +10%);
 }
 menu-bar > .container > .button-large.button > img:active {
-  background: adjust-color($nav-accent, $lightness: 10%);
+  background: adjust-color($nav-accent, $lightness: -20%);
 }
 
 //noinspection CssUnusedSymbol

@@ -6,7 +6,6 @@ import logger from "./modules/logger.js";
 import location_service from "./modules/location_service.js";
 import MenuBar from "./components/MenuBar.js"
 import render_service from "./modules/render_service.js";
-import {Euler} from "three";
 import lower_card from "./components/lower_card.js";
 
 document.getElementById("app").innerHTML = `
@@ -22,7 +21,9 @@ document.getElementById("app").innerHTML = `
     Rendering: <pre data-ref="fpsData"></pre>
 </div>
 <menu-bar data-ref="menu-bar"></menu-bar>
-<lower-card data-ref="lower-card"><div class="placeholder">More Coming Soon!</div></lower-card>
+<lower-card data-ref="lower-card">
+    <div class="placeholder">More Coming Soon!</div>
+</lower-card>
 `;
 let output_gps = document.querySelector("[data-ref=gpsData]");
 let output_compass = document.querySelector("[data-ref=compassData]");

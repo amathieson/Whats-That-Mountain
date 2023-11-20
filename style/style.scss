@@ -1,6 +1,6 @@
 @import "vars";
 :root {
-  --primary-color: $deep-blue;
+  --primary-color: $primary;
 }
 
 :root {
@@ -21,11 +21,11 @@
 
 a {
   font-weight: 500;
-  color: $blue;
+  color: $primary;
   text-decoration: inherit;
 }
 a:hover {
-  color: adjust-color($blue, $lightness: -10%);
+  color: adjust-color($primary, $lightness: -10%);
 }
 
 body {
@@ -48,32 +48,13 @@ h1 {
   text-align: center;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: adjust-color($dark, $lightness: -10%);
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: $blue;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
 @media (prefers-color-scheme: light) {
   :root {
-    color: $deep-blue;
+    color: $secondary;
     background-color: $white;
   }
   a:hover {
-    color: adjust-color($blue, $lightness: 10%);
+    color: adjust-color($primary, $lightness: 10%);
   }
   button {
     background-color: adjust-color($white, $lightness: -10%);
@@ -111,4 +92,44 @@ canvas[data-ref=main_canvas] {
   margin: auto;
   top: 40%;
   position: relative;
+}
+
+button {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  background-color: adjust-color($dark, $lightness: -10%);
+  border-radius: 4pt;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  transition: background-color 150ms ease-in-out;
+}
+
+button.primary {
+  background: $primary;
+}
+button.secondary {
+  background: $secondary;
+}
+
+button:hover {
+  background-color: adjust-color($dark, $lightness: +10%);
+}
+button.primary:hover {
+  background-color: adjust-color($primary, $lightness: +10%);
+}
+button.secondary:hover {
+  background-color: adjust-color($secondary, $lightness: +10%);
+}
+
+button:active {
+  background-color: adjust-color($dark, $lightness: -20%);
+}
+button.primary:active {
+  background-color: adjust-color($primary, $lightness: -20%);
+}
+button.secondary:active {
+  background-color: adjust-color($secondary, $lightness: -20%);
 }
