@@ -1,14 +1,22 @@
 {
   "name": "whats-that-mountain",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "vite build",
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^4.4.5"
+    "sass": "^1.69.5",
+    "vite": "^4.4.5",
+    "vite-plugin-browser-sync": "^1.0.7"
+  },
+  "dependencies": {
+    "@hughsk/fulltilt": "^0.7.1",
+    "css.gg": "^2.1.1",
+    "inter-ui": "^3.19.3",
+    "three": "^0.158.0"
   }
 }

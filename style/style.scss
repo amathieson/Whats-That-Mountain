@@ -1,0 +1,148 @@
+@import "vars";
+
+:root {
+  --primary-color: $primary;
+}
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: $white;
+  background-color: $dark;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+@supports (font-variation-settings: normal) {
+  :root { font-family: 'Inter var', system-ui, Avenir, Helvetica, Arial, sans-serif; }
+}
+
+a {
+  font-weight: 500;
+  color: $primary;
+  text-decoration: inherit;
+}
+a:hover {
+  color: adjust-color($primary, $lightness: -10%);
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100%;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+#app {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+pre {
+  text-align: left;
+}
+
+.debug-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0.6;
+  z-index: 2;
+  color: $white;
+  background: $dark;
+  padding: 0.5em;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+canvas[data-ref=main_canvas] {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.placeholder {
+  transform: rotate(45deg);
+  opacity: 0.8;
+  margin: auto;
+  top: 40%;
+  position: relative;
+}
+
+button {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  background-color: adjust-color($dark, $lightness: -10%);
+  border-radius: 4pt;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  transition: background-color 150ms ease-in-out;
+}
+
+button.primary {
+  background: $primary;
+}
+button.secondary {
+  background: $secondary;
+}
+
+button:hover {
+  background-color: adjust-color($dark, $lightness: +10%);
+}
+button.primary:hover {
+  background-color: adjust-color($primary, $lightness: +10%);
+}
+button.secondary:hover {
+  background-color: adjust-color($secondary, $lightness: +10%);
+}
+
+button:active {
+  background-color: adjust-color($dark, $lightness: -20%);
+}
+button.primary:active {
+  background-color: adjust-color($primary, $lightness: -20%);
+}
+button.secondary:active {
+  background-color: adjust-color($secondary, $lightness: -20%);
+}
+
+
+
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: $secondary;
+    background-color: $white;
+  }
+  a:hover {
+    color: adjust-color($primary, $lightness: 10%);
+  }
+  button {
+    background-color: adjust-color($white, $lightness: -10%);
+  }
+
+  .debug-overlay {
+    color: $dark;
+    background: $white;
+  }
+}
