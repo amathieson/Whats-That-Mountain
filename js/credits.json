@@ -18,5 +18,10 @@
     "element": "Compas Wrapper (FULLTILT)",
     "owner": "Hugh Kennedy & Nils Forsblom",
     "link": "https://github.com/hughsk/Full-Tilt"
+  },
+  {
+    "element": "UI Font (Inter)",
+    "owner": "@rsms (Rasmus)",
+    "link": "https://github.com/rsms/inter/"
   }
 ]

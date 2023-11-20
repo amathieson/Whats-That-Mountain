@@ -1,7 +1,7 @@
 {
   "name": "whats-that-mountain",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite --host",
@@ -16,6 +16,7 @@
   "dependencies": {
     "@hughsk/fulltilt": "^0.7.1",
     "css.gg": "^2.1.1",
+    "inter-ui": "^3.19.3",
     "three": "^0.158.0"
   }
 }
