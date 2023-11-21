@@ -1,0 +1,6 @@
+{
+    "require": {
+        "aws/aws-sdk-php": "^3.287",
+        "symfony/dotenv": "^6.3"
+    }
+}
