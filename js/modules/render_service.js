@@ -2,13 +2,14 @@ import * as THREE from 'three';
 export default {
     animate,
     initialize,
-    setCamera
+    setCamera,
+    setMeshData
 }
 // Create a scene
 const scene = new THREE.Scene();
 
 // Create a camera
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 100, 100000);
 camera.position.z = 5;
 
 // Create a renderer
@@ -43,7 +44,9 @@ function animate() {
 
 function setCamera(position, rotation) {
     camera.setRotationFromEuler(rotation);
-    // camera.position = position;
+    camera.position.x = position.x;
+    camera.position.y = position.y;
+    camera.position.z = position.z;
 }
 
 function initialize() {
@@ -52,4 +55,11 @@ function initialize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 
     return renderer.domElement;
+}
+
+function setMeshData(meshs) {
+    scene.clear();
+    meshs.forEach((el)=>{
+        scene.add(el);
+    })
 }

@@ -8,6 +8,8 @@ import MenuBar from "./components/MenuBar.js"
 import render_service from "./modules/render_service.js";
 import lower_card from "./components/lower_card.js";
 import popup_list from "./components/popup_list.js";
+import {Euler} from "three";
+import geo_service from "./modules/geo_service.js";
 
 document.getElementById("app").innerHTML = `
 <div class="debug-overlay">
@@ -20,6 +22,7 @@ document.getElementById("app").innerHTML = `
     Gravity: <pre data-ref="gravityData"></pre>
     <hr/>
     Rendering: <pre data-ref="fpsData"></pre>
+    <canvas width="3601" height="3601" style="width: 30vw;" id="tile_debug"></canvas>
 </div>
 <menu-bar data-ref="menu-bar"></menu-bar>
 <lower-card data-ref="lower-card">
@@ -89,7 +92,7 @@ document.addEventListener('click', function (event) {
             location.coords.altitudeAccuracy*100)/100}m`;
     }
     render_service.animate();
-    // render_service.setCamera({x:0,y:0,z:5},new Euler(0,0,Math.sin(Date.now()/1000), 'XYZ'));
+    render_service.setCamera({x:0,y:0,z:900},new Euler(0.5,0,0, 'XYZ'));
     output_fps.textContent = `${Math.round(1000/(Date.now()-lastFrame) * 10) / 10} FPS`;
     lastFrame = Date.now();
 
@@ -105,7 +108,13 @@ function Initialise_Modules() {
     compass_service.initHandlers();
     pitch_service.initHandlers();
     location_service.initHandlers();
+    geo_service.initialize();
     if (last_canvas !== undefined)
         document.getElementById("app").removeChild(last_canvas);
     last_canvas = document.getElementById("app").appendChild(render_service.initialize());
+
+
+    geo_service.fetch_radius(56.4677482,-3.0085072, 3).then((meshs)=>{
+        render_service.setMeshData(meshs);
+    })
 }
