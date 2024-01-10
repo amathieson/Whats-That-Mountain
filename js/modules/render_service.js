@@ -29,13 +29,6 @@ const geometry = new THREE.PlaneGeometry(10, 10, 64, 64);
 const rootStyles = getComputedStyle(document.documentElement);
 const primaryColor = rootStyles.getPropertyValue('--primary-color');
 
-// Create a material
-const material = new THREE.MeshBasicMaterial({ color: 0x3A506B, wireframe: true });
-
-// Create a mesh and add it to the scene
-const mesh = new THREE.Mesh(geometry, material);
-scene.add(mesh);
-
 // Animation/render loop
 function animate() {
     if (renderer)
