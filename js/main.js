@@ -92,7 +92,7 @@ document.addEventListener('click', function (event) {
             location.coords.altitudeAccuracy*100)/100}m`;
     }
     render_service.animate();
-    render_service.setCamera({x:0,y:0,z:900},new Euler(0.5,0,0, 'XYZ'));
+    render_service.setCamera({x:0,y:0,z:700},new Euler(1,0,0, 'XYZ'));
     output_fps.textContent = `${Math.round(1000/(Date.now()-lastFrame) * 10) / 10} FPS`;
     lastFrame = Date.now();
 

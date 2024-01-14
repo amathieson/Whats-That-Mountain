@@ -29,25 +29,29 @@ async function fetch_radius(lat, lon, radius) {
     let coord1 = gps2XY(lat, lon);
     let coord2 = gps2XY(lat+1, lon+1);
     const mountainGeom = new THREE.PlaneGeometry((coord2[0]-coord1[0]), (coord2[1]-coord1[1]),2048, 2048);
-    const material = new THREE.MeshBasicMaterial( { color: 0xff00ff, wireframe: true } );
     // for ()
     {
-        // const data = await fetch_tile(lat, lon);
+        const data = await fetch_tile(lat, lon);
 
-        // const canvas = document.getElementById("tile_debug");
+        const canvas = document.getElementById("tile_debug");
         // let coord1 = gps2XY(lat, lon);
         // let coord2 = gps2XY(lat+1, lon+1);
-        // canvas.style.height = Math.abs(30*(1-(coord2[1]-coord1[1])/(coord2[0]-coord1[0]))) + "vw";
-        /*const ctx = canvas.getContext("2d");
+        canvas.style.height = Math.abs(30*(1-(coord2[1]-coord1[1])/(coord2[0]-coord1[0]))) + "vw";
+        const ctx = canvas.getContext("2d");
         const id = ctx.createImageData(Tile_Dim, Tile_Dim);
         for (let i = 0; i < data.data.length; i++) {
-            let rgb = hslToRgb(((1-(data.data[i]-data.valley)/(data.peak-data.valley)))*.3+.3, 1, .5);
-            id.data[(i * 4) + 0] = rgb[0];
-            id.data[(i * 4) + 1] = rgb[1];
-            id.data[(i * 4) + 2] = rgb[2];
+            let v = (1-(data.data[i]-data.valley)/(data.peak-data.valley))*255;
+            id.data[(i * 4) + 0] = v;
+            id.data[(i * 4) + 1] = v;
+            id.data[(i * 4) + 2] = v;
             id.data[(i * 4) + 3] = 255;
         }
-        ctx.putImageData(id, 0, 0);*/
+        const material = new THREE.MeshStandardMaterial( { color: 0xff00ff, wireframe: true,
+            displacementMap: new THREE.CanvasTexture(canvas),
+            emissive: 0xffffff,
+            emissiveIntensity: 0.5
+        } );
+        ctx.putImageData(id, 0, 0);
         // const geometry = new BufferGeometry();
         /*const vertexArray = new Float32Array(Tile_Dim_Squared*3);
         for (let y = 0; y < Tile_Dim; y++) {

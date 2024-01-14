@@ -8,9 +8,9 @@ export default {
 // Create a scene
 const scene = new THREE.Scene();
 
+
 // Create a camera
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 100, 100000);
-camera.position.z = 5;
 
 // Create a renderer
 let renderer;
@@ -31,8 +31,10 @@ const primaryColor = rootStyles.getPropertyValue('--primary-color');
 
 // Animation/render loop
 function animate() {
-    if (renderer)
+    if (renderer) {
         renderer.render(scene, camera);
+
+    }
 }
 
 function setCamera(position, rotation) {
