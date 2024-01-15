@@ -47,8 +47,10 @@ function setCamera(position, rotation) {
 
 function initialize() {
     try {
-        document.documentElement.requestFullscreen();
-        screen.orientation.lock("portrait");
+        document.documentElement.requestFullscreen().then(r => {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        // screen.orientation.lock("portrait");
     } catch (e) {
         console.log(e);
     }
