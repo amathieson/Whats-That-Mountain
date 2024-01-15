@@ -34,8 +34,6 @@ async function fetch_radius(lat, lon, radius) {
         const data = await fetch_tile(lat, lon);
 
         const canvas = document.getElementById("tile_debug");
-        // let coord1 = gps2XY(lat, lon);
-        // let coord2 = gps2XY(lat+1, lon+1);
         canvas.style.height = Math.abs(30*(1-(coord2[1]-coord1[1])/(coord2[0]-coord1[0]))) + "vw";
         const ctx = canvas.getContext("2d");
         const id = ctx.createImageData(Tile_Dim, Tile_Dim);
@@ -52,23 +50,8 @@ async function fetch_radius(lat, lon, radius) {
             emissiveIntensity: 0.5
         } );
         ctx.putImageData(id, 0, 0);
-        // const geometry = new BufferGeometry();
-        /*const vertexArray = new Float32Array(Tile_Dim_Squared*3);
-        for (let y = 0; y < Tile_Dim; y++) {
-            for (let x = 0; x < Tile_Dim; x++) {
-                vertexArray[(x+y*Tile_Dim)*3 + 0] = x;
-                vertexArray[(x+y*Tile_Dim)*3 + 1] = y;
-                vertexArray[(x+y*Tile_Dim)*3 + 2] = 0;
-            }
-        }*/
-        // Equation for number of triangle points based on verticies:
-        // 2n-4
-        // const indexArray = new Int16Array(2*Tile_Dim_Squared-4);
-        // indexArray[0] = 0;
-        // geometry.setIndex(indexArray);
-        // geometry.setAttribute('position', new THREE.BufferAttribute(vertexArray, 3));
+
         const mesh = new THREE.Mesh(mountainGeom, material);
-        // mesh.drawMode = THREE.TriangleStripDrawMode;
         tiles.push(mesh);
     }
     return tiles;

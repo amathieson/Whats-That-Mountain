@@ -10,6 +10,7 @@ import lower_card from "./components/lower_card.js";
 import popup_list from "./components/popup_list.js";
 import {Quaternion} from "three";
 import geo_service from "./modules/geo_service.js";
+import {isIOS} from "./modules/util.js";
 
 document.getElementById("app").innerHTML = `
 <div class="debug-overlay">
@@ -69,6 +70,13 @@ document.addEventListener('click', function (event) {
     }
 });
 
+document.addEventListener("resize", ()=>{
+    render_service.setSize(window.innerWidth, window.innerHeight);
+});
+screen.orientation.addEventListener("change", () =>{
+    render_service.setSize(window.innerWidth, window.innerHeight);
+});
+
 (function draw() {
     if (compass_service.getOrientation()) {
         let euler = compass_service.getOrientation().getScreenAdjustedEuler();
@@ -76,7 +84,8 @@ document.addEventListener('click', function (event) {
         output_compass.textContent =  `alpha: ${Math.round( euler.alpha*100)/100}\n`;
         output_compass.textContent += `beta : ${Math.round(euler.beta*100)/100}\n`;
         output_compass.textContent += `gamma: ${Math.round(euler.gamma*100)/100}\n`;
-
+        if (!isIOS)
+            quat.rotateZ(90*3.14/180);
         render_service.setCamera({x:0,y:0,z:700},new Quaternion(quat.x, quat.y, quat.z, quat.w));
     }
 

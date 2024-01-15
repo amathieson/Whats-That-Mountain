@@ -3,7 +3,8 @@ export default {
     animate,
     initialize,
     setCamera,
-    setMeshData
+    setMeshData,
+    setSize
 }
 // Create a scene
 const scene = new THREE.Scene();
@@ -45,6 +46,12 @@ function setCamera(position, rotation) {
 }
 
 function initialize() {
+    try {
+        document.documentElement.requestFullscreen();
+        screen.orientation.lock("portrait");
+    } catch (e) {
+        console.log(e);
+    }
     renderer = new THREE.WebGLRenderer();
     renderer.domElement.setAttribute("data-ref", "main_canvas");
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -57,4 +64,8 @@ function setMeshData(meshs) {
     meshs.forEach((el)=>{
         scene.add(el);
     })
+}
+
+function setSize(width, height) {
+    renderer.setSize(width, height);
 }
