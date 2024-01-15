@@ -28,7 +28,7 @@ async function fetch_radius(lat, lon, radius) {
     let tiles = [];
     let coord1 = gps2XY(lat, lon);
     let coord2 = gps2XY(lat+1, lon+1);
-    const mountainGeom = new THREE.PlaneGeometry((coord2[0]-coord1[0]), (coord2[1]-coord1[1]),2048, 2048);
+    const mountainGeom = new THREE.PlaneGeometry((coord2[0]-coord1[0]), (coord2[1]-coord1[1]),64, 64);
     // for ()
     {
         const data = await fetch_tile(lat, lon);

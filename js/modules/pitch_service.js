@@ -8,19 +8,23 @@ export default {
 let deviceOrientation;
 function initHandlers() {
     logger.log("Starting Pitch Service", "pitch_service");
-    let gravitySensor = new GravitySensor({ frequency: 60 });
+    try {
+        let gravitySensor = new GravitySensor({frequency: 60});
 
-    gravitySensor.addEventListener("reading", (_) => {
-        deviceOrientation = {
-            euler: {
-                alpha: gravitySensor.x,
-                beta: gravitySensor.y,
-                gamma: gravitySensor.z
+        gravitySensor.addEventListener("reading", (_) => {
+            deviceOrientation = {
+                euler: {
+                    alpha: gravitySensor.x,
+                    beta: gravitySensor.y,
+                    gamma: gravitySensor.z
+                }
             }
-        }
-    });
+        });
 
-    gravitySensor.start();
+        gravitySensor.start();
+    } catch (e) {
+        console.log(e)
+    }
 }
 
 // Deprecated Getter

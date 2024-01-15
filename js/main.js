@@ -8,7 +8,7 @@ import MenuBar from "./components/MenuBar.js"
 import render_service from "./modules/render_service.js";
 import lower_card from "./components/lower_card.js";
 import popup_list from "./components/popup_list.js";
-import {Euler} from "three";
+import {Quaternion} from "three";
 import geo_service from "./modules/geo_service.js";
 
 document.getElementById("app").innerHTML = `
@@ -72,9 +72,12 @@ document.addEventListener('click', function (event) {
 (function draw() {
     if (compass_service.getOrientation()) {
         let euler = compass_service.getOrientation().getScreenAdjustedEuler();
+        let quat = compass_service.getOrientation().getScreenAdjustedQuaternion()
         output_compass.textContent =  `alpha: ${Math.round( euler.alpha*100)/100}\n`;
         output_compass.textContent += `beta : ${Math.round(euler.beta*100)/100}\n`;
         output_compass.textContent += `gamma: ${Math.round(euler.gamma*100)/100}\n`;
+
+        render_service.setCamera({x:0,y:0,z:700},new Quaternion(quat.x, quat.y, quat.z, quat.w));
     }
 
     if (pitch_service.getOrientation()) {
@@ -92,7 +95,6 @@ document.addEventListener('click', function (event) {
             location.coords.altitudeAccuracy*100)/100}m`;
     }
     render_service.animate();
-    render_service.setCamera({x:0,y:0,z:700},new Euler(1,0,0, 'XYZ'));
     output_fps.textContent = `${Math.round(1000/(Date.now()-lastFrame) * 10) / 10} FPS`;
     lastFrame = Date.now();
 

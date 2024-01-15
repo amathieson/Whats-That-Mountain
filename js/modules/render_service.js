@@ -38,7 +38,7 @@ function animate() {
 }
 
 function setCamera(position, rotation) {
-    camera.setRotationFromEuler(rotation);
+    camera.setRotationFromQuaternion(rotation);
     camera.position.x = position.x;
     camera.position.y = position.y;
     camera.position.z = position.z;
