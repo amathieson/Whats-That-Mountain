@@ -86,7 +86,7 @@ screen.orientation.addEventListener("change", () =>{
         output_compass.textContent += `gamma: ${Math.round(euler.gamma*100)/100}\n`;
         if (!isIOS)
             quat.rotateZ(90*3.14/180);
-        render_service.setCamera({x:0,y:0,z:700},new Quaternion(quat.x, quat.y, quat.z, quat.w));
+        render_service.setCamera({x:0,y:0,z:900},new Quaternion(quat.x, quat.y, quat.z, quat.w));
     }
 
     if (pitch_service.getOrientation()) {
@@ -125,7 +125,8 @@ function Initialise_Modules() {
     last_canvas = document.getElementById("app").appendChild(render_service.initialize());
 
 
-    geo_service.fetch_radius(56.4677482,-3.0085072, 3).then((meshs)=>{
+    // geo_service.fetch_radius(56.4677482,-3.0085072, 3).then((meshs)=>{
+    geo_service.fetch_radius(46.26248001948516, 5.9257905590163436, 3).then((meshs)=>{
         render_service.setMeshData(meshs);
     })
 }

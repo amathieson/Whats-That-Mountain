@@ -28,7 +28,7 @@ async function fetch_radius(lat, lon, radius) {
     let tiles = [];
     let coord1 = gps2XY(lat, lon);
     let coord2 = gps2XY(lat+1, lon+1);
-    const mountainGeom = new THREE.PlaneGeometry((coord2[0]-coord1[0]), (coord2[1]-coord1[1]),64, 64);
+    const mountainGeom = new THREE.PlaneGeometry((coord2[0]-coord1[0]), (coord2[1]-coord1[1]),128, 128);
     // for ()
     {
         const data = await fetch_tile(lat, lon);
@@ -38,21 +38,39 @@ async function fetch_radius(lat, lon, radius) {
         const ctx = canvas.getContext("2d");
         const id = ctx.createImageData(Tile_Dim, Tile_Dim);
         for (let i = 0; i < data.data.length; i++) {
-            let v = (1-(data.data[i]-data.valley)/(data.peak-data.valley))*255;
+            let v = ((data.data[i]-data.valley)/(data.peak-data.valley))*255;
             id.data[(i * 4) + 0] = v;
             id.data[(i * 4) + 1] = v;
             id.data[(i * 4) + 2] = v;
             id.data[(i * 4) + 3] = 255;
         }
-        const material = new THREE.MeshStandardMaterial( { color: 0xff00ff, wireframe: true,
-            displacementMap: new THREE.CanvasTexture(canvas),
-            emissive: 0xffffff,
-            emissiveIntensity: 0.5
+        ctx.putImageData(id, 0, 0)
+        let tex = new THREE.CanvasTexture(canvas);
+        setTimeout(()=>{
+            tex.needsUpdate = true;
+        }, 50);
+        const material = new THREE.MeshStandardMaterial( { wireframe: false,
+            side: THREE.FrontSide,
+            displacementMap: tex,
+            displacementScale: data.peak-data.valley,
+            displacementBias: data.valley,
+            // map: tex,
+            color: 0xff00ffff,
         } );
-        ctx.putImageData(id, 0, 0);
 
         const mesh = new THREE.Mesh(mountainGeom, material);
         tiles.push(mesh);
+        const material2 = new THREE.MeshStandardMaterial( { wireframe: true,
+            side: THREE.FrontSide,
+            displacementMap: tex,
+            displacementScale: data.peak-data.valley,
+            displacementBias: data.valley,
+            // map: tex,
+            color: 0xff0000ff,
+        } );
+
+        const mesh2 = new THREE.Mesh(mountainGeom, material2);
+        tiles.push(mesh2);
     }
     return tiles;
 }
