@@ -23,5 +23,20 @@
     "element": "UI Font (Inter)",
     "owner": "@rsms (Rasmus)",
     "link": "https://github.com/rsms/inter/"
+  },
+  {
+    "element": "Height Map",
+    "owner": "NASA",
+    "link": "https://www.earthdata.nasa.gov/sensors/srtm"
+  },
+  {
+    "element": "Decompression (Pako for Zlib)",
+    "owner": "Pako Contributors",
+    "link": "https://nodeca.github.io/pako/"
+  },
+  {
+    "element": "Peaks Data (OpenStreetMap)",
+    "owner": "OpenStreetMap Contributors",
+    "link": "https://www.openstreetmap.org/"
   }
 ]

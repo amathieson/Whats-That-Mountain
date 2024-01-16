@@ -9,6 +9,11 @@ export default {
 let deviceOrientation;
 function initHandlers() {
     logger.log("Starting Compass Service", "compass_service");
+    try {
+        DeviceOrientationEvent.requestPermission()
+    } catch (e) {
+        console.log(e);
+    }
     FULLTILT.getDeviceOrientation({'type': 'world'})
         .then(function(controller) {
             deviceOrientation = controller;

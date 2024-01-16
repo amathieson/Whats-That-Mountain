@@ -8,6 +8,9 @@ import MenuBar from "./components/MenuBar.js"
 import render_service from "./modules/render_service.js";
 import lower_card from "./components/lower_card.js";
 import popup_list from "./components/popup_list.js";
+import {Quaternion} from "three";
+import geo_service from "./modules/geo_service.js";
+import {isIOS} from "./modules/util.js";
 
 document.getElementById("app").innerHTML = `
 <div class="debug-overlay">
@@ -20,6 +23,7 @@ document.getElementById("app").innerHTML = `
     Gravity: <pre data-ref="gravityData"></pre>
     <hr/>
     Rendering: <pre data-ref="fpsData"></pre>
+    <canvas width="3601" height="3601" style="width: 30vw;" id="tile_debug"></canvas>
 </div>
 <menu-bar data-ref="menu-bar"></menu-bar>
 <lower-card data-ref="lower-card">
@@ -66,12 +70,23 @@ document.addEventListener('click', function (event) {
     }
 });
 
+document.addEventListener("resize", ()=>{
+    render_service.setSize(window.innerWidth, window.innerHeight);
+});
+screen.orientation.addEventListener("change", () =>{
+    render_service.setSize(window.innerWidth, window.innerHeight);
+});
+
 (function draw() {
     if (compass_service.getOrientation()) {
         let euler = compass_service.getOrientation().getScreenAdjustedEuler();
+        let quat = compass_service.getOrientation().getScreenAdjustedQuaternion()
         output_compass.textContent =  `alpha: ${Math.round( euler.alpha*100)/100}\n`;
         output_compass.textContent += `beta : ${Math.round(euler.beta*100)/100}\n`;
         output_compass.textContent += `gamma: ${Math.round(euler.gamma*100)/100}\n`;
+        if (!isIOS)
+            quat.rotateZ(90*3.14/180);
+        render_service.setCamera({x:0,y:0,z:900},new Quaternion(quat.x, quat.y, quat.z, quat.w));
     }
 
     if (pitch_service.getOrientation()) {
@@ -89,7 +104,6 @@ document.addEventListener('click', function (event) {
             location.coords.altitudeAccuracy*100)/100}m`;
     }
     render_service.animate();
-    // render_service.setCamera({x:0,y:0,z:5},new Euler(0,0,Math.sin(Date.now()/1000), 'XYZ'));
     output_fps.textContent = `${Math.round(1000/(Date.now()-lastFrame) * 10) / 10} FPS`;
     lastFrame = Date.now();
 
@@ -105,7 +119,14 @@ function Initialise_Modules() {
     compass_service.initHandlers();
     pitch_service.initHandlers();
     location_service.initHandlers();
+    geo_service.initialize();
     if (last_canvas !== undefined)
         document.getElementById("app").removeChild(last_canvas);
     last_canvas = document.getElementById("app").appendChild(render_service.initialize());
+
+
+    // geo_service.fetch_radius(56.4677482,-3.0085072, 3).then((meshs)=>{
+    geo_service.fetch_radius(46.26248001948516, 5.9257905590163436, 3).then((meshs)=>{
+        render_service.setMeshData(meshs);
+    })
 }
