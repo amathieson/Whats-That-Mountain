@@ -51,6 +51,7 @@ menu-bar > .container > .button-large > img {
   transition: background-color 250ms ease-out;
   cursor: pointer;
   box-shadow: $dark 0 0 10px;
+  left: calc(calc(50vw - calc(min(48pt, 10vw) / 2)) - 1em)
 }
 menu-bar > .container > .button > span {
   font-size: 12pt;

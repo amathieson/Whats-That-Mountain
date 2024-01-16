@@ -10,17 +10,27 @@ let deviceOrientation;
 function initHandlers() {
     logger.log("Starting Compass Service", "compass_service");
     try {
-        DeviceOrientationEvent.requestPermission()
-    } catch (e) {
-        console.log(e);
-    }
-    FULLTILT.getDeviceOrientation({'type': 'world'})
-        .then(function(controller) {
-            deviceOrientation = controller;
+        DeviceOrientationEvent.requestPermission().then(()=>{
+
+            FULLTILT.getDeviceOrientation({'type': 'world'})
+                .then(function(controller) {
+                    deviceOrientation = controller;
+                })
+                .catch(function(message) {
+                    logger.error(message, "compass_service");
+                });
         })
-        .catch(function(message) {
-            logger.error(message, "compass_service");
-        });
+    } catch (e) {
+        logger.error(e.message, "compass_service");
+
+        FULLTILT.getDeviceOrientation({'type': 'world'})
+            .then(function(controller) {
+                deviceOrientation = controller;
+            })
+            .catch(function(message) {
+                logger.error(message, "compass_service");
+            });
+    }
 }
 
 // Deprecated Getter

@@ -23,7 +23,7 @@ function initHandlers() {
 
         gravitySensor.start();
     } catch (e) {
-        console.log(e)
+        logger.warn(e.message, "pitch_service")
     }
 }
 
