@@ -84,8 +84,22 @@ screen.orientation.addEventListener("change", () =>{
         output_compass.textContent =  `alpha: ${Math.round( euler.alpha*100)/100}\n`;
         output_compass.textContent += `beta : ${Math.round(euler.beta*100)/100}\n`;
         output_compass.textContent += `gamma: ${Math.round(euler.gamma*100)/100}\n`;
-        if (!isIOS)
-            quat.rotateZ(90*3.14/180);
+        if (!isIOS) {
+            switch (screen.orientation.type) {
+                case "portrait-primary":
+                    quat.rotateZ(90 * 3.14 / 180);
+                    break;
+                case "landscape-primary":
+                    quat.rotateZ(-90 * 3.14 / 180);
+                    break;
+                case "portrait-secondary":
+                    quat.rotateZ(90 * 3.14 / 180);
+                    break;
+                case "landscape-secondary":
+                    quat.rotateZ(-90 * 3.14 / 180);
+                    break;
+            }
+        }
         render_service.setCamera({x:0,y:0,z:900},new Quaternion(quat.x, quat.y, quat.z, quat.w));
     }
 

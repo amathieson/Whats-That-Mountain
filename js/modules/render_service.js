@@ -38,6 +38,9 @@ function setCamera(position, rotation) {
     camera.position.z = position.z;
 }
 
+let pinching = false;
+let dist = 0;
+
 function initialize() {
     if (screen.orientation.lock !== undefined) {
         try {
@@ -53,6 +56,30 @@ function initialize() {
     renderer.domElement.setAttribute("data-ref", "main_canvas");
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.shadowMap.enabled = false;
+    renderer.domElement.addEventListener("touchstart", (e)=> {
+        if (e.touches.length === 2) {
+            pinching = true;
+            dist = Math.hypot(
+                e.touches[0].pageX - e.touches[1].pageX,
+                e.touches[0].pageY - e.touches[1].pageY)
+        }
+    })
+    renderer.domElement.addEventListener("touchmove", (e) =>{
+        if (pinching) {
+            let d = Math.hypot(
+                e.touches[0].pageX - e.touches[1].pageX,
+                e.touches[0].pageY - e.touches[1].pageY)
+            let frac = (dist / d);
+            if (frac < 1)
+                camera.setFocalLength(camera.getFocalLength() + 10*(1-frac));
+            else
+                camera.setFocalLength(Math.max(5, camera.getFocalLength() - (frac)));
+
+        }
+    })
+    renderer.domElement.addEventListener("touchend", ()=>{
+        pinching = false;
+    })
 
     return renderer.domElement;
 }
