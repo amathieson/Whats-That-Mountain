@@ -71,10 +71,11 @@ function initialize() {
                 e.touches[0].pageY - e.touches[1].pageY)
             let frac = (dist / d);
             if (frac < 1)
-                camera.setFocalLength(camera.getFocalLength() + 10*(1-frac));
+                camera.setFocalLength(camera.getFocalLength() + (1-frac)*7);
             else
-                camera.setFocalLength(Math.max(5, camera.getFocalLength() - (frac)));
+                camera.setFocalLength(Math.max(5, camera.getFocalLength() - (frac)/2));
 
+            dist = d;
         }
     })
     renderer.domElement.addEventListener("touchend", ()=>{

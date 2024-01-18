@@ -87,16 +87,12 @@ screen.orientation.addEventListener("change", () =>{
         if (!isIOS) {
             switch (screen.orientation.type) {
                 case "portrait-primary":
-                    quat.rotateZ(90 * 3.14 / 180);
+                case "portrait-secondary":
+                    quat.rotateZ(Math.PI/2);
                     break;
                 case "landscape-primary":
-                    quat.rotateZ(-90 * 3.14 / 180);
-                    break;
-                case "portrait-secondary":
-                    quat.rotateZ(90 * 3.14 / 180);
-                    break;
                 case "landscape-secondary":
-                    quat.rotateZ(-90 * 3.14 / 180);
+                    quat.rotateZ(-Math.PI/2);
                     break;
             }
         }
