@@ -89,8 +89,9 @@ async function fetch_tile(lat, lon) {
         peak = Math.max(peak, tmp[i]);
         valley = Math.min(valley, tmp[i]);
     }
+    let pois = await (await fetch(`${CDN_Route}/markers/${latlon2ne(lat,lon)}.json`)).json()
 
-    return {"peak":peak,"valley":valley,"data":tmp};
+    return {"peak":peak,"valley":valley,"data":tmp, "pois":pois};
 }
 
 function latlon2ne(lat, lon) {

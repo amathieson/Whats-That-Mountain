@@ -52,7 +52,7 @@ function initialize() {
             console.log(e);
         }
     }
-    renderer = new THREE.WebGLRenderer();
+    renderer = new THREE.WebGLRenderer({antialias: true});
     renderer.domElement.setAttribute("data-ref", "main_canvas");
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.shadowMap.enabled = false;
