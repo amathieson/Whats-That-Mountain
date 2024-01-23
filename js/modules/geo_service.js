@@ -27,7 +27,8 @@ async function fetch_radius(lat, lon, radius) {
     let tiles = [];
     let coord1 = gps2XY(lat, lon);
     let coord2 = gps2XY(lat+1, lon+1);
-    const mountainGeom = new THREE.PlaneGeometry((coord2[0]-coord1[0]), (coord2[1]-coord1[1]),128, 128);
+    console.log(`Dims ${Math.abs(coord2[0]-coord1[0])} , ${Math.abs(coord2[1]-coord1[1])}`);
+    const mountainGeom = new THREE.PlaneGeometry(Math.abs(coord2[0]-coord1[0]), Math.abs(coord2[1]-coord1[1]),128, 128);
     // for ()
     {
         const data = await fetch_tile(lat, lon);
@@ -68,7 +69,9 @@ async function fetch_radius(lat, lon, radius) {
 
             const labelObj = new CSS2DObject( label );
             let [x,y] = gps2XY(point.location.lat, point.location.lon)
-            labelObj.position.set( x, y, 900 );
+
+            console.log(`coords: ${x - coord1[0]} : ${y - coord2[1]}`);
+            labelObj.position.set( x - coord1[0], y - coord1[1], 900 );
             labelObj.center.set( 0, 1 );
 
             tiles.push(labelObj);

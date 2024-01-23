@@ -108,9 +108,11 @@ function setMeshData(meshs) {
 }
 
 function setSize(width, height) {
-    renderer.setSize(width, height);
-    camera.aspect = width / height;
+    if (renderer) {
+        renderer.setSize(width, height);
+        camera.aspect = width / height;
 
-    camera.updateProjectionMatrix();
-    labelRenderer.setSize(width, height)
+        camera.updateProjectionMatrix();
+        labelRenderer.setSize(width, height)
+    }
 }
