@@ -1,7 +1,6 @@
 import pako from "pako";
 import * as THREE from 'three';
-import {BufferGeometry} from "three";
-import {hslToRgb} from "./util.js";
+import {CSS2DObject} from "three/addons/renderers/CSS2DRenderer.js";
 
 export default {
     initialize,
@@ -60,6 +59,21 @@ async function fetch_radius(lat, lon, radius) {
 
         const mesh = new THREE.Mesh(mountainGeom, material);
         tiles.push(mesh);
+
+        data.pois.forEach((point)=>{
+            const label = document.createElement( 'div' );
+            label.className = 'label';
+            label.textContent = point.tags.name;
+            label.style.backgroundColor = 'red';
+
+            const labelObj = new CSS2DObject( label );
+            let [x,y] = gps2XY(point.location.lat, point.location.lon)
+            labelObj.position.set( x, y, 900 );
+            labelObj.center.set( 0, 1 );
+
+            tiles.push(labelObj);
+        })
+
         const material2 = new THREE.MeshStandardMaterial( { wireframe: true,
             side: THREE.FrontSide,
             displacementMap: tex,
@@ -70,6 +84,7 @@ async function fetch_radius(lat, lon, radius) {
         } );
 
         const mesh2 = new THREE.Mesh(mountainGeom, material2);
+
         tiles.push(mesh2);
     }
     return tiles;

@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import {Vector3} from "three";
+import {CSS2DObject, CSS2DRenderer} from "three/addons/renderers/CSS2DRenderer.js";
 export default {
     animate,
     initialize,
@@ -15,10 +15,11 @@ light.castShadow = false;
 light.receiveShadow = false;
 
 // Create a camera
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 100, 100000);
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 100000);
 
 // Create a renderer
 let renderer;
+let labelRenderer;
 
 const rootStyles = getComputedStyle(document.documentElement);
 const primaryColor = rootStyles.getPropertyValue('--primary-color');
@@ -27,6 +28,7 @@ const primaryColor = rootStyles.getPropertyValue('--primary-color');
 function animate() {
     if (renderer) {
         renderer.render(scene, camera);
+        labelRenderer.render(scene, camera);
 
     }
 }
@@ -56,31 +58,43 @@ function initialize() {
     renderer.domElement.setAttribute("data-ref", "main_canvas");
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.shadowMap.enabled = false;
-    renderer.domElement.addEventListener("touchstart", (e)=> {
+
+    labelRenderer = new CSS2DRenderer();
+    labelRenderer.setSize( window.innerWidth, window.innerHeight );
+    labelRenderer.domElement.style.position = 'absolute';
+    labelRenderer.domElement.style.top = '0px';
+    document.body.appendChild( labelRenderer.domElement );
+
+    let els = [renderer.domElement, labelRenderer.domElement];
+
+els.forEach((el)=>{
+    el.addEventListener("touchstart", (e)=> {
         if (e.touches.length === 2) {
             pinching = true;
+            let w = window.innerWidth;
+            let h = window.innerHeight;
             dist = Math.hypot(
-                e.touches[0].pageX - e.touches[1].pageX,
-                e.touches[0].pageY - e.touches[1].pageY)
+                e.touches[0].pageX / w - e.touches[1].pageX / w,
+                e.touches[0].pageY / h - e.touches[1].pageY / h)
         }
     })
-    renderer.domElement.addEventListener("touchmove", (e) =>{
+    el.addEventListener("touchmove", (e) =>{
         if (pinching) {
+            let w = window.innerWidth;
+            let h = window.innerHeight;
             let d = Math.hypot(
-                e.touches[0].pageX - e.touches[1].pageX,
-                e.touches[0].pageY - e.touches[1].pageY)
-            let frac = (dist / d);
-            if (frac < 1)
-                camera.setFocalLength(camera.getFocalLength() + (1-frac)*15);
-            else
-                camera.setFocalLength(Math.max(5, camera.getFocalLength() - (frac)/1.3));
-
+                e.touches[0].pageX / w - e.touches[1].pageX / w,
+                e.touches[0].pageY / h - e.touches[1].pageY / h)
+            let delta = d - dist;
+            camera.setFocalLength(Math.max(5,camera.getFocalLength() + delta * 50));
             dist = d;
         }
     })
-    renderer.domElement.addEventListener("touchend", ()=>{
+    el.addEventListener("touchend", ()=>{
         pinching = false;
     })
+})
+
 
     return renderer.domElement;
 }
@@ -95,4 +109,8 @@ function setMeshData(meshs) {
 
 function setSize(width, height) {
     renderer.setSize(width, height);
+    camera.aspect = width / height;
+
+    camera.updateProjectionMatrix();
+    labelRenderer.setSize(width, height)
 }

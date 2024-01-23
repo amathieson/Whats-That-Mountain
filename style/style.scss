@@ -127,6 +127,13 @@ button.secondary:active {
   background-color: adjust-color($secondary, $lightness: -20%);
 }
 
+.label {
+  color: #FFF;
+  font-family: sans-serif;
+  padding: 2px;
+  background: rgba( 0, 0, 0, .6 );
+}
+
 
 
 
