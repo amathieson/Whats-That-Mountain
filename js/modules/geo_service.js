@@ -11,7 +11,6 @@ export default {
 const CDN_Route = "https://cdn.whats-that-mountain.site";
 const Earth_Radius = 6371000;
 const Tile_Dim = 3601;
-const Tile_Dim_Squared = Tile_Dim*Tile_Dim;
 function initialize() {
 
 }
@@ -23,16 +22,18 @@ function gps2XY(lat, lon) {
     ];
 }
 
-async function fetch_radius(lat, lon, radius) {
+async function fetch_radius(inlat, inlon, radius) {
     let tiles = [];
-    let coord1 = gps2XY(lat, lon);
-    let coord2 = gps2XY(lat+1, lon+1);
-    console.log(`Dims ${Math.abs(coord2[0]-coord1[0])} , ${Math.abs(coord2[1]-coord1[1])}`);
-    const mountainGeom = new THREE.PlaneGeometry(Math.abs(coord2[0]-coord1[0]), Math.abs(coord2[1]-coord1[1]),128, 128);
-    // for ()
+    let dirs = [[inlat, inlon], [inlat+1, inlon], [inlat, inlon+1], [inlat-1, inlon], [inlat, inlon-1]];
+    for (let tile in dirs)
     {
+        let [lat, lon] = dirs[tile];
+        let coord1 = gps2XY(lat, lon);
+        let coord2 = gps2XY(lat+1, lon+1);
+        const mountainGeom = new THREE.PlaneGeometry(Math.abs(coord2[0]-coord1[0]), Math.abs(coord2[1]-coord1[1]),512, 512);
         const data = await fetch_tile(lat, lon);
-
+        if (data === undefined)
+            continue;
         const canvas = document.getElementById("tile_debug");
         canvas.style.height = Math.abs(30*(1-(coord2[1]-coord1[1])/(coord2[0]-coord1[0]))) + "vw";
         const ctx = canvas.getContext("2d");
@@ -59,6 +60,9 @@ async function fetch_radius(lat, lon, radius) {
         } );
 
         const mesh = new THREE.Mesh(mountainGeom, material);
+        let [posx,posy] = gps2XY(Math.round(lat) + 0.5, Math.round(lon) + 0.5);
+        console.log(`tile: ${Math.round(lat)},${Math.round(lon)} - posx: ${posx} - posy: ${posy} - width: ${Math.abs(coord2[0]-coord1[0])} - height: ${Math.abs(coord2[1]-coord1[1])}`)
+        mesh.position.set(posx,posy,0)
         tiles.push(mesh);
 
         data.pois.forEach((point)=>{
@@ -70,8 +74,7 @@ async function fetch_radius(lat, lon, radius) {
             const labelObj = new CSS2DObject( label );
             let [x,y] = gps2XY(point.location.lat, point.location.lon)
 
-            console.log(`coords: ${x - coord1[0]} : ${y - coord2[1]}`);
-            labelObj.position.set( x - coord1[0], y - coord1[1], 900 );
+            labelObj.position.set( x, y, 900 );
             labelObj.center.set( 0, 1 );
 
             tiles.push(labelObj);
@@ -87,29 +90,34 @@ async function fetch_radius(lat, lon, radius) {
         } );
 
         const mesh2 = new THREE.Mesh(mountainGeom, material2);
-
+        mesh2.position.set(posx,posy,0)
         tiles.push(mesh2);
     }
     return tiles;
 }
 
 async function fetch_tile(lat, lon) {
-    let d = await fetch(`${CDN_Route}/${latlon2ne(lat,lon)}.hgt.gz`)
-    let data = await d.arrayBuffer();
-    let decop = pako.inflate(data);
-    const tmp = new Int16Array(decop.length / 2);
-    let peak = -32767;
-    let valley = 32767;
-    for (let i = 0; i < tmp.length; i++) {
-        const byte1 = decop[i * 2];
-        const byte2 = decop[i * 2 + 1];
-        tmp[i] = (byte1 << 8) | byte2;
-        peak = Math.max(peak, tmp[i]);
-        valley = Math.min(valley, tmp[i]);
-    }
-    let pois = await (await fetch(`${CDN_Route}/markers/${latlon2ne(lat,lon)}.json`)).json()
+    try {
+        let d = await fetch(`${CDN_Route}/${latlon2ne(lat, lon)}.hgt.gz`)
+        if (d.ok) {
+            let data = await d.arrayBuffer();
+            let decop = pako.inflate(data);
+            const tmp = new Int16Array(decop.length / 2);
+            let peak = -32767;
+            let valley = 32767;
+            for (let i = 0; i < tmp.length; i++) {
+                const byte1 = decop[i * 2];
+                const byte2 = decop[i * 2 + 1];
+                tmp[i] = (byte1 << 8) | byte2;
+                peak = Math.max(peak, tmp[i]);
+                valley = Math.min(valley, tmp[i]);
+            }
+            let pois = await (await fetch(`${CDN_Route}/markers/${latlon2ne(lat, lon)}.json`)).json()
 
-    return {"peak":peak,"valley":valley,"data":tmp, "pois":pois};
+            return {"peak": peak, "valley": valley, "data": tmp, "pois": pois};
+        }
+    } catch (e) {
+    }
 }
 
 function latlon2ne(lat, lon) {

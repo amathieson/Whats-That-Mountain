@@ -3,7 +3,8 @@ import {CSS2DObject, CSS2DRenderer} from "three/addons/renderers/CSS2DRenderer.j
 export default {
     animate,
     initialize,
-    setCamera,
+    setCameraRotation,
+    setCameraPosition,
     setMeshData,
     setSize
 }
@@ -33,8 +34,11 @@ function animate() {
     }
 }
 
-function setCamera(position, rotation) {
+function setCameraRotation(rotation) {
     camera.setRotationFromQuaternion(rotation);
+}
+
+function setCameraPosition(position) {
     camera.position.x = position.x;
     camera.position.y = position.y;
     camera.position.z = position.z;

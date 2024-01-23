@@ -77,6 +77,8 @@ screen.orientation.addEventListener("change", () =>{
     render_service.setSize(window.innerWidth, window.innerHeight);
 });
 
+let LastLocTileCtr = [-1,-1];
+
 (function draw() {
     if (compass_service.getOrientation()) {
         let euler = compass_service.getOrientation().getScreenAdjustedEuler();
@@ -96,7 +98,7 @@ screen.orientation.addEventListener("change", () =>{
                     break;
             }
         }
-        render_service.setCamera({x:0,y:0,z:900},new Quaternion(quat.x, quat.y, quat.z, quat.w));
+        render_service.setCameraRotation(new Quaternion(quat.x, quat.y, quat.z, quat.w));
     }
 
     if (pitch_service.getOrientation()) {
@@ -112,6 +114,23 @@ screen.orientation.addEventListener("change", () =>{
         output_gps.textContent += `Alt: ${location.coords.altitude}m\n`;
         output_gps.textContent += `Acc: ${Math.round(location.coords.accuracy*100)/100}m/${Math.round(
             location.coords.altitudeAccuracy*100)/100}m`;
+
+        let tileX = Math.round(location.coords.latitude);
+        let tileY = Math.round(location.coords.longitude);
+
+        let [x,y] =
+            geo_service.gps2XY(location.coords.latitude, location.coords.longitude);
+        // let [tx,ty] = geo_service.gps2XY(tileX, tileY)
+        render_service.setCameraPosition({x:x,y:y,z:100})
+
+        if (tileX !== LastLocTileCtr[0] || tileY !== LastLocTileCtr[1]) {
+            geo_service.fetch_radius(location.coords.latitude, location.coords.longitude, 3).then((meshes) => {
+                render_service.setMeshData(meshes);
+            })
+
+            LastLocTileCtr[0] = tileX;
+            LastLocTileCtr[1] = tileY;
+        }
     }
     render_service.animate();
     output_fps.textContent = `${Math.round(1000/(Date.now()-lastFrame) * 10) / 10} FPS`;
@@ -128,15 +147,9 @@ function Initialise_Modules() {
     lower_cardEl.removeAttribute("open");
     compass_service.initHandlers();
     pitch_service.initHandlers();
-    location_service.initHandlers();
     geo_service.initialize();
+    location_service.initHandlers();
     if (last_canvas !== undefined)
         document.getElementById("app").removeChild(last_canvas);
     last_canvas = document.getElementById("app").appendChild(render_service.initialize());
-
-
-    // geo_service.fetch_radius(56.4677482,-3.0085072, 3).then((meshs)=>{
-    geo_service.fetch_radius(46.26248001948516, 5.9257905590163436, 3).then((meshs)=>{
-        render_service.setMeshData(meshs);
-    })
 }
