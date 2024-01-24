@@ -1,6 +1,7 @@
 import pako from "pako";
 import * as THREE from 'three';
 import {CSS2DObject} from "three/addons/renderers/CSS2DRenderer.js";
+import {WTMPlaneGeometry} from "../constructs/PlaneGeom.js"
 
 export default {
     initialize,
@@ -24,13 +25,13 @@ function gps2XY(lat, lon) {
 
 async function fetch_radius(inlat, inlon, radius) {
     let tiles = [];
-    let dirs = [[inlat, inlon], [inlat+1, inlon], [inlat, inlon+1], [inlat-1, inlon], [inlat, inlon-1]];
+    let dirs = [[inlat, inlon]];
     for (let tile in dirs)
     {
         let [lat, lon] = dirs[tile];
         let coord1 = gps2XY(lat, lon);
         let coord2 = gps2XY(lat+1, lon+1);
-        const mountainGeom = new THREE.PlaneGeometry(Math.abs(coord2[0]-coord1[0]), Math.abs(coord2[1]-coord1[1]),512, 512);
+        const mountainGeom = new WTMPlaneGeometry(Math.abs(coord2[0]-coord1[0]), Math.abs(coord2[1]-coord1[1]),512, 512);
         const data = await fetch_tile(lat, lon);
         if (data === undefined)
             continue;
