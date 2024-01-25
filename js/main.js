@@ -8,7 +8,7 @@ import MenuBar from "./components/MenuBar.js"
 import render_service from "./modules/render_service.js";
 import lower_card from "./components/lower_card.js";
 import popup_list from "./components/popup_list.js";
-import {Quaternion} from "three";
+import {FloatType, Quaternion} from "three";
 import geo_service from "./modules/geo_service.js";
 import {isIOS} from "./modules/util.js";
 
@@ -77,7 +77,7 @@ screen.orientation.addEventListener("change", () =>{
     render_service.setSize(window.innerWidth, window.innerHeight);
 });
 
-let LastLocTileCtr = [-1,-1];
+let lastRenderPoint = [Number.MAX_VALUE,Number.MAX_VALUE];
 
 (function draw() {
     if (compass_service.getOrientation()) {
@@ -115,12 +115,7 @@ let LastLocTileCtr = [-1,-1];
         output_gps.textContent += `Acc: ${Math.round(location.coords.accuracy*100)/100}m/${Math.round(
             location.coords.altitudeAccuracy*100)/100}m`;
 
-        let tileX = Math.round(location.coords.latitude);
-        let tileY = Math.round(location.coords.longitude);
-
-        let [x,y] =
-            geo_service.gps2XY(location.coords.latitude, location.coords.longitude);
-        // let [tx,ty] = geo_service.gps2XY(tileX, tileY)
+        let [x,y] = geo_service.gps2XY(location.coords.latitude, location.coords.longitude);
         render_service.setCameraPosition({x:x,y:y,z:100})
 
         if (tileX !== LastLocTileCtr[0] || tileY !== LastLocTileCtr[1]) {

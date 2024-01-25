@@ -2,6 +2,7 @@ import pako from "pako";
 import * as THREE from 'three';
 import {CSS2DObject} from "three/addons/renderers/CSS2DRenderer.js";
 import {WTMPlaneGeometry} from "../constructs/PlaneGeom.js"
+import logger from "./logger.js";
 
 export default {
     initialize,
@@ -12,8 +13,38 @@ export default {
 const CDN_Route = "https://cdn.whats-that-mountain.site";
 const Earth_Radius = 6371000;
 const Tile_Dim = 3601;
+let LastLoc = [];
+let tile_canvases = [];
+let worker = null;
 function initialize() {
+    if (window.Worker && worker == null) {
+        worker = new Worker("js/modules/geo_worker.js");
+        worker.onmessage = function(e) {
+            if (e.data.method === undefined) {
+                logger.error("Command Missing Method", "GEO_SERVICE")
+                return;
+            }
 
+            switch (e.data.method) {
+                default:
+                    logger.error(`Unrecognised Method '${e.data.method}'`, "GEO_SERVICE")
+                    return;
+
+            }
+        }
+    }
+
+    worker.postMessage({
+        method: "POS_UPDATE",
+        data: [56.4588327, -2.9829916]
+    });
+}
+
+function update(position) {
+    worker.postMessage({
+        method: "POS_UPDATE",
+        data: position
+    });
 }
 
 function gps2XY(lat, lon) {
@@ -24,8 +55,6 @@ function gps2XY(lat, lon) {
 }
 
 async function fetch_radius(inlat, inlon, radius) {
-    let tiles = [];
-    let dirs = [[inlat, inlon]];
     for (let tile in dirs)
     {
         let [lat, lon] = dirs[tile];
@@ -38,7 +67,7 @@ async function fetch_radius(inlat, inlon, radius) {
         const canvas = document.getElementById("tile_debug");
         canvas.style.height = Math.abs(30*(1-(coord2[1]-coord1[1])/(coord2[0]-coord1[0]))) + "vw";
         const ctx = canvas.getContext("2d");
-        const id = ctx.createImageData(Tile_Dim, Tile_Dim);
+        const id = ctx.createImageData(Tile_Dim*3, Tile_Dim*3);
         for (let i = 0; i < data.data.length; i++) {
             let v = ((data.data[i]-data.valley)/(data.peak-data.valley))*255;
             id.data[(i * 4) + 0] = v;
@@ -97,9 +126,9 @@ async function fetch_radius(inlat, inlon, radius) {
     return tiles;
 }
 
-async function fetch_tile(lat, lon) {
+async function fetch_tile(ne) {
     try {
-        let d = await fetch(`${CDN_Route}/${latlon2ne(lat, lon)}.hgt.gz`)
+        let d = await fetch(`${CDN_Route}/${ne}.hgt.gz`)
         if (d.ok) {
             let data = await d.arrayBuffer();
             let decop = pako.inflate(data);
@@ -113,7 +142,7 @@ async function fetch_tile(lat, lon) {
                 peak = Math.max(peak, tmp[i]);
                 valley = Math.min(valley, tmp[i]);
             }
-            let pois = await (await fetch(`${CDN_Route}/markers/${latlon2ne(lat, lon)}.json`)).json()
+            let pois = await (await fetch(`${CDN_Route}/markers/${ne}.json`)).json()
 
             return {"peak": peak, "valley": valley, "data": tmp, "pois": pois};
         }
