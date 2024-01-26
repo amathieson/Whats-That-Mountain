@@ -27,24 +27,19 @@ function latlon2ne(lat, lon) {
     return (latRound < 0 ? 's' : 'n') + ("0" + Math.abs(latRound)).slice(-2) + (lonRound < 0 ? 'w' : 'e') +
         ("00" + Math.abs(lonRound)).slice(-3);
 }
-function gps2XY(lat, lon) {
-    return [
-        Earth_Radius * Math.cos(lat*(Math.PI/180)) * Math.cos(lon*(Math.PI/180)),
-        Earth_Radius * Math.cos(lat*(Math.PI/180)) * Math.sin(lon*(Math.PI/180))
-    ];
-}
 
 function reRender(pos) {
     let tiles_to_load = [];
-    let tile_range = {};
     let angle = 0;
-    let rad = .5;
+    let tile_radius = .5;
     while (angle < 360) {
-        let y = Math.sin(angle)*rad + pos[0];
-        let x = Math.cos(angle)*rad + pos[1];
+        let y = Math.sin(angle)*tile_radius + pos[0];
+        let x = Math.cos(angle)*tile_radius + pos[1];
         let tile_id = latlon2ne(y,x);
-        if (tiles_to_load.indexOf(tile_id) === -1)
+
+        if (tiles_to_load.indexOf(tile_id) === -1) {
             tiles_to_load.push(tile_id)
+        }
         angle += 0.5;
     }
 
@@ -56,9 +51,10 @@ function reRender(pos) {
             ctx: null,
             pois:[],
             loaded:false,
-            available: null
+            available: null,
+            imageData: null
         }
-        tile_canvas.ctx = tile_canvas.canvas.getContext("2d");
+        tile_canvas.ctx = tile_canvas.canvas.getContext("2d", {willReadFrequently:true});
         tiles[id] = tile_canvas;
 
         fetch_tile(id).then((data)=>{
@@ -68,36 +64,42 @@ function reRender(pos) {
             }
             const imageData = tile_canvas.ctx.createImageData(Tile_Dim*3, Tile_Dim*3);
             for (let i = 0; i < data.data.length; i++) {
-                let v = ((data.data[i]-data.valley)/(data.peak-data.valley))*255;
-                imageData.data[(i * 4) + 0] = v;
-                imageData.data[(i * 4) + 1] = v;
-                imageData.data[(i * 4) + 2] = v;
-                imageData.data[(i * 4) + 3] = 255;
+                let v = ((data.data[i] - data.valley) / (data.peak - data.valley)) * 255;
+                let index = i * 4;
+
+                imageData.data[index] = imageData.data[index + 1] = imageData.data[index + 2] = v;
+                imageData.data[index + 3] = 255;
             }
             tile_canvas.ctx.putImageData(imageData, 0, 0);
+            tile_canvas.imageData = imageData;
             tile_canvas.pois = data.pois;
             tile_canvas.loaded = true;
             tile_canvas.available = true;
         });
     })
 
-
-    let loaded = true;
-    tiles_to_load.forEach((id)=>{
-        if (tiles[id] === undefined || (!tiles[id].loaded && tiles[id].available !== false))
-            loaded = false;
-    })
-
-    if (loaded) {
+    if (tiles_to_load.every(id =>
+        tiles[id] !== undefined && (tiles[id].loaded || tiles[id].available === false))) {
         let outCanvas = new OffscreenCanvas(Tile_Dim, Tile_Dim);
         let ctx = outCanvas.getContext("2d");
-        const grd = ctx.createLinearGradient(0, 0, 200, 0);
-        grd.addColorStop(0, "red");
-        grd.addColorStop(1, "white");
-        ctx.fillStyle = grd;
-        ctx.fillRect(64,64,1024,1024);
+        console.log("READY")
         let pois = [];
-        lastRenderedPosition = pos;
+        ctx.strokeStyle = "red";
+        ctx.lineWidth = 8;
+        ctx.strokeRect(0,0, 1024, 1024);
+        let i = 0;
+        tiles_to_load.forEach((id)=>{
+            let x = i %2;
+            let y = Math.floor(i / 2);
+            if (tiles[id].available) {
+                tiles[id].pois.filter(point => Math.hypot(pos[0] - point.location.lat, pos[1] - point.location.lon) < 0.25)
+                    .forEach(point => pois.push(point));
+
+                ctx.putImageData(tiles[id].ctx.getImageData(0,0,1801,1801),1800*x,1800*y);
+            }
+            i++;
+        })
+
         postMessage({
             method:"UPDATE_TERRAIN",
             data: {
@@ -106,12 +108,13 @@ function reRender(pos) {
                 tile_origin: [pos[0]-0.5,pos[1]-0.5]
             }
         })
+
+        lastRenderedPosition = pos;
     }
 }
 
 
 const CDN_Route = "https://cdn.whats-that-mountain.site";
-const Earth_Radius = 6371000;
 const Tile_Dim = 3601;
 
 async function fetch_tile(ne) {
