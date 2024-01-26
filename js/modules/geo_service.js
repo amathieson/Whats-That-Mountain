@@ -1,22 +1,20 @@
-import pako from "pako";
 import * as THREE from 'three';
 import {CSS2DObject} from "three/addons/renderers/CSS2DRenderer.js";
 import {WTMPlaneGeometry} from "../constructs/PlaneGeom.js"
 import logger from "./logger.js";
+import render_service from "./render_service.js";
 
 export default {
     initialize,
     gps2XY,
-    update,
-    latlon2ne
+    update
 }
 
-const CDN_Route = "https://cdn.whats-that-mountain.site";
 const Earth_Radius = 6371000;
 const Tile_Dim = 3601;
-let LastLoc = [];
-let tile_canvases = [];
 let worker = null;
+let lastPos = [];
+let lastUpdate = 0;
 function initialize() {
     if (window.Worker && worker == null) {
         worker = new Worker("js/modules/geo_worker.js");
@@ -31,6 +29,8 @@ function initialize() {
                     const canvas = document.getElementById("tile_debug");
                     const ctx = canvas.getContext("2d");
                     ctx.putImageData(e.data.data.canvas, 0, 0);
+
+                    render_service.setMeshData([]);
                     return;
                 default:
                     logger.error(`Unrecognised Method '${e.data.method}'`, "GEO_SERVICE")
@@ -40,9 +40,6 @@ function initialize() {
         }
     }
 }
-
-let lastPos = [];
-let lastUpdate = 0;
 function update(position) {
     if (Math.hypot(lastPos[0]-position[0], lastPos[1]-position[1]) || Math.abs(lastUpdate - Date.now()) > 500) {
         lastPos = position;
@@ -131,35 +128,4 @@ async function fetch_radius(inlat, inlon, radius) {
         tiles.push(mesh2);
     }
     return tiles;
-}
-
-async function fetch_tile(ne) {
-    try {
-        let d = await fetch(`${CDN_Route}/${ne}.hgt.gz`)
-        if (d.ok) {
-            let data = await d.arrayBuffer();
-            let decop = pako.inflate(data);
-            const tmp = new Int16Array(decop.length / 2);
-            let peak = -32767;
-            let valley = 32767;
-            for (let i = 0; i < tmp.length; i++) {
-                const byte1 = decop[i * 2];
-                const byte2 = decop[i * 2 + 1];
-                tmp[i] = (byte1 << 8) | byte2;
-                peak = Math.max(peak, tmp[i]);
-                valley = Math.min(valley, tmp[i]);
-            }
-            let pois = await (await fetch(`${CDN_Route}/markers/${ne}.json`)).json()
-
-            return {"peak": peak, "valley": valley, "data": tmp, "pois": pois};
-        }
-    } catch (e) {
-    }
-}
-
-function latlon2ne(lat, lon) {
-    let latRound = Math.round(lat);
-    let lonRound = Math.round(lon);
-    return (latRound < 0 ? 's' : 'n') + ("0" + Math.abs(latRound)).slice(-2) + (lonRound < 0 ? 'w' : 'e') +
-        ("00" + Math.abs(lonRound)).slice(-3);
 }
