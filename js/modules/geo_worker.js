@@ -20,8 +20,23 @@ onmessage = function(e) {
     }
 }
 
+
+function latlon2ne(lat, lon) {
+    let latRound = Math.round(lat);
+    let lonRound = Math.round(lon);
+    return (latRound < 0 ? 's' : 'n') + ("0" + Math.abs(latRound)).slice(-2) + (lonRound < 0 ? 'w' : 'e') +
+        ("00" + Math.abs(lonRound)).slice(-3);
+}
+function gps2XY(lat, lon) {
+    return [
+        Earth_Radius * Math.cos(lat*(Math.PI/180)) * Math.cos(lon*(Math.PI/180)),
+        Earth_Radius * Math.cos(lat*(Math.PI/180)) * Math.sin(lon*(Math.PI/180))
+    ];
+}
+
 function reRender(pos) {
     let tiles_to_load = [];
+    let tile_range = {};
     let angle = 0;
     let rad = .5;
     while (angle < 360) {
@@ -34,7 +49,7 @@ function reRender(pos) {
     }
 
     tiles_to_load.forEach((id)=>{
-        if (tiles[id]?.loaded || tiles[id]?.available !== true)
+        if (tiles[id]?.loaded || tiles[id]?.available === false || tiles[id]?.available === null)
             return;
         let tile_canvas = {
             canvas: new OffscreenCanvas(Tile_Dim, Tile_Dim),
@@ -66,6 +81,32 @@ function reRender(pos) {
         });
     })
 
+
+    let loaded = true;
+    tiles_to_load.forEach((id)=>{
+        if (tiles[id] === undefined || (!tiles[id].loaded && tiles[id].available !== false))
+            loaded = false;
+    })
+
+    if (loaded) {
+        let outCanvas = new OffscreenCanvas(Tile_Dim, Tile_Dim);
+        let ctx = outCanvas.getContext("2d");
+        const grd = ctx.createLinearGradient(0, 0, 200, 0);
+        grd.addColorStop(0, "red");
+        grd.addColorStop(1, "white");
+        ctx.fillStyle = grd;
+        ctx.fillRect(64,64,1024,1024);
+        let pois = [];
+        lastRenderedPosition = pos;
+        postMessage({
+            method:"UPDATE_TERRAIN",
+            data: {
+                canvas:ctx.getImageData(0,0,Tile_Dim, Tile_Dim),
+                pois,
+                tile_origin: [pos[0]-0.5,pos[1]-0.5]
+            }
+        })
+    }
 }
 
 
@@ -99,11 +140,4 @@ async function fetch_tile(ne) {
     } catch (e) {
         console.error(e)
     }
-}
-
-function latlon2ne(lat, lon) {
-    let latRound = Math.round(lat);
-    let lonRound = Math.round(lon);
-    return (latRound < 0 ? 's' : 'n') + ("0" + Math.abs(latRound)).slice(-2) + (lonRound < 0 ? 'w' : 'e') +
-        ("00" + Math.abs(lonRound)).slice(-3);
 }

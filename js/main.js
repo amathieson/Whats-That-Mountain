@@ -118,14 +118,7 @@ let lastRenderPoint = [Number.MAX_VALUE,Number.MAX_VALUE];
         let [x,y] = geo_service.gps2XY(location.coords.latitude, location.coords.longitude);
         render_service.setCameraPosition({x:x,y:y,z:100})
 
-        if (tileX !== LastLocTileCtr[0] || tileY !== LastLocTileCtr[1]) {
-            geo_service.fetch_radius(location.coords.latitude, location.coords.longitude, 3).then((meshes) => {
-                render_service.setMeshData(meshes);
-            })
-
-            LastLocTileCtr[0] = tileX;
-            LastLocTileCtr[1] = tileY;
-        }
+        geo_service.update([location.coords.latitude, location.coords.longitude]);
     }
     render_service.animate();
     output_fps.textContent = `${Math.round(1000/(Date.now()-lastFrame) * 10) / 10} FPS`;

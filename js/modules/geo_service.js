@@ -6,8 +6,9 @@ import logger from "./logger.js";
 
 export default {
     initialize,
-    fetch_radius,
-    gps2XY
+    gps2XY,
+    update,
+    latlon2ne
 }
 
 const CDN_Route = "https://cdn.whats-that-mountain.site";
@@ -26,6 +27,11 @@ function initialize() {
             }
 
             switch (e.data.method) {
+                case "UPDATE_TERRAIN":
+                    const canvas = document.getElementById("tile_debug");
+                    const ctx = canvas.getContext("2d");
+                    ctx.putImageData(e.data.data.canvas, 0, 0);
+                    return;
                 default:
                     logger.error(`Unrecognised Method '${e.data.method}'`, "GEO_SERVICE")
                     return;
@@ -33,18 +39,19 @@ function initialize() {
             }
         }
     }
-
-    worker.postMessage({
-        method: "POS_UPDATE",
-        data: [56.4588327, -2.9829916]
-    });
 }
 
+let lastPos = [];
+let lastUpdate = 0;
 function update(position) {
-    worker.postMessage({
-        method: "POS_UPDATE",
-        data: position
-    });
+    if (Math.hypot(lastPos[0]-position[0], lastPos[1]-position[1]) || Math.abs(lastUpdate - Date.now()) > 500) {
+        lastPos = position;
+        lastUpdate = Date.now();
+        worker.postMessage({
+            method: "POS_UPDATE",
+            data: position
+        });
+    }
 }
 
 function gps2XY(lat, lon) {
