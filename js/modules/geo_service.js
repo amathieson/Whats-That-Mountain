@@ -17,7 +17,7 @@ const valley = -100;
 const peak = 5000;
 function initialize() {
     if (window.Worker && worker == null) {
-        worker = new Worker("js/modules/geo_worker.js");
+        worker = new Worker(import.meta.env.MODE === 'development' ? "js/modules/geo_worker.js" : "geo-worker.js");
         worker.onmessage = function(e) {
             if (e.data.method === undefined) {
                 logger.error("Command Missing Method", "GEO_SERVICE")
@@ -53,7 +53,6 @@ function initialize() {
 
                     const mesh = new THREE.Mesh(mountainGeom, material);
                     let [posx,posy] = gps2XY(Math.round(lat) + 0.5, Math.round(lon) + 0.5);
-                    console.log(`tile: ${Math.round(lat)},${Math.round(lon)} - posx: ${posx} - posy: ${posy} - width: ${Math.abs(coord2[0]-coord1[0])} - height: ${Math.abs(coord2[1]-coord1[1])}`)
                     mesh.position.set(posx,posy,0)
                     tiles.push(mesh);
 
