@@ -22,26 +22,44 @@ onmessage = function(e) {
 
 
 function latlon2ne(lat, lon) {
-    let latRound = Math.round(lat);
-    let lonRound = Math.round(lon);
+    let latRound = Math.floor(lat);
+    let lonRound = Math.floor(lon);
     return (latRound < 0 ? 's' : 'n') + ("0" + Math.abs(latRound)).slice(-2) + (lonRound < 0 ? 'w' : 'e') +
         ("00" + Math.abs(lonRound)).slice(-3);
 }
 
 function reRender(pos) {
     let tiles_to_load = [];
-    let angle = 0;
+    // let angle = 0;
     let tile_radius = .5;
-    while (angle < 360) {
-        let y = Math.sin(angle)*tile_radius + pos[0];
-        let x = Math.cos(angle)*tile_radius + pos[1];
-        let tile_id = latlon2ne(y,x);
+    // while (angle < 360) {
+    //     let y = Math.sin(angle)*tile_radius + pos[0];
+    //     let x = Math.cos(angle)*tile_radius + pos[1];
+    //     let tile_id = latlon2ne(y,x);
+    //
+    //     if (tiles_to_load.indexOf(tile_id) === -1) {
+    //         tiles_to_load.push(tile_id)
+    //     }
+    //     angle += 0.5;
+    // }
 
-        if (tiles_to_load.indexOf(tile_id) === -1) {
-            tiles_to_load.push(tile_id)
-        }
-        angle += 0.5;
-    }
+
+
+    let corners = [
+        [pos[0] + tile_radius, pos[1] - tile_radius], // top left
+        [pos[0] + tile_radius, pos[1] + tile_radius], // top right
+        [pos[0] - tile_radius, pos[1] - tile_radius], // bottom left
+        [pos[0] - tile_radius, pos[1] + tile_radius], // bottom right
+    ];
+
+    let corner_tiles = [
+        latlon2ne(corners[0][0],corners[0][1]), // top left
+        latlon2ne(corners[1][0],corners[1][1]), // top right
+        latlon2ne(corners[2][0],corners[2][1]), // bottom left
+        latlon2ne(corners[3][0],corners[3][1]), // bottom right
+    ]
+
+    tiles_to_load = corner_tiles;
 
     tiles_to_load.forEach((id)=>{
         if (tiles[id]?.loaded || tiles[id]?.available === false || tiles[id]?.available === null)
@@ -62,7 +80,7 @@ function reRender(pos) {
                 tile_canvas.available = false;
                 return;
             }
-            const imageData = tile_canvas.ctx.createImageData(Tile_Dim*3, Tile_Dim*3);
+            const imageData = tile_canvas.ctx.createImageData(Tile_Dim, Tile_Dim);
             for (let i = 0; i < data.data.length; i++) {
                 let v = ((data.data[i] - data.valley) / (data.peak - data.valley)) * 255;
                 let index = i * 4;
@@ -84,20 +102,56 @@ function reRender(pos) {
         let ctx = outCanvas.getContext("2d");
         console.log("READY")
         let pois = [];
-        ctx.strokeStyle = "red";
-        ctx.lineWidth = 8;
-        ctx.strokeRect(0,0, 1024, 1024);
-        let i = 0;
+
+        {
+
+            // Top Left
+            let tile_id = corner_tiles[0];
+            if (tiles[tile_id].available) {
+                // ctx.putImageData(tiles[tile_id].ctx.getImageData(0,0,Tile_Dim,Tile_Dim),0,0);
+                let x = frac(corners[0][1]) * Tile_Dim;
+                let y = (1-frac(corners[0][0])) * Tile_Dim;
+                if (x < Tile_Dim && y < Tile_Dim)
+                    ctx.putImageData(tiles[tile_id].ctx.getImageData(x,y,Tile_Dim - x,Tile_Dim - y),0,0);
+            }
+
+            // Top Right
+            tile_id = corner_tiles[1];
+            if (frac(corners[0][1]) !== 0 && tiles[tile_id].available) {
+                // ctx.putImageData(tiles[tile_id].ctx.getImageData(0,0,Tile_Dim,Tile_Dim),0,0);
+                let width = frac(corners[1][1]) * Tile_Dim;
+                let y = (1-frac(corners[1][0])) * Tile_Dim;
+                if (width > 0 && y < Tile_Dim)
+                    ctx.putImageData(tiles[tile_id].ctx.getImageData(0,y,width,Tile_Dim - y),Tile_Dim - width,0);
+            }
+
+            // Bottom Left
+            tile_id = corner_tiles[2];
+            if (frac(corners[0][0]) !== 0 && tiles[tile_id].available) {
+                let x = frac(corners[2][1]) * Tile_Dim;
+                let height = (1-frac(corners[2][0])) * Tile_Dim;
+                if (height > 0 && x < Tile_Dim)
+                    ctx.putImageData(tiles[tile_id].ctx.getImageData(x,0,Tile_Dim - x,height),0,Tile_Dim-height);
+            }
+
+            // Bottom Right
+            tile_id = corner_tiles[3];
+            if (frac(corners[0][1]) !== 0 && frac(corners[0][0]) !== 0 && tiles[tile_id].available) {
+                let width = frac(corners[3][1]) * Tile_Dim;
+                let height = (1-frac(corners[3][0])) * Tile_Dim;
+                if (height > 0 && 0 < width)
+                    ctx.putImageData(tiles[tile_id].ctx.getImageData(0,0,width,height),Tile_Dim - width,Tile_Dim-height);
+            }
+
+
+        }
+
         tiles_to_load.forEach((id)=>{
-            let x = i %2;
-            let y = Math.floor(i / 2);
-            if (tiles[id].available) {
-                tiles[id].pois.filter(point => Math.hypot(pos[0] - point.location.lat, pos[1] - point.location.lon) < 0.25)
+            if (tiles[id].available)
+                // Push the PoIs that are within range to the array
+                tiles[id].pois.filter(point => Math.hypot(pos[0] - point.location.lat, pos[1] - point.location.lon) < tile_radius)
                     .forEach(point => pois.push(point));
 
-                ctx.putImageData(tiles[id].ctx.getImageData(0,0,1801,1801),1800*x,1800*y);
-            }
-            i++;
         })
 
         postMessage({
@@ -143,4 +197,9 @@ async function fetch_tile(ne) {
     } catch (e) {
         console.error(e)
     }
+}
+
+
+function frac(value) {
+    return value - Math.floor(value);
 }
