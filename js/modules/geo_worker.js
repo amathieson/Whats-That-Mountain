@@ -108,7 +108,6 @@ function reRender(pos) {
             // Top Left
             let tile_id = corner_tiles[0];
             if (tiles[tile_id].available) {
-                // ctx.putImageData(tiles[tile_id].ctx.getImageData(0,0,Tile_Dim,Tile_Dim),0,0);
                 let x = frac(corners[0][1]) * Tile_Dim;
                 let y = (1-frac(corners[0][0])) * Tile_Dim;
                 if (x < Tile_Dim && y < Tile_Dim)
@@ -118,7 +117,6 @@ function reRender(pos) {
             // Top Right
             tile_id = corner_tiles[1];
             if (frac(corners[0][1]) !== 0 && tiles[tile_id].available) {
-                // ctx.putImageData(tiles[tile_id].ctx.getImageData(0,0,Tile_Dim,Tile_Dim),0,0);
                 let width = frac(corners[1][1]) * Tile_Dim;
                 let y = (1-frac(corners[1][0])) * Tile_Dim;
                 if (width > 0 && y < Tile_Dim)
@@ -158,8 +156,8 @@ function reRender(pos) {
             method:"UPDATE_TERRAIN",
             data: {
                 canvas:ctx.getImageData(0,0,Tile_Dim, Tile_Dim),
-                pois,
-                tile_origin: [pos[0]-0.5,pos[1]-0.5]
+                points_of_interest: pois,
+                tile_origin: [pos[0],pos[1]]
             }
         })
 
