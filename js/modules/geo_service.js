@@ -60,7 +60,6 @@ function initialize() {
                         const label = document.createElement( 'div' );
                         label.className = 'label';
                         label.textContent = point.tags.name;
-                        label.style.backgroundColor = 'red';
 
                         const labelObj = new CSS2DObject( label );
                         let [x,y] = gps2XY(point.location.lat, point.location.lon)
