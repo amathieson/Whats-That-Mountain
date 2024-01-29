@@ -30,18 +30,7 @@ function latlon2ne(lat, lon) {
 
 function reRender(pos) {
     let tiles_to_load = [];
-    // let angle = 0;
     let tile_radius = .5;
-    // while (angle < 360) {
-    //     let y = Math.sin(angle)*tile_radius + pos[0];
-    //     let x = Math.cos(angle)*tile_radius + pos[1];
-    //     let tile_id = latlon2ne(y,x);
-    //
-    //     if (tiles_to_load.indexOf(tile_id) === -1) {
-    //         tiles_to_load.push(tile_id)
-    //     }
-    //     angle += 0.5;
-    // }
 
 
 
