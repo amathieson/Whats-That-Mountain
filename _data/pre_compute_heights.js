@@ -41,11 +41,10 @@ async function fetch_tile(ne) {
         console.error(e)
     }
 }
-let metadata = {};
 let counter = 0;
 console.log("\x1B[2J");
 let data = fs.readFileSync("processed_tiles.json", "utf8");
-let done_tiles = JSON.parse(data)
+let metadata = JSON.parse(data)
 fs.readFile("tiles.txt", 'utf8', (err, data) => {
     if (err) {
         console.error('Error reading the file:', err);
@@ -57,7 +56,7 @@ fs.readFile("tiles.txt", 'utf8', (err, data) => {
     const fetchAllTilesSequentially = async () => {
         for (const tile of tiles) {
             counter++;
-            if (Object.keys(done_tiles).includes(tile)) {
+            if (Object.keys(metadata).includes(tile)) {
                 console.log(`\x1B[1;1HSkipping Tile: '${tile}' - ${counter} / ${tiles.length} (${Math.round(counter/tiles.length*10000)/100}%)...` + " ".repeat(40));
                 continue;
             }
