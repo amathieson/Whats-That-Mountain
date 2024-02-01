@@ -1,6 +1,6 @@
 let lastRenderedPosition = [Number.MAX_VALUE,Number.MAX_VALUE];
 let tiles = {};
-
+let tile_meta = null;
 onmessage = function(e) {
     if (e.data.method === undefined) {
         console.error("[GEO_WORKER] - Command Missing Method")
@@ -164,6 +164,10 @@ const CDN_Route = "https://cdn.whats-that-mountain.site";
 const Tile_Dim = 3601;
 
 async function fetch_tile(ne) {
+    if (tile_meta === null) {
+        tile_meta = await (await fetch(`${CDN_Route}/compressed_tiles.json`)).json()
+    }
+
     const pako = await import("pako");
     try {
         let d = await fetch(`${CDN_Route}/${ne}.hgt.gz`)
@@ -171,14 +175,12 @@ async function fetch_tile(ne) {
             let data = await d.arrayBuffer();
             let decompression = pako.inflate(data);
             const tmp = new Int16Array(decompression.length / 2);
-            let peak = -32767;
-            let valley = 32767;
+            let peak = tile_meta[ne].peak;
+            let valley = tile_meta[ne].valley;
             for (let i = 0; i < tmp.length; i++) {
                 const byte1 = decompression[i * 2];
                 const byte2 = decompression[i * 2 + 1];
                 tmp[i] = (byte1 << 8) | byte2;
-                peak = Math.max(peak, tmp[i]);
-                valley = Math.min(valley, tmp[i]);
             }
             let pois = await (await fetch(`${CDN_Route}/markers/${ne}.json`)).json()
 
