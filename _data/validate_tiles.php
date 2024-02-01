@@ -14,6 +14,7 @@ foreach ($tiles as $id=>$tile) {
     if (abs($tile->peak - $average) > 150) {
         echo "'$id' Peak∆ too high! - ";
         print_r($tile);
+        continue;
     }
 
     $a = array_filter($tile->valleys);
@@ -21,5 +22,11 @@ foreach ($tiles as $id=>$tile) {
     if (abs($tile->valley - $average) > 150) {
         echo "'$id' Valley∆ too high! - ";
         print_r($tile);
+        continue;
     }
+
+    unset($tile->valleys);
+    unset($tile->peaks);
 }
+
+file_put_contents("compressed_tiles.json", json_encode($tiles));
