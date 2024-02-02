@@ -76,6 +76,7 @@ function reRender(pos) {
                 return;
             }
             const imageData = tile_canvas.ctx.createImageData(Tile_Dim, Tile_Dim);
+            console.time("DRAW_CANVAS_" + id)
             for (let i = 0; i < data.data.length; i++) {
                 let v = ((data.data[i] - data.valley) / (data.peak - data.valley)) * 255;
                 let index = i * 4;
@@ -84,6 +85,7 @@ function reRender(pos) {
                 imageData.data[index + 3] = 255;
             }
             tile_canvas.ctx.putImageData(imageData, 0, 0);
+            console.timeEnd("DRAW_CANVAS_" + id)
             tile_canvas.imageData = imageData;
             tile_canvas.pois = data.pois;
             tile_canvas.loaded = true;
@@ -95,6 +97,7 @@ function reRender(pos) {
         tiles[id] !== undefined && (tiles[id].loaded || tiles[id].available === false))) {
         let outCanvas = new OffscreenCanvas(Tile_Dim, Tile_Dim);
         let ctx = outCanvas.getContext("2d");
+        console.time("DRAW_CANVAS_MAIN")
         let pois = [];
 
         {
@@ -137,7 +140,7 @@ function reRender(pos) {
 
 
         }
-
+        console.timeEnd("DRAW_CANVAS_MAIN")
         tiles_to_load.forEach((id)=>{
             if (tiles[id].available)
                 // Push the PoIs that are within range to the array
@@ -173,15 +176,19 @@ async function fetch_tile(ne) {
         let d = await fetch(`${CDN_Route}/${ne}.hgt.gz`)
         if (d.ok) {
             let data = await d.arrayBuffer();
+            console.time("DECOMPRESSION_" + ne)
             let decompression = pako.inflate(data);
+            console.timeEnd("DECOMPRESSION_" + ne)
             const tmp = new Int16Array(decompression.length / 2);
             let peak = tile_meta[ne].peak;
             let valley = tile_meta[ne].valley;
+            console.time("BYTE_SWAP_" + ne)
             for (let i = 0; i < tmp.length; i++) {
                 const byte1 = decompression[i * 2];
                 const byte2 = decompression[i * 2 + 1];
                 tmp[i] = (byte1 << 8) | byte2;
             }
+            console.timeEnd("BYTE_SWAP_" + ne)
             let pois = await (await fetch(`${CDN_Route}/markers/${ne}.json`)).json()
 
             return {"peak": peak, "valley": valley, "data": tmp, "pois": pois};
