@@ -53,6 +53,12 @@ function reRender(pos) {
     tiles_to_load.forEach((id)=>{
         if (tiles[id]?.loaded || tiles[id]?.available === false || tiles[id]?.available === null)
             return;
+        postMessage({
+            method:"LOADING_TILES",
+            data: {
+                tiles: tiles_to_load
+            }
+        })
         let tile_canvas = {
             canvas: new OffscreenCanvas(Tile_Dim, Tile_Dim),
             ctx: null,

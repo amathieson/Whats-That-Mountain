@@ -11,31 +11,9 @@ import popup_list from "./components/popup_list.js";
 import {FloatType, Quaternion} from "three";
 import geo_service from "./modules/geo_service.js";
 import {isIOS} from "./modules/util.js";
+import home_page from "./components/home_page.js";
 
-document.getElementById("app").innerHTML = `
-<div class="debug-overlay">
-    Compass: <pre data-ref="compassData"></pre>
-    <hr/>
-    CompassABS: <pre data-ref="compassData2"></pre>
-    <hr/>
-    GPS: <pre data-ref="gpsData"></pre>
-    <hr/>
-    Gravity: <pre data-ref="gravityData"></pre>
-    <hr/>
-    Rendering: <pre data-ref="fpsData"></pre>
-    <canvas width="3601" height="3601" style="width: 30vw;" id="tile_debug"></canvas>
-</div>
-<menu-bar data-ref="menu-bar"></menu-bar>
-<lower-card data-ref="lower-card">
-    <div class="placeholder">More Coming Soon!</div>
-</lower-card>
-<popup-list data-ref="more-popup" pos="0,0">
-<ul>
-<li>Credits</li>
-<li>Tourist Board</li>
-</ul>
-</popup-list>
-`;
+document.getElementById("app").innerHTML = home_page.content;
 let output_gps = document.querySelector("[data-ref=gpsData]");
 let output_compass = document.querySelector("[data-ref=compassData]");
 let output_gravity = document.querySelector("[data-ref=gravityData]");
