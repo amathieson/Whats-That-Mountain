@@ -8,7 +8,7 @@ import MenuBar from "./components/MenuBar.js"
 import render_service from "./modules/render_service.js";
 import lower_card from "./components/lower_card.js";
 import popup_list from "./components/popup_list.js";
-import {FloatType, Quaternion} from "three";
+import {Quaternion} from "three";
 import geo_service from "./modules/geo_service.js";
 import {isIOS} from "./modules/util.js";
 import home_page from "./components/home_page.js";
@@ -79,8 +79,6 @@ screen.orientation.addEventListener("change", () =>{
     render_service.setSize(window.innerWidth, window.innerHeight);
 });
 
-let lastRenderPoint = [Number.MAX_VALUE,Number.MAX_VALUE];
-
 (function draw() {
     if (compass_service.getOrientation()) {
         let euler = compass_service.getOrientation().getScreenAdjustedEuler();
@@ -135,9 +133,10 @@ function toggleMenuBar() {
     menu_bar.removeAttribute("open");
     lower_cardEl.removeAttribute("open");
 }
-
+document.querySelector(`[data-ref="home-modal"]`).setAttribute("visible", true);
 
 function Initialise_Modules() {
+    document.querySelector(`[data-ref="home-modal"]`).removeAttribute("visible");
     document.getElementsByClassName("loading-scroller")[0].setAttribute("visible", "true");
     document.getElementsByClassName("loading-scroller")[0].innerText = "Loading Tiles...";
     compass_service.initHandlers();

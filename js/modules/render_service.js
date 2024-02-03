@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import {CSS2DObject, CSS2DRenderer} from "three/addons/renderers/CSS2DRenderer.js";
+import {CSS2DRenderer} from "three/addons/renderers/CSS2DRenderer.js";
 export default {
     animate,
     initialize,
@@ -50,10 +50,10 @@ let dist = 0;
 function initialize() {
     if (screen.orientation.lock !== undefined) {
         try {
-            screen.orientation.lock("portrait");
-            // document.documentElement.requestFullscreen().then(r => {
-            //     renderer.setSize(window.innerWidth, window.innerHeight);
-            // });
+            document.documentElement.requestFullscreen().then(_ => {
+                screen.orientation.lock("portrait");
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
         } catch (e) {
             console.log(e);
         }
@@ -67,7 +67,7 @@ function initialize() {
     labelRenderer.setSize( window.innerWidth, window.innerHeight );
     labelRenderer.domElement.style.position = 'absolute';
     labelRenderer.domElement.style.top = '0px';
-    document.body.appendChild( labelRenderer.domElement );
+    document.querySelector('[data-ref="label-container"]').appendChild( labelRenderer.domElement );
 
     let els = [renderer.domElement, labelRenderer.domElement];
 

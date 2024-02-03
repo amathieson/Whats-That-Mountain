@@ -83,3 +83,15 @@ menu-bar > .container > .button-large.button > img:active {
 menu-bar > .container.open {
   bottom: 60vh;
 }
+
+
+@supports (-webkit-touch-callout: none) {
+  /* CSS specific to iOS devices */
+  menu-bar > .container {
+    padding-bottom: 16pt;
+    transition: padding-bottom $menu-bar-time, bottom $menu-bar-time;
+  }
+  menu-bar > .container.open {
+    padding-bottom: 0;
+  }
+}

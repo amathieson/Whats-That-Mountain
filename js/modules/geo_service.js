@@ -86,6 +86,7 @@ function initialize() {
                     render_service.setMeshData(tiles);
 
                     document.getElementsByClassName("loading-scroller")[0].removeAttribute("visible");
+                    document.querySelector("[data-ref=\"main_canvas\"]").setAttribute("data-ready", "true")
                     return;
                 case "LOADING_TILES":
                     document.getElementsByClassName("loading-scroller")[0].setAttribute("visible", "true");

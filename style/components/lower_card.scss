@@ -16,7 +16,7 @@ lower-card {
 
   .cover {
     transition: opacity $menu-bar-time;
-    background: $dark;
+    background: adjust-color($dark, $alpha: -0.8, $lightness: -15%);
     z-index: 3;
     position: absolute;
     top: 0;

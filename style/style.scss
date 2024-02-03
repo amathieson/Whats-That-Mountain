@@ -159,6 +159,7 @@ button.secondary:active {
   width: 100vw;
   height: 1.5em;
   background: adjust-color($dark, $alpha: -0.1);
+  color: $white;
   z-index: 999;
   transition: top ease-in 150ms;
 
@@ -174,7 +175,7 @@ button.secondary:active {
     background-image:
             conic-gradient(from calc(calc(calc(var(--loading-width2) / 2) * -1)), $secondary var(--loading-width2), transparent 0deg),
             conic-gradient(from calc(calc(var(--loading-width) / 2) * -1), $primary var(--loading-width), $secondary 0deg);
-    animation: borderGradientAnimation 1.5s infinite ease;
+    animation: borderGradientAnimation 1s infinite ease;
   }
 }
 .loading-scroller[visible] {
@@ -196,6 +197,64 @@ button.secondary:active {
   }
 }
 
+[data-ref="main_canvas"] {
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 500ms ease;
+}
+[data-ref="main_canvas"][data-ready="true"]
+{
+  opacity: 1;
+}
+
+.label-container {
+  position: absolute;
+  z-index: 1;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+}
+.label-container > section {
+  position: relative;
+}
+
+.modal-container {
+  position: absolute;
+  z-index: 1000;
+  width: 100vw;
+  height: 100vh;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  display: flex;
+  background: adjust-color($dark, $alpha: -0.8, $lightness: -15%);
+  visibility: hidden;
+}
+.modal-container[visible] {
+  visibility: visible;
+}
+
+modal {
+  background: $dark;
+  box-shadow: adjust-color($dark, $lightness: -5%) 0 0 10px 10px;
+  max-width: 80vw;
+  padding: 0.5em 1em;
+  cursor: default;
+  margin: 64pt auto auto;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+modal > h1 {
+  font-size: 14pt;
+  text-align: left;
+}
+modal > .button-group {
+  align-self: end;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: $secondary;
@@ -205,15 +264,22 @@ button.secondary:active {
     color: adjust-color($primary, $lightness: 10%);
   }
   button {
-    background-color: adjust-color($white, $lightness: -10%);
+    background-color: adjust-color($dark, $lightness: 70%);
+  }
+  button:hover {
+    background-color: adjust-color($dark, $lightness: 75%);
+  }
+  button:active {
+    background-color: adjust-color($dark, $lightness: 50%);
+  }
+
+  modal {
+    box-shadow: adjust-color($dark, $lightness: 50%) 0 0 10px 10px;
+    background: $white;
   }
 
   .debug-overlay {
     color: $dark;
     background: $white;
   }
-}
-
-[data-ref="main_canvas"] {
-  z-index: 0;
 }

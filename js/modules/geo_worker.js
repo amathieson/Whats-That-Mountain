@@ -95,7 +95,6 @@ function reRender(pos) {
         tiles[id] !== undefined && (tiles[id].loaded || tiles[id].available === false))) {
         let outCanvas = new OffscreenCanvas(Tile_Dim, Tile_Dim);
         let ctx = outCanvas.getContext("2d");
-        console.log("READY")
         let pois = [];
 
         {
