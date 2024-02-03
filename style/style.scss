@@ -13,7 +13,8 @@
 }
 
 :root {
-  --primary-color: $primary;
+  --primary-color: #{$primary};
+  --secondary-color: #{$secondary};
 }
 
 :root {

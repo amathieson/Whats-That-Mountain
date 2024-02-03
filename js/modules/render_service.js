@@ -22,9 +22,6 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 let renderer;
 let labelRenderer;
 
-const rootStyles = getComputedStyle(document.documentElement);
-const primaryColor = rootStyles.getPropertyValue('--primary-color');
-
 // Animation/render loop
 function animate() {
     if (renderer) {

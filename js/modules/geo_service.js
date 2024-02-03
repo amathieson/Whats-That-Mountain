@@ -42,13 +42,18 @@ function initialize() {
                         tex.needsUpdate = true;
                     }, 50);
                     let tiles = [];
+                    const rootStyles = getComputedStyle(document.documentElement);
+                    const primaryColor = Number("0x" + standardize_color(rootStyles.getPropertyValue('--primary-color')).substring(1));
+                    const secondaryColor = Number("0x" + standardize_color(rootStyles.getPropertyValue('--secondary-color')).substring(1));
+
+
                     const material = new THREE.MeshStandardMaterial( { wireframe: false,
                         side: THREE.FrontSide,
                         displacementMap: tex,
                         displacementScale: peak-valley,
                         displacementBias: valley,
                         // map: tex,
-                        color: 0xff00ffff,
+                        color: primaryColor,
                     } );
 
                     const mesh = new THREE.Mesh(mountainGeom, material);
@@ -76,7 +81,7 @@ function initialize() {
                         displacementScale: peak-valley,
                         displacementBias: valley,
                         // map: tex,
-                        color: 0xff0000ff,
+                        color: secondaryColor,
                     } );
 
                     const mesh2 = new THREE.Mesh(mountainGeom, material2);
@@ -115,4 +120,11 @@ function gps2XY(lat, lon) {
         Earth_Radius * Math.cos(lat*(Math.PI/180)) * Math.cos(lon*(Math.PI/180)),
         Earth_Radius * Math.cos(lat*(Math.PI/180)) * Math.sin(lon*(Math.PI/180))
     ];
+}
+
+// Based on https://stackoverflow.com/a/47355187
+function standardize_color(str){
+    let ctx = document.createElement("canvas").getContext("2d");
+    ctx.fillStyle = str;
+    return ctx.fillStyle;
 }
