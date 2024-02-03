@@ -85,6 +85,11 @@ function initialize() {
 
                     render_service.setMeshData(tiles);
 
+                    document.getElementsByClassName("loading-scroller")[0].removeAttribute("visible");
+                    return;
+                case "LOADING_TILES":
+                    document.getElementsByClassName("loading-scroller")[0].setAttribute("visible", "true");
+                    document.getElementsByClassName("loading-scroller")[0].innerText = "Loading Tiles...";
                     return;
                 default:
                     logger.error(`Unrecognised Method '${e.data.method}'`, "GEO_SERVICE")

@@ -81,6 +81,11 @@ pre {
   padding: 0.5em;
   max-height: 70vh;
   overflow-y: auto;
+  display: none;
+}
+
+.debug-overlay[visible] {
+  display: block;
 }
 
 canvas[data-ref=main_canvas] {
@@ -207,4 +212,8 @@ button.secondary:active {
     color: $dark;
     background: $white;
   }
+}
+
+[data-ref="main_canvas"] {
+  z-index: 0;
 }

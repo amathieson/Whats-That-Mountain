@@ -21,9 +21,33 @@ let output_fps = document.querySelector("[data-ref=fpsData]");
 let menu_bar = document.querySelector("[data-ref=menu-bar]");
 let lower_cardEl = document.querySelector("[data-ref=lower-card]");
 let more_popup = document.querySelector("[data-ref=more-popup]");
+let authorise_button = document.querySelector("[data-ref=authorise-button]");
+authorise_button.addEventListener("click", Initialise_Modules);
 let last_canvas = undefined;
-menu_bar.addEventListener("action-button", Initialise_Modules);
-lower_cardEl.addEventListener("close", Initialise_Modules);
+const debug_threshold = 1000;
+let debug_clickCount = 0;
+let debug_lastClickTime = 0;
+menu_bar.addEventListener("action-button", ()=>{
+
+    const currentTime = new Date().getTime();
+
+    if (currentTime - debug_lastClickTime < debug_threshold) {
+        debug_clickCount++;
+
+        if (debug_clickCount === 5) {
+            // Button clicked 5 times in short succession
+            document.getElementsByClassName("debug-overlay")[0].toggleAttribute("visible");
+        }
+    } else {
+        // Reset the count if the time gap is longer than the threshold
+        debug_clickCount = 1;
+        toggleMenuBar();
+    }
+
+    // Update the last click time
+    debug_lastClickTime = currentTime;
+});
+lower_cardEl.addEventListener("close", toggleMenuBar);
 menu_bar.addEventListener("button-click", (a)=>{
     if (a.detail.el.getAttribute("data-ref") !== "moreButton") {
         menu_bar.setAttribute("open", "")
@@ -107,10 +131,15 @@ let lastRenderPoint = [Number.MAX_VALUE,Number.MAX_VALUE];
 
 })();
 
-
-function Initialise_Modules() {
+function toggleMenuBar() {
     menu_bar.removeAttribute("open");
     lower_cardEl.removeAttribute("open");
+}
+
+
+function Initialise_Modules() {
+    document.getElementsByClassName("loading-scroller")[0].setAttribute("visible", "true");
+    document.getElementsByClassName("loading-scroller")[0].innerText = "Loading Tiles...";
     compass_service.initHandlers();
     pitch_service.initHandlers();
     geo_service.initialize();

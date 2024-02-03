@@ -16,7 +16,7 @@ export default {
 <h1>Location Access</h1>
 To use this app location services and compass services are required, please tap authorise to continue.
 <button>Cancel</button>
-<button>Authorise</button>
+<button data-ref="authorise-button"">Authorise</button>
 </modal>
 <menu-bar data-ref="menu-bar"></menu-bar>
 <lower-card data-ref="lower-card">
