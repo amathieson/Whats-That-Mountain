@@ -12,6 +12,12 @@
   syntax: "<angle>";
 }
 
+@property --bg-size {
+  inherits: false;
+  initial-value: 11%;
+  syntax: "<percentage>";
+}
+
 :root {
   --primary-color: #{$primary};
   --secondary-color: #{$secondary};
@@ -31,7 +37,24 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
-  touch-action: none
+  touch-action: none;
+
+  background-size: 32px 32px;
+  background-position: 0 0;
+  background-image: radial-gradient(100% 100% at 50% 50%, adjust-color($dark, $lightness: 10%) 0%, adjust-color($dark, $lightness: 10%) var(--bg-size), #00000000 calc(var(--bg-size) * 1.1));
+  animation: backgroundAnimation 10s infinite ease;
+}
+
+@keyframes backgroundAnimation {
+  0% {
+    --bg-size: 10%;
+  }
+  50% {
+    --bg-size: 20%;
+  }
+  100% {
+    --bg-size: 10%;
+  }
 }
 
 @supports (font-variation-settings: normal) {
@@ -116,13 +139,16 @@ button {
   font-weight: 500;
   font-family: inherit;
   transition: background-color 150ms ease-in-out;
+  color: $white
 }
 
 button.primary {
   background: $primary;
+  color: $dark
 }
 button.secondary {
   background: $secondary;
+  color: $white
 }
 
 button:hover {
@@ -260,12 +286,14 @@ modal > .button-group {
   :root {
     color: $secondary;
     background-color: $white;
+    background-image: radial-gradient(100% 100% at 50% 50%, adjust-color($dark, $lightness: 60%) 0%, adjust-color($dark, $lightness: 60%) var(--bg-size), #00000000 calc(var(--bg-size) * 1.1));
   }
   a:hover {
     color: adjust-color($primary, $lightness: 10%);
   }
   button {
     background-color: adjust-color($dark, $lightness: 70%);
+    color: $dark;
   }
   button:hover {
     background-color: adjust-color($dark, $lightness: 75%);

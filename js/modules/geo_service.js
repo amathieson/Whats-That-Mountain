@@ -67,6 +67,7 @@ function initialize() {
                         label.textContent = point.tags.name;
 
                         const labelObj = new CSS2DObject( label );
+                        labelObj.userData = point;
                         let [x,y] = gps2XY(point.location.lat, point.location.lon)
 
                         labelObj.position.set( x, y, 900 );

@@ -1,12 +1,19 @@
 import * as THREE from 'three';
 import {CSS2DRenderer} from "three/addons/renderers/CSS2DRenderer.js";
+
+let visibleObjectsArray;
 export default {
     animate,
     initialize,
     setCameraRotation,
     setCameraPosition,
     setMeshData,
-    setSize
+    setSize,
+    visibleObjects
+}
+
+function visibleObjects() {
+    return visibleObjectsArray;
 }
 // Create a scene
 const scene = new THREE.Scene();
@@ -21,12 +28,26 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 // Create a renderer
 let renderer;
 let labelRenderer;
+let lastPointsTime = 0;
 
 // Animation/render loop
 function animate() {
     if (renderer) {
         renderer.render(scene, camera);
         labelRenderer.render(scene, camera);
+
+        if (Math.abs(Date.now() - lastPointsTime) > 50) {
+            lastPointsTime = Date.now();
+            const frustum = new THREE.Frustum().setFromProjectionMatrix(new THREE.Matrix4().multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse));
+            visibleObjectsArray = []
+
+            scene.traverse(node => {
+                if (node.isCSS2DObject && (frustum.containsPoint(node.position))) {
+                    visibleObjectsArray.push(node)
+                }
+            })
+        }
+
 
     }
 }

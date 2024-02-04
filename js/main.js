@@ -121,7 +121,8 @@ screen.orientation.addEventListener("change", () =>{
         geo_service.update([location.coords.latitude, location.coords.longitude]);
     }
     render_service.animate();
-    output_fps.textContent = `${Math.round(1000/(Date.now()-lastFrame) * 10) / 10} FPS`;
+    let objs = render_service.visibleObjects();
+    output_fps.textContent = `${Math.round(1000/(Date.now()-lastFrame) * 10) / 10} FPS\n${objs !== undefined ? objs.length : 0} Objects`;
     lastFrame = Date.now();
 
     // Execute function on each browser animation frame
