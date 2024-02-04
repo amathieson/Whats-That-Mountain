@@ -34,7 +34,7 @@ function initialize() {
                     let [lat, lon] = data.tile_origin;
                     let coord1 = gps2XY(lat-.5, lon-.5);
                     let coord2 = gps2XY(lat+.5, lon+.5);
-                    const mountainGeom = new WTMPlaneGeometry(Math.abs(coord2[0]-coord1[0]), Math.abs(coord2[1]-coord1[1]),512, 512);
+                    const mountainGeom = new WTMPlaneGeometry(Math.abs(coord2[0]-coord1[0]), Math.abs(coord2[1]-coord1[1]),256, 256);
 
 
                     let tex = new THREE.CanvasTexture(canvas);
@@ -57,10 +57,60 @@ function initialize() {
                     } );
 
                     const mesh = new THREE.Mesh(mountainGeom, material);
-                    let [posx,posy] = gps2XY(Math.round(lat) + 0.5, Math.round(lon) + 0.5);
+                    let [posx,posy] = gps2XY(lat,lon);
                     mesh.position.set(posx,posy,0)
+                    mesh.rotateZ(-Math.PI/2);
                     tiles.push(mesh);
 
+                    data.points_of_interest.push({
+                        location: {
+                            lat: lat,
+                            lon: lon,
+                        },
+                        tags: {
+                            name: "🟢 _CENTRE"
+                        }
+                    })
+
+                    data.points_of_interest.push({
+                        location: {
+                            lat: lat + 0.2,
+                            lon: lon,
+                        },
+                        tags: {
+                            name: "🔴 +0.2 LAT - NORTH"
+                        }
+                    })
+
+                    data.points_of_interest.push({
+                        location: {
+                            lat: lat - 0.2,
+                            lon: lon,
+                        },
+                        tags: {
+                            name: "🔵 -0.2 LAT - SOUTH"
+                        }
+                    })
+
+                    data.points_of_interest.push({
+                        location: {
+                            lat: lat,
+                            lon: lon + 0.2,
+                        },
+                        tags: {
+                            name: "🔴 +0.2 LON - EAST"
+                        }
+                    })
+
+                    data.points_of_interest.push({
+                        location: {
+                            lat: lat,
+                            lon: lon - 0.2,
+                        },
+                        tags: {
+                            name: "🔵 -0.2 LON - WEST"
+                        }
+                    })
                     data.points_of_interest.forEach((point)=>{
                         const label = document.createElement( 'div' );
                         label.className = 'label';
@@ -87,6 +137,7 @@ function initialize() {
 
                     const mesh2 = new THREE.Mesh(mountainGeom, material2);
                     mesh2.position.set(posx,posy,0)
+                    mesh2.rotateZ(-Math.PI/2);
                     tiles.push(mesh2);
 
                     render_service.setMeshData(tiles);
@@ -118,8 +169,8 @@ function update(position) {
 
 function gps2XY(lat, lon) {
     return [
-        Earth_Radius * Math.cos(lat*(Math.PI/180)) * Math.cos(lon*(Math.PI/180)),
-        Earth_Radius * Math.cos(lat*(Math.PI/180)) * Math.sin(lon*(Math.PI/180))
+        Earth_Radius * -Math.cos(lat*(Math.PI/180)) * Math.cos(lon*(Math.PI/180)),
+        Earth_Radius * -Math.cos(lat*(Math.PI/180)) * Math.sin(lon*(Math.PI/180))
     ];
 }
 

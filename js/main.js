@@ -41,13 +41,13 @@ menu_bar.addEventListener("action-button", ()=>{
     } else {
         // Reset the count if the time gap is longer than the threshold
         debug_clickCount = 1;
-        toggleMenuBar();
+        handleMainClick();
     }
 
     // Update the last click time
     debug_lastClickTime = currentTime;
 });
-lower_cardEl.addEventListener("close", toggleMenuBar);
+lower_cardEl.addEventListener("close", handleMainClick);
 menu_bar.addEventListener("button-click", (a)=>{
     if (a.detail.el.getAttribute("data-ref") !== "moreButton") {
         menu_bar.setAttribute("open", "")
@@ -114,9 +114,9 @@ screen.orientation.addEventListener("change", () =>{
         output_gps.textContent += `Alt: ${location.coords.altitude}m\n`;
         output_gps.textContent += `Acc: ${Math.round(location.coords.accuracy*100)/100}m/${Math.round(
             location.coords.altitudeAccuracy*100)/100}m`;
-
         let [x,y] = geo_service.gps2XY(location.coords.latitude, location.coords.longitude);
-        render_service.setCameraPosition({x:x,y:y,z:100})
+        render_service.setCameraPosition({x:x,y:y,z:500})
+
 
         geo_service.update([location.coords.latitude, location.coords.longitude]);
     }
@@ -130,9 +130,24 @@ screen.orientation.addEventListener("change", () =>{
 
 })();
 
-function toggleMenuBar() {
-    menu_bar.removeAttribute("open");
-    lower_cardEl.removeAttribute("open");
+function handleMainClick() {
+    if (menu_bar.hasAttribute("open")) {
+        menu_bar.removeAttribute("open");
+        lower_cardEl.removeAttribute("open");
+    } else {
+        let objects = render_service.visibleObjects();
+        if (objects !== undefined) {
+            if (objects.length > 0) {
+                if (objects.length < 5) {
+                    // alert("Showing Objects")
+                } else {
+                    // alert("Too Many Objects")
+                }
+            } else {
+                // alert("Cannot see any objects")
+            }
+        }
+    }
 }
 document.querySelector(`[data-ref="home-modal"]`).setAttribute("visible", true);
 
