@@ -90,11 +90,11 @@ screen.orientation.addEventListener("change", () =>{
             switch (screen.orientation.type) {
                 case "portrait-primary":
                 case "portrait-secondary":
-                    quat.rotateZ(Math.PI/2); // Todo - on ios phones remove this correction factor
+                    quat.rotateZ(Math.PI/2);
                     break;
                 case "landscape-primary":
                 case "landscape-secondary":
-                    quat.rotateZ(-Math.PI/2); // Todo - on ios phones remove this correction factor
+                    quat.rotateZ(-Math.PI/2);
                     break;
             }
         }

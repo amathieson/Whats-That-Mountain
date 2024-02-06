@@ -1,6 +1,9 @@
 export const isiPad = !(
-    navigator.userAgent.match(/(iPad)/) &&
-    navigator.userAgent.match(/AppleWebKit/)
+    (navigator.userAgent.match(/(iPad)/) &&
+    navigator.userAgent.match(/AppleWebKit/)) ||
+    (
+        /Macintosh/i.test(navigator.userAgent) && navigator.maxTouchPoints && navigator.maxTouchPoints > 1
+    )
 );
 
 // https://stackoverflow.com/a/9493060/6683922
