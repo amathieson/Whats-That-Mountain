@@ -10,7 +10,7 @@ import lower_card from "./components/lower_card.js";
 import popup_list from "./components/popup_list.js";
 import {Quaternion} from "three";
 import geo_service from "./modules/geo_service.js";
-import {isIOS} from "./modules/util.js";
+import {isiPad} from "./modules/util.js";
 import home_page from "./components/home_page.js";
 
 document.getElementById("app").innerHTML = home_page.content;
@@ -86,7 +86,7 @@ screen.orientation.addEventListener("change", () =>{
         output_compass.textContent =  `alpha: ${Math.round( euler.alpha*100)/100}\n`;
         output_compass.textContent += `beta : ${Math.round(euler.beta*100)/100}\n`;
         output_compass.textContent += `gamma: ${Math.round(euler.gamma*100)/100}\n`;
-        if (!isIOS) {
+        if (!isiPad) {
             switch (screen.orientation.type) {
                 case "portrait-primary":
                 case "portrait-secondary":

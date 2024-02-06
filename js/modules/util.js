@@ -1,5 +1,5 @@
-export const isIOS = !(
-    navigator.userAgent.match(/(iPod|iPhone|iPad)/) &&
+export const isiPad = !(
+    navigator.userAgent.match(/(iPad)/) &&
     navigator.userAgent.match(/AppleWebKit/)
 );
 
