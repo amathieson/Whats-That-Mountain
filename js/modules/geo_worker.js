@@ -32,8 +32,6 @@ function reRender(pos) {
     let tiles_to_load = [];
     let tile_radius = .5;
 
-
-
     let corners = [
         [pos[0] + tile_radius, pos[1] - tile_radius], // top left
         [pos[0] + tile_radius, pos[1] + tile_radius], // top right
