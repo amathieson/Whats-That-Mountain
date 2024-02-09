@@ -12,8 +12,10 @@ import {Quaternion} from "three";
 import geo_service from "./modules/geo_service.js";
 import {isiPad} from "./modules/util.js";
 import home_page from "./components/home_page.js";
+import calibrate_page from "./components/calibrate_page.js";
 
 document.getElementById("app").innerHTML = home_page.content;
+document.getElementById("app").innerHTML += calibrate_page.content;
 let output_gps = document.querySelector("[data-ref=gpsData]");
 let output_compass = document.querySelector("[data-ref=compassData]");
 let output_gravity = document.querySelector("[data-ref=gravityData]");
@@ -23,10 +25,20 @@ let lower_cardEl = document.querySelector("[data-ref=lower-card]");
 let more_popup = document.querySelector("[data-ref=more-popup]");
 let authorise_button = document.querySelector("[data-ref=authorise-button]");
 authorise_button.addEventListener("click", Initialise_Modules);
+let calibrate_button = document.querySelector("[data-ref=calibrate-button]");
+let calibrating = false;
+calibrate_button.addEventListener("click", ()=>{
+    calibrating = true;
+    calibrate_page.init();
+    document.querySelector(`[data-ref="calibrate-modal"]`).removeAttribute("visible");
+    document.getElementsByClassName("calibrate-slider")[0].setAttribute("visible", true)
+});
 let last_canvas = undefined;
 const debug_threshold = 1000;
 let debug_clickCount = 0;
 let debug_lastClickTime = 0;
+
+let north_Calibration_factor = Number.NaN;
 menu_bar.addEventListener("action-button", ()=>{
 
     const currentTime = new Date().getTime();
@@ -98,6 +110,16 @@ screen.orientation.addEventListener("change", () =>{
                     break;
             }
         }
+        if (!compass_service.getOrientation().isAbsolute() || north_Calibration_factor === Number.NaN) {
+            let ev = compass_service.getOrientation().getLastRawEventData();
+            // if (ev.webkitCompassHeading) {
+            //     console.log(`I HAVE A COMPASS!!!!!! ${ev.webkitCompassHeading} : ${ev.webkitCompassAccuracy}`)
+            // } else {
+                if (!calibrating)
+                    document.querySelector(`[data-ref="calibrate-modal"]`).setAttribute("visible", true);
+                // Trigger Overlay
+            // }
+        }
         render_service.setCameraRotation(new Quaternion(quat.x, quat.y, quat.z, quat.w));
     }
 
@@ -149,10 +171,10 @@ function handleMainClick() {
         }
     }
 }
-document.querySelector(`[data-ref="home-modal"]`).setAttribute("visible", true);
+document.querySelector(`[data-ref="authorise-modal"]`).setAttribute("visible", true);
 
 function Initialise_Modules() {
-    document.querySelector(`[data-ref="home-modal"]`).removeAttribute("visible");
+    document.querySelector(`[data-ref="authorise-modal"]`).removeAttribute("visible");
     document.getElementsByClassName("loading-scroller")[0].setAttribute("visible", "true");
     document.getElementsByClassName("loading-scroller")[0].innerText = "Loading Tiles...";
     compass_service.initHandlers();
@@ -163,3 +185,32 @@ function Initialise_Modules() {
         document.getElementById("app").removeChild(last_canvas);
     last_canvas = document.getElementById("app").appendChild(render_service.initialize());
 }
+
+
+// const constraints = {
+//     audio: false,
+//     video: { width: screen.width, height: screen.height, facingMode: { ideal: "environment" }},
+// };
+//
+// navigator.mediaDevices
+//     .getUserMedia(constraints)
+//     .then((mediaStream) => {
+//         const video = document.querySelector("video");
+//         video.srcObject = mediaStream;
+//         video.onloadedmetadata = () => {
+//             var promise = video.play();
+//
+//             if (promise !== undefined) {
+//                 promise.catch(error => {
+//                     console.log(error)
+//                     // Auto-play was prevented
+//                     // Show a UI element to let the user manually start playback
+//                 }).then(() => {
+//                     // Auto-play started
+//                 });
+//             }        };
+//     })
+//     .catch((err) => {
+//         // always check for errors at the end.
+//         console.error(`${err.name}: ${err.message}`);
+//     });

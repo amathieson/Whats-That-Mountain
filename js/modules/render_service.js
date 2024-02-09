@@ -66,16 +66,16 @@ let pinching = false;
 let dist = 0;
 
 function initialize() {
-    if (screen.orientation.lock !== undefined) {
-        try {
-            document.documentElement.requestFullscreen().then(_ => {
-                screen.orientation.lock("portrait");
-                renderer.setSize(window.innerWidth, window.innerHeight);
-            });
-        } catch (e) {
-            console.log(e);
-        }
-    }
+    // if (screen.orientation.lock !== undefined) {
+    //     try {
+    //         document.documentElement.requestFullscreen().then(_ => {
+    //             screen.orientation.lock("portrait");
+    //             renderer.setSize(window.innerWidth, window.innerHeight);
+    //         });
+    //     } catch (e) {
+    //         console.log(e);
+    //     }
+    // }
     renderer = new THREE.WebGLRenderer({antialias: true});
     renderer.domElement.setAttribute("data-ref", "main_canvas");
     renderer.setSize(window.innerWidth, window.innerHeight);
