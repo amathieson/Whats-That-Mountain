@@ -28,20 +28,21 @@
 }
 
 .slide-container > div > section > nav {
-  width: 100vw;
-  height: 15vh;
   background: adjust-color($dark, $alpha: -0.6);
   z-index: 10;
-  display: block;
+  display: flex;
   position: absolute;
-  bottom: 0;
-  right: 0;
-  padding: 1em;
-
+  top: calc(100vh - 12em);
+  padding: 1em 1.5em;
+  align-items: center;
+  flex-direction: column;
+  gap: 1em;
+  min-width: calc(100vw - 3em);
+  min-height: 12em;
 }
 
 .slide-container > div > section > nav > button {
-  //margin: auto 2em 2em auto;
+  width: 32px;
 }
 
 
@@ -61,7 +62,6 @@
     position: relative;
     height: 100vh;
     aspect-ratio: 9/16;
-    //overflow: hidden;
     transform-style: flat;
     perspective: 900px;
     transform: translateZ(0);
@@ -194,4 +194,13 @@
     }
   }
 
+}
+
+
+
+@media (prefers-color-scheme: light) {
+  .slide-container > div > section > nav {
+    background: adjust-color($white, $alpha: -0.1);
+    color: $dark;
+  }
 }

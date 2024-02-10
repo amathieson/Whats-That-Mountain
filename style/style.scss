@@ -292,11 +292,11 @@ modal > .button-group {
     color: adjust-color($primary, $lightness: 10%);
   }
   button {
-    background-color: adjust-color($dark, $lightness: 70%);
+    background-color: adjust-color($dark, $lightness: 60%);
     color: $dark;
   }
   button:hover {
-    background-color: adjust-color($dark, $lightness: 75%);
+    background-color: adjust-color($dark, $lightness: 65%);
   }
   button:active {
     background-color: adjust-color($dark, $lightness: 50%);
