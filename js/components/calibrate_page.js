@@ -44,11 +44,12 @@ export default {
             </nav>
         </section>
     </div>
-    <video></video>
+    <video data-ref="camera1"></video>
     <div>
         <i>Ground Animation Goes Here</i>
         <button>Continue</button>
     </div>
+    <video data-ref="camera2"></video>
 </div>
 `,
     init:()=>{

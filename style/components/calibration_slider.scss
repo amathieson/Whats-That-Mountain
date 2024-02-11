@@ -21,6 +21,8 @@
   height: 100vh;
   top: 0;
   left: 100vw;
+  transition: left 200ms ease;
+  overflow: hidden;
 }
 .slide-container > *[visible="true"] {
   top: 0;
@@ -195,7 +197,18 @@
   }
 
 }
-
+.slide-container > div:first-of-type {
+  z-index: 1;
+}
+.slide-container > video:first-of-type {
+  z-index: 2;
+}
+.slide-container > div:nth-of-type(2) {
+  z-index: 3;
+}
+.slide-container > video:nth-of-type(2) {
+  z-index: 4;
+}
 
 
 @media (prefers-color-scheme: light) {
