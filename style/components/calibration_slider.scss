@@ -2,17 +2,18 @@
 
 .slide-container {
   position: absolute;
-  top: 0;
+  top: 100vh;
   left: 0;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
   background: $dark;
   z-index: 100;
-  display: none;
+  display: block;
+  transition: top 200ms ease;
 }
 .slide-container[visible="true"] {
-  display: block;
+  top: 0vh;
 }
 
 .slide-container > * {
@@ -27,6 +28,8 @@
 .slide-container > *[visible="true"] {
   top: 0;
   left: 0;
+  --animation-duration: 10s;
+  --animation-duration2: 10s;
 }
 
 .slide-container > div > section > nav {
@@ -55,7 +58,8 @@
 }
 
 .slide-container {
-  --animation-duration: 10s;
+  --animation-duration: 24h;
+  --animation-duration2: 24h;
   margin: 0;
   padding: 0;
   background: $skyblue;
@@ -80,67 +84,152 @@
     transform-origin: bottom;
   }
 
-  #sun {
-    bottom: 50%;
-    left: 40%;
-    height: 15%;
-    z-index: 0;
-    animation: sun var(--animation-duration) ease-in-out infinite;
-    transform: translateZ(0);
+  [data-ref="slide1"] {
+    #sun {
+      bottom: 50%;
+      left: 40%;
+      height: 15%;
+      z-index: 0;
+      animation: sun var(--animation-duration) ease-in-out infinite;
+      transform: translateZ(0);
+    }
+
+    #leftHand {
+      height: 80%;
+      bottom: -17%;
+      left: -30%;
+      transform: translateX(-100%) translateZ(900px);
+      animation: leftHand var(--animation-duration) ease-in-out infinite;
+      z-index: 900;
+    }
+
+    #handedPhone {
+      bottom: -20%;
+      left: 25%;
+      animation: handedPhone var(--animation-duration) ease-in-out infinite;
+      z-index: 500;
+      transform: translateZ(500px);
+    }
+
+    @keyframes sun {
+      0% {
+        transform: translateY(-200%);
+      }
+
+      10% {
+        transform: translateY(0);
+      }
+
+      20% {
+        transform: translateX(-10%);
+      }
+
+      30% {
+        transform: translateX(10%);
+      }
+
+      40% {
+        transform: translateX(0);
+      }
+
+      70% {
+        transform: translateY(0);
+      }
+
+      85% {
+        transform: translateY(-200%);
+      }
+
+      100% {
+        transform: translateY(-200%);
+      }
+    }
+
+    @keyframes leftHand {
+      40% {
+        transform: translateX(-100%);
+      }
+
+      55% {
+        transform: translateX(0) rotate3d(1, 0, 0, 0deg);
+      }
+
+      60% {
+        transform: translateX(0) rotate3d(1, 0, 0, 5deg);
+      }
+
+      65% {
+        transform: translateX(0) rotate3d(1, 0, 0, 0deg);
+      }
+
+      70% {
+        transform: translateX(-100%);
+      }
+    }
+
+    @keyframes handedPhone {
+      0% {
+        transform: rotate3d(1, 0, 0, 30deg);
+      }
+
+      10% {
+        transform: rotate3d(1, 0, 0, 0deg);
+      }
+
+      20% {
+        transform: rotate3d(0, 1, 0, -10deg);
+      }
+
+      30% {
+        transform: rotate3d(0, 1, 0, 10deg);
+      }
+
+      40% {
+        transform: rotate3d(0, 1, 0, 0deg);
+      }
+
+      70% {
+        transform: rotate3d(1, 0, 0, 0deg);
+      }
+
+      85% {
+        transform: rotate3d(1, 0, 0, 30deg);
+      }
+
+      100% {
+        transform: rotate3d(1, 0, 0, 30deg);
+      }
+    }
+
+  }
+}
+[data-ref="slide2"] {
+
+  background: adjust-color($dark, $lightness: 50%);
+
+  #leftHand2 {
+    height: 130%;
+    bottom: -80%;
+    left: -100%;
+    transform: translateX(-100%);
+    animation: leftHand2 var(--animation-duration2) ease-in-out infinite;
   }
 
-  #leftHand {
-    height: 80%;
-    bottom: -17%;
-    left: -30%;
-    transform: translateX(-100%) translateZ(900px);
-    animation: leftHand var(--animation-duration) ease-in-out infinite;
-    z-index: 900;
+  #handedPhone2 {
+    height: 150%;
+    bottom: -70%;
+    left: 14%;
+    transform-origin: center;
+    animation: handedPhone2 var(--animation-duration2) ease-in-out infinite;
   }
 
-  #handedPhone {
+  #legs2 {
     bottom: -20%;
-    left: 25%;
-    animation: handedPhone var(--animation-duration) ease-in-out infinite;
-    z-index: 500;
-    transform: translateZ(500px);
+    left: -25%;
+    transform: scale(0.8);
   }
 
-  @keyframes sun {
-    0% {
-      transform: translateY(-200%);
-    }
-
-    10% {
-      transform: translateY(0);
-    }
-
-    20% {
-      transform: translateX(-10%);
-    }
-
-    30% {
-      transform: translateX(10%);
-    }
-
-    40% {
-      transform: translateX(0);
-    }
-
-    70% {
-      transform: translateY(0);
-    }
-
-    85% {
-      transform: translateY(-200%);
-    }
-
-    100% {
-      transform: translateY(-200%);
-    }
-  }
-
-  @keyframes leftHand {
+  @keyframes leftHand2 {
     40% {
       transform: translateX(-100%);
     }
@@ -162,21 +251,13 @@
     }
   }
 
-  @keyframes handedPhone {
+  @keyframes handedPhone2 {
     0% {
-      transform: rotate3d(1, 0, 0, 30deg);
+      transform: translateX(30%) rotate3d(1, 0, 0, -30deg);
     }
 
     10% {
-      transform: rotate3d(1, 0, 0, 0deg);
-    }
-
-    20% {
-      transform: rotate3d(0, 1, 0, -10deg);
-    }
-
-    30% {
-      transform: rotate3d(0, 1, 0, 10deg);
+      transform: translateX(30%) rotate3d(1, 0, 0, -30deg);
     }
 
     40% {
@@ -187,15 +268,10 @@
       transform: rotate3d(1, 0, 0, 0deg);
     }
 
-    85% {
-      transform: rotate3d(1, 0, 0, 30deg);
-    }
-
     100% {
-      transform: rotate3d(1, 0, 0, 30deg);
+      transform: translateX(30%) rotate3d(1, 0, 0, -30deg);
     }
   }
-
 }
 .slide-container > div:first-of-type {
   z-index: 1;
@@ -208,6 +284,12 @@
 }
 .slide-container > video:nth-of-type(2) {
   z-index: 4;
+}
+
+.slide-container > video {
+  background: red;
+  width: 100vw;
+  height: 100vh;
 }
 
 

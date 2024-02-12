@@ -188,58 +188,29 @@ function Initialise_Modules() {
 }
 
 
-const options = { frequency: 60, referenceFrame: "device" };
-const sensor = new AbsoluteOrientationSensor(options);
-Promise.all([
-    navigator.permissions.query({ name: "accelerometer" }),
-    navigator.permissions.query({ name: "magnetometer" }),
-    navigator.permissions.query({ name: "gyroscope" }),
-]).then((results) => {
-    if (results.every((result) => result.state === "granted")) {
-        sensor.start();
-        console.log("Start")
-    } else {
-        console.log("No permissions to use AbsoluteOrientationSensor.");
-    }
-});
-sensor.addEventListener("error", (error) => {
-    if (event.error.name === "NotReadableError") {
-        output_compass2.textContent = ("Sensor is not available.");
-    }
-});
-sensor.addEventListener("reading", () => {
-    console.log(sensor)
-    // model is a Three.js object instantiated elsewhere.
-    output_compass2.textContent = `alpha: ${Math.round( sensor.quaternion[0]*100)/100}\n`;
-    output_compass2.textContent += `beta : ${Math.round(sensor.quaternion[1]*100)/100}\n`;
-    output_compass2.textContent += `gamma: ${Math.round(sensor.quaternion[2]*100)/100}\n`;
-});
-
-
-// const constraints = {
-//     audio: false,
-//     video: { width: screen.width, height: screen.height, facingMode: { ideal: "environment" }},
-// };
-//
-// navigator.mediaDevices
-//     .getUserMedia(constraints)
-//     .then((mediaStream) => {
-//         const video = document.querySelector("video");
-//         video.srcObject = mediaStream;
-//         video.onloadedmetadata = () => {
-//             var promise = video.play();
-//
-//             if (promise !== undefined) {
-//                 promise.catch(error => {
-//                     console.log(error)
-//                     // Auto-play was prevented
-//                     // Show a UI element to let the user manually start playback
-//                 }).then(() => {
-//                     // Auto-play started
-//                 });
-//             }        };
-//     })
-//     .catch((err) => {
-//         // always check for errors at the end.
-//         console.error(`${err.name}: ${err.message}`);
-//     });
+// const options = { frequency: 60, referenceFrame: "device" };
+// const sensor = new AbsoluteOrientationSensor(options);
+// Promise.all([
+//     navigator.permissions.query({ name: "accelerometer" }),
+//     navigator.permissions.query({ name: "magnetometer" }),
+//     navigator.permissions.query({ name: "gyroscope" }),
+// ]).then((results) => {
+//     if (results.every((result) => result.state === "granted")) {
+//         sensor.start();
+//         console.log("Start")
+//     } else {
+//         console.log("No permissions to use AbsoluteOrientationSensor.");
+//     }
+// });
+// sensor.addEventListener("error", (error) => {
+//     if (event.error.name === "NotReadableError") {
+//         output_compass2.textContent = ("Sensor is not available.");
+//     }
+// });
+// sensor.addEventListener("reading", () => {
+//     console.log(sensor)
+//     // model is a Three.js object instantiated elsewhere.
+//     output_compass2.textContent = `alpha: ${Math.round( sensor.quaternion[0]*100)/100}\n`;
+//     output_compass2.textContent += `beta : ${Math.round(sensor.quaternion[1]*100)/100}\n`;
+//     output_compass2.textContent += `gamma: ${Math.round(sensor.quaternion[2]*100)/100}\n`;
+// });

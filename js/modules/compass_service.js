@@ -21,7 +21,8 @@ function initHandlers() {
                 });
         })
     } catch (e) {
-        logger.error(e.message, "compass_service");
+        if (e.message.indexOf("is not a function") === undefined)
+            logger.error(e.message, "compass_service");
 
         FULLTILT.getDeviceOrientation({'type': 'world'})
             .then(function(controller) {
