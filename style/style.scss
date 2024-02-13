@@ -43,6 +43,7 @@
   background-position: 0 0;
   background-image: radial-gradient(100% 100% at 50% 50%, adjust-color($dark, $lightness: 10%) 0%, adjust-color($dark, $lightness: 10%) var(--bg-size), #00000000 calc(var(--bg-size) * 1.1));
   animation: backgroundAnimation 10s infinite ease;
+  overflow: hidden;
 }
 
 @keyframes backgroundAnimation {

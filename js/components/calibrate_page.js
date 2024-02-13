@@ -177,7 +177,8 @@ export default {
     <video data-ref="camera2" autoplay playsinline webkit-playsinline muted></video>
 </div>
 `,
-    init:()=>{
+    init:(compass_service)=>{
+        let initial_state = compass_service.getOrientation().getLastRawEventData();
         const anim_time = 200;
         document.querySelector(`[data-ref="calib_continue1"]`).addEventListener("click", ()=>{
             document.querySelector(`[data-ref="camera1"]`).setAttribute("visible", true)

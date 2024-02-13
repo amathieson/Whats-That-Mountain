@@ -30,7 +30,7 @@ let calibrate_button = document.querySelector("[data-ref=calibrate-button]");
 let calibrating = false;
 calibrate_button.addEventListener("click", ()=>{
     calibrating = true;
-    calibrate_page.init();
+    calibrate_page.init(compass_service);
     document.querySelector(`[data-ref="calibrate-modal"]`).removeAttribute("visible");
     document.getElementsByClassName("calibrate-slider")[0].setAttribute("visible", true)
 });
@@ -113,13 +113,13 @@ screen.orientation.addEventListener("change", () =>{
         }
         if (!compass_service.getOrientation().isAbsolute() || north_Calibration_factor === Number.NaN) {
             let ev = compass_service.getOrientation().getLastRawEventData();
-            // if (ev.webkitCompassHeading) {
+            if (ev.webkitCompassHeading && ev.webkitCompassAccuracy < 7) {
             //     console.log(`I HAVE A COMPASS!!!!!! ${ev.webkitCompassHeading} : ${ev.webkitCompassAccuracy}`)
-            // } else {
-                if (!calibrating)
+            } else {
+                if (!calibrating) {
                     document.querySelector(`[data-ref="calibrate-modal"]`).setAttribute("visible", true);
-                // Trigger Overlay
-            // }
+                }
+            }
         }
         render_service.setCameraRotation(new Quaternion(quat.x, quat.y, quat.z, quat.w));
     }
