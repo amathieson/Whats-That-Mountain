@@ -186,10 +186,24 @@ export default {
                 .getUserMedia(constraints)
                 .then((mediaStream) => {
                     const video = document.querySelector(`[data-ref="camera1"]`);
+                    const video2 = document.querySelector(`[data-ref="camera2"]`);
                     cameraStream = mediaStream;
                     video.srcObject = cameraStream;
                     video.onloadedmetadata = () => {
                         let promise = video.play();
+
+                        if (promise !== undefined) {
+                            promise.catch(error => {
+                                console.log(error)
+                                // Auto-play was prevented
+                                // Show a UI element to let the user manually start playback
+                            }).then(() => {
+                                // Auto-play started
+                            });
+                        }        };
+                    video2.srcObject = cameraStream;
+                    video2.onloadedmetadata = () => {
+                        let promise = video2.play();
 
                         if (promise !== undefined) {
                             promise.catch(error => {
@@ -229,10 +243,16 @@ export default {
 
             document.querySelector(`.calibrate-slider`).setAttribute("visible", false)
             setTimeout(()=>{
-                document.querySelector(`[data-ref="camera2"]`).setAttribute("visible", false)
-                document.querySelector(`[data-ref="camera1"]`).srcObject = null;
-                document.querySelector(`[data-ref="camera2"]`).srcObject = null;
-                cameraStream?.video.stop();
+                const video = document.querySelector(`[data-ref="camera1"]`);
+                const video2 = document.querySelector(`[data-ref="camera2"]`);
+                cameraStream.getTracks().forEach(function(track) {
+                    track.stop();
+                });
+                video.srcObject = null;
+                video.pause();
+                video2.srcObject = null;
+                video2.pause();
+                video2.setAttribute("visible", false);
             }, anim_time)
         })
     }
@@ -242,5 +262,5 @@ let cameraStream = null;
 
 const constraints = {
     audio: false,
-    video: { width: screen.width, height: screen.height, facingMode: { ideal: "environment" }},
+    video: { width: {ideal: screen.height}, height: {ideal: screen.width}, facingMode: { ideal: "environment" }},
 };
