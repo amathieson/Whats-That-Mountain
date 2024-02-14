@@ -4,8 +4,10 @@ import logger from "./logger.js";
 export default {
     initHandlers,
     getOrientation,
-    getHeading
+    getAdjustedQuat,
+    set_heading_offset: (off)=>{headingOffset = off}
 }
+let headingOffset = 0;
 let deviceOrientation;
 function initHandlers() {
     logger.log("Starting Compass Service", "compass_service");
@@ -36,12 +38,15 @@ function initHandlers() {
 
 // Deprecated Getter
 function getOrientation() {
-    logger.warn("getOrientation is deprecated, use getHeading from compass_service", "compass_service")
+    logger.warn("getOrientation is deprecated, use getAdjustedQuat from compass_service", "compass_service")
     return deviceOrientation;
 }
+const RAD = Math.PI / 180
 
-function getHeading() {
-    return 0.0;
+function getAdjustedQuat() {
+    let quat = deviceOrientation.getScreenAdjustedQuaternion();
+    quat.rotateY(headingOffset*RAD);
+    return quat;
 }
 
 

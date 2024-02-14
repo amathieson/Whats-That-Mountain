@@ -30,7 +30,7 @@ let calibrate_button = document.querySelector("[data-ref=calibrate-button]");
 let calibrating = false;
 calibrate_button.addEventListener("click", ()=>{
     calibrating = true;
-    calibrate_page.init(compass_service);
+    calibrate_page.init(compass_service, location_service);
     document.querySelector(`[data-ref="calibrate-modal"]`).removeAttribute("visible");
     document.getElementsByClassName("calibrate-slider")[0].setAttribute("visible", true)
 });
@@ -95,7 +95,7 @@ screen.orientation.addEventListener("change", () =>{
 (function draw() {
     if (compass_service.getOrientation()) {
         let euler = compass_service.getOrientation().getScreenAdjustedEuler();
-        let quat = compass_service.getOrientation().getScreenAdjustedQuaternion()
+        let quat = compass_service.getAdjustedQuat()
         output_compass.textContent =  `alpha: ${Math.round( euler.alpha*100)/100}\n`;
         output_compass.textContent += `beta : ${Math.round(euler.beta*100)/100}\n`;
         output_compass.textContent += `gamma: ${Math.round(euler.gamma*100)/100}\n`;
