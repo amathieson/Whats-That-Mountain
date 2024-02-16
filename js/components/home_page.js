@@ -37,7 +37,31 @@ export default {
 </div>
 <menu-bar data-ref="menu-bar"></menu-bar>
 <lower-card data-ref="lower-card">
-    <div class="placeholder">More Coming Soon!</div>
+<div>
+<ul>
+<li>
+<h1>Title Title</h1>
+<sub>Sub Sub Sub Sub Sub</sub>
+<div class="chevron">
+<i class="gg-chevron-right"></i></div>
+</li><li>
+<h1>Title Title</h1>
+<sub>Sub Sub Sub Sub Sub</sub>
+<div class="chevron">
+<i class="gg-chevron-right"></i></div>
+</li><li>
+<h1>Title Title</h1>
+<sub>Sub Sub Sub Sub Sub</sub>
+<div class="chevron">
+<i class="gg-chevron-right"></i></div>
+</li><li>
+<h1>Title Title</h1>
+<sub>Sub Sub Sub Sub Sub</sub>
+<div class="chevron">
+<i class="gg-chevron-right"></i></div>
+</li>
+</ul>
+</div>
 </lower-card>
 <popup-list data-ref="more-popup" pos="0,0">
 <ul>

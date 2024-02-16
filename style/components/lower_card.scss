@@ -38,6 +38,43 @@ lower-card {
     height: 60vh;
     overflow-y: auto;
   }
+
+  div {
+    ul {
+      padding: 0 1em;
+      li:last-of-type {
+        border-bottom: none;
+      }
+      li {
+        list-style-type: none;
+        display: grid;
+        width: 100%;
+        border-bottom: 1px solid adjust-color($white, $alpha: -0.5);
+        grid-template-columns: auto 2em;
+        margin: 0.5em 0;
+        cursor: pointer;
+        * {
+          grid-column: 1;
+          text-align: left;
+        }
+        .chevron {
+          grid-column: 2;
+          grid-row: 1 / 3;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        h1 {
+          font-size: 1em;
+          padding: 0;
+          margin: 0;
+        }
+        sub {
+          font-size: 0.7em;
+        }
+      }
+    }
+  }
   @media (prefers-color-scheme: light) {
     .container {
       background-color: $white;
