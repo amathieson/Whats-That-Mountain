@@ -49,7 +49,7 @@ lower-card {
         list-style-type: none;
         display: grid;
         width: 100%;
-        border-bottom: 1px solid adjust-color($white, $alpha: -0.5);
+        border-bottom: 1px solid adjust-color($tertiary, $saturation: -20%);
         grid-template-columns: auto 2em;
         margin: 0.5em 0;
         cursor: pointer;
