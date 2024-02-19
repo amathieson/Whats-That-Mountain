@@ -42,7 +42,7 @@ export default {
 <menu-bar data-ref="menu-bar"></menu-bar>
 
 <lower-card data-ref="lower-card">
-    <div>
+    <div data-ref="tours">
         <ul>
             <li>
                 <h1>Title Title</h1>
@@ -51,6 +51,10 @@ export default {
                     <i class="gg-chevron-right"></i>
                 </div>
             </li>
+        </ul>
+    </div>
+    <div data-ref="trails">
+        <ul>
             <li>
                 <h1>Title Title</h1>
                 <sub>Sub Sub Sub Sub Sub</sub>
@@ -58,13 +62,10 @@ export default {
                     <i class="gg-chevron-right"></i>
                 </div>
             </li>
-            <li>
-                <h1>Title Title</h1>
-                <sub>Sub Sub Sub Sub Sub</sub>
-                <div class="chevron">
-                    <i class="gg-chevron-right"></i>
-                </div>
-            </li>
+        </ul>
+    </div>
+    <div data-ref="pins">
+        <ul>
             <li>
                 <h1>Title Title</h1>
                 <sub>Sub Sub Sub Sub Sub</sub>
