@@ -42,10 +42,10 @@ export default {
 <menu-bar data-ref="menu-bar"></menu-bar>
 
 <lower-card data-ref="lower-card">
-    <div data-ref="tours">
+    <div data-ref="toursPage">
         <ul>
             <li>
-                <h1>Title Title</h1>
+                <h1>Tour Title Title</h1>
                 <sub>Sub Sub Sub Sub Sub</sub>
                 <div class="chevron">
                     <i class="gg-chevron-right"></i>
@@ -53,10 +53,10 @@ export default {
             </li>
         </ul>
     </div>
-    <div data-ref="trails">
+    <div data-ref="trailsPage">
         <ul>
             <li>
-                <h1>Title Title</h1>
+                <h1>Trail Title Title</h1>
                 <sub>Sub Sub Sub Sub Sub</sub>
                 <div class="chevron">
                     <i class="gg-chevron-right"></i>
@@ -64,10 +64,10 @@ export default {
             </li>
         </ul>
     </div>
-    <div data-ref="pins">
+    <div data-ref="pinsPage">
         <ul>
             <li>
-                <h1>Title Title</h1>
+                <h1>Pin Title Title</h1>
                 <sub>Sub Sub Sub Sub Sub</sub>
                 <div class="chevron">
                     <i class="gg-chevron-right"></i>
