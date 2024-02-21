@@ -38,5 +38,10 @@
     "element": "Peaks Data (OpenStreetMap)",
     "owner": "OpenStreetMap Contributors",
     "link": "https://www.openstreetmap.org/"
+  },
+  {
+    "element": "Additional PoI Data",
+    "owner": "Wikipedia Contributors",
+    "link": "https://en.wikipedia.org/"
   }
 ]
