@@ -75,6 +75,13 @@ export default {
             </li>
         </ul>
     </div>
+    <div class="info-card">
+    <h1>Dundee Law</h1>
+    <sub>Montain</sub>
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloribus fuga incidunt maxime minus placeat provident quisquam, tempora ut vero. A dicta exercitationem facere illo illum molestias placeat quisquam quos rem.</p>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Alpharabius_in_Liber_Chronicarum_1493_AD.png" alt="Dundee Law">
+    <footer>Information collected from Wikipedia</footer>
+    </div>
 </lower-card>
 
 <popup-list data-ref="more-popup" pos="0,0">
