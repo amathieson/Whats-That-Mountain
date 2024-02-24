@@ -4,6 +4,7 @@ export default class extends HTMLElement  {
     constructor() {
         super();
     }
+    //this is a function that is called when added to the dom
     connectedCallback() {
         this.innerHTML += `
         <div class="lower-card container">
