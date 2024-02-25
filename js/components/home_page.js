@@ -82,7 +82,7 @@ export default {
         </section>
         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloribus fuga incidunt maxime minus placeat provident quisquam, tempora ut vero. A dicta exercitationem facere illo illum molestias placeat quisquam quos rem.</p>
         <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Alpharabius_in_Liber_Chronicarum_1493_AD.png" alt="Dundee Law">
-        <footer>Information collected from Wikipedia</footer>
+        <footer>Information collected from <a href="#">Wikipedia</a></footer>
     </div>
 </lower-card>
 
