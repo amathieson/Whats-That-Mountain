@@ -117,7 +117,7 @@ screen.orientation.addEventListener("change", () =>{
             //     console.log(`I HAVE A COMPASS!!!!!! ${ev.webkitCompassHeading} : ${ev.webkitCompassAccuracy}`)
             } else {
                 if (!calibrating) {
-                    document.querySelector(`[data-ref="calibrate-modal"]`).setAttribute("visible", true);
+                    // document.querySelector(`[data-ref="calibrate-modal"]`).setAttribute("visible", true);
                 }
             }
         }

@@ -42,48 +42,6 @@ export default {
 <menu-bar data-ref="menu-bar"></menu-bar>
 
 <lower-card data-ref="lower-card">
-<!--    <div data-ref="toursPage">-->
-<!--        <ul>-->
-<!--            <li>-->
-<!--                <h1>Tour Title Title</h1>-->
-<!--                <sub>Sub Sub Sub Sub Sub</sub>-->
-<!--                <div class="chevron">-->
-<!--                    <i class="gg-chevron-right"></i>-->
-<!--                </div>-->
-<!--            </li>-->
-<!--        </ul>-->
-<!--    </div>-->
-<!--    <div data-ref="trailsPage">-->
-<!--        <ul>-->
-<!--            <li>-->
-<!--                <h1>Trail Title Title</h1>-->
-<!--                <sub>Sub Sub Sub Sub Sub</sub>-->
-<!--                <div class="chevron">-->
-<!--                    <i class="gg-chevron-right"></i>-->
-<!--                </div>-->
-<!--            </li>-->
-<!--        </ul>-->
-<!--    </div>-->
-<!--    <div data-ref="pinsPage">-->
-<!--        <ul>-->
-<!--            <li>-->
-<!--                <h1>Pin Title Title</h1>-->
-<!--                <sub>Sub Sub Sub Sub Sub</sub>-->
-<!--                <div class="chevron">-->
-<!--                    <i class="gg-chevron-right"></i>-->
-<!--                </div>-->
-<!--            </li>-->
-<!--        </ul>-->
-<!--    </div>-->
-    <div data-ref="info-card">
-        <section>
-            <h1>Dundee Law</h1>
-            <sub>Montain</sub>
-        </section>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloribus fuga incidunt maxime minus placeat provident quisquam, tempora ut vero. A dicta exercitationem facere illo illum molestias placeat quisquam quos rem.</p>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Alpharabius_in_Liber_Chronicarum_1493_AD.png" alt="Dundee Law">
-        <footer>Information collected from <a href="#">Wikipedia</a></footer>
-    </div>
 </lower-card>
 
 <popup-list data-ref="more-popup" pos="0,0">
