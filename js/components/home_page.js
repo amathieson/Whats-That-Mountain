@@ -75,7 +75,7 @@ export default {
 <!--            </li>-->
 <!--        </ul>-->
 <!--    </div>-->
-    <div class="info-card">
+    <div data-ref="info-card">
         <section>
             <h1>Dundee Law</h1>
             <sub>Montain</sub>
