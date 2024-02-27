@@ -4,6 +4,7 @@ import compass_service from "./modules/compass_service.js";
 import pitch_service from "./modules/pitch_service.js";
 import logger from "./modules/logger.js";
 import location_service from "./modules/location_service.js";
+import lower_card_service from "./modules/lower_card_service.js";
 import MenuBar from "./components/MenuBar.js"
 import render_service from "./modules/render_service.js";
 import lower_card from "./components/lower_card.js";
@@ -62,6 +63,7 @@ menu_bar.addEventListener("action-button", ()=>{
 });
 lower_cardEl.addEventListener("close", handleMainClick);
 menu_bar.addEventListener("button-click", (a)=>{
+    lower_card_service.page_transition()
     if (a.detail.el.getAttribute("data-ref") !== "moreButton") {
         menu_bar.setAttribute("open", "")
         lower_cardEl.setAttribute("open", "")

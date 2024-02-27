@@ -1,7 +1,8 @@
 export default {
-
+    page_transition
 }
-
+let last_page = null;
+let last_page_type = null;
 const info_card_template = `<div data-ref="info-card">
         <section>
             <h1>{{title}}</h1>
@@ -27,7 +28,17 @@ const list_item_template = `<li data-id="{{id}}">
             </li>`
 String.prototype.fill_template = fill_template;
 function fill_template(obj) {
-    this.replace(/{{(.*?)}}/g, (match, key) => {
+    let st = this;
+    st = st.replace(/{{(.*?)}}/g, (match, key) => {
+        console.log(obj)
+        console.log(key)
         return obj[key] || match; // Replace with value if found, otherwise keep the placeholder
     });
+    return st;
+}
+
+function page_transition(page, data) {
+    document.querySelector("[data-ref='lower-card']>div").innerHTML = info_card_template.fill_template({
+        title: "TEST"
+    })
 }
