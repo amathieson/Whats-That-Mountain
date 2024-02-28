@@ -63,7 +63,7 @@ menu_bar.addEventListener("action-button", ()=>{
 });
 lower_cardEl.addEventListener("close", handleMainClick);
 menu_bar.addEventListener("button-click", (a)=>{
-    lower_card_service.page_transition()
+    lower_card_service.page_transition('list', [{title:"Hi"}])
     if (a.detail.el.getAttribute("data-ref") !== "moreButton") {
         menu_bar.setAttribute("open", "")
         lower_cardEl.setAttribute("open", "")
@@ -164,7 +164,8 @@ function handleMainClick() {
         if (objects !== undefined) {
             if (objects.length > 0) {
                 if (objects.length < 5) {
-                    // alert("Showing Objects")
+                    console.log(objects)
+                    lower_card_service.page_transition('list', [{title:"Hi"}])
                 } else {
                     // alert("Too Many Objects")
                 }

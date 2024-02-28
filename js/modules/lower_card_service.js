@@ -38,7 +38,14 @@ function fill_template(obj) {
 }
 
 function page_transition(page, data) {
-    document.querySelector("[data-ref='lower-card']>div").innerHTML = info_card_template.fill_template({
-        title: "TEST"
-    })
+    switch (page) {
+        case "list":
+            document.querySelector("[data-ref='lower-card']>div").innerHTML = list_view_template.fill_template({
+                list: (data.map(dict=>list_item_template.fill_template(dict)).join(''))
+            })
+            break;
+        case "wiki":
+            document.querySelector("[data-ref='lower-card']>div").innerHTML = info_card_template.fill_template(data)
+            break;
+    }
 }
