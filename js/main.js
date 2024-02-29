@@ -155,6 +155,8 @@ screen.orientation.addEventListener("change", () =>{
 
 })();
 
+const MAX_POINTS = 5000; // Soft limit for the number of visible objects
+
 function handleMainClick() {
     if (menu_bar.hasAttribute("open")) {
         menu_bar.removeAttribute("open");
@@ -163,8 +165,10 @@ function handleMainClick() {
         let objects = render_service.visibleObjects();
         if (objects !== undefined) {
             if (objects.length > 0) {
-                if (objects.length < 50) {
+                if (objects.length < MAX_POINTS) {
                     let list = objects.map((ob)=>{
+                        if (!ob.userData.tags.name)
+                            return null
                         const dist = location_service.dist2point(ob.userData.location.lat, ob.userData.location.lon);
                         return {
                             title: `${toTitleCase(ob.userData.tags?.name)}${(ob.userData.tags.ele ? (' - Altitude:' + ob.userData.tags.ele + 'm') : '')}`,
@@ -173,7 +177,7 @@ function handleMainClick() {
                             infoID: ob.userData.tags?.wikidata,
                             dist
                         }
-                    }).sort((ob1, ob2)=> ob1.dist - ob2.dist);
+                    }).filter(a=>a!==null).sort((ob1, ob2)=> ob1.dist - ob2.dist);
                     lower_card_service.page_transition('list', list)
 
                     menu_bar.setAttribute("open", "")

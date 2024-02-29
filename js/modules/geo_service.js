@@ -61,56 +61,56 @@ function initialize() {
                     mesh.position.set(posx,posy,0)
                     mesh.rotateZ(-Math.PI/2);
                     tiles.push(mesh);
-
-                    data.points_of_interest.push({
-                        location: {
-                            lat: lat,
-                            lon: lon,
-                        },
-                        tags: {
-                            name: "🟢 _CENTRE"
-                        }
-                    })
-
-                    data.points_of_interest.push({
-                        location: {
-                            lat: lat + 0.2,
-                            lon: lon,
-                        },
-                        tags: {
-                            name: "🔴 +0.2 LAT - NORTH"
-                        }
-                    })
-
-                    data.points_of_interest.push({
-                        location: {
-                            lat: lat - 0.2,
-                            lon: lon,
-                        },
-                        tags: {
-                            name: "🔵 -0.2 LAT - SOUTH"
-                        }
-                    })
-
-                    data.points_of_interest.push({
-                        location: {
-                            lat: lat,
-                            lon: lon + 0.2,
-                        },
-                        tags: {
-                            name: "🔴 +0.2 LON - EAST"
-                        }
-                    })
-
-                    data.points_of_interest.push({
-                        location: {
-                            lat: lat,
-                            lon: lon - 0.2,
-                        },
-                        tags: {
-                            name: "🔵 -0.2 LON - WEST"
-                        }
-                    })
+                    //
+                    // data.points_of_interest.push({
+                    //     location: {
+                    //         lat: lat,
+                    //         lon: lon,
+                    //     },
+                    //     tags: {
+                    //         name: "🟢 _CENTRE"
+                    //     }
+                    // })
+                    //
+                    // data.points_of_interest.push({
+                    //     location: {
+                    //         lat: lat + 0.2,
+                    //         lon: lon,
+                    //     },
+                    //     tags: {
+                    //         name: "🔴 +0.2 LAT - NORTH"
+                    //     }
+                    // })
+                    //
+                    // data.points_of_interest.push({
+                    //     location: {
+                    //         lat: lat - 0.2,
+                    //         lon: lon,
+                    //     },
+                    //     tags: {
+                    //         name: "🔵 -0.2 LAT - SOUTH"
+                    //     }
+                    // })
+                    //
+                    // data.points_of_interest.push({
+                    //     location: {
+                    //         lat: lat,
+                    //         lon: lon + 0.2,
+                    //     },
+                    //     tags: {
+                    //         name: "🔴 +0.2 LON - EAST"
+                    //     }
+                    // })
+                    //
+                    // data.points_of_interest.push({
+                    //     location: {
+                    //         lat: lat,
+                    //         lon: lon - 0.2,
+                    //     },
+                    //     tags: {
+                    //         name: "🔵 -0.2 LON - WEST"
+                    //     }
+                    // })
                     data.points_of_interest.forEach((point)=>{
                         const label = document.createElement( 'div' );
                         label.className = 'label';
