@@ -163,9 +163,21 @@ function handleMainClick() {
         let objects = render_service.visibleObjects();
         if (objects !== undefined) {
             if (objects.length > 0) {
-                if (objects.length < 5) {
-                    console.log(objects)
-                    lower_card_service.page_transition('list', [{title:"Hi"}])
+                if (objects.length < 50) {
+                    let list = objects.map((ob)=>{
+                        const dist = location_service.dist2point(ob.userData.location.lat, ob.userData.location.lon);
+                        return {
+                            title: `${toTitleCase(ob.userData.tags?.name)}${(ob.userData.tags.ele ? (' - Altitude:' + ob.userData.tags.ele + 'm') : '')}`,
+                            sub: `${toTitleCase(ob.userData.tags?.natural)} - ${Math.round(dist)}m away`,
+                            id: ob.userData.id,
+                            infoID: ob.userData.tags?.wikidata,
+                            dist
+                        }
+                    }).sort((ob1, ob2)=> ob1.dist - ob2.dist);
+                    lower_card_service.page_transition('list', list)
+
+                    menu_bar.setAttribute("open", "")
+                    lower_cardEl.setAttribute("open", "")
                 } else {
                     // alert("Too Many Objects")
                 }
@@ -190,7 +202,17 @@ function Initialise_Modules() {
     last_canvas = document.getElementById("app").appendChild(render_service.initialize());
 }
 
-
+//https://stackoverflow.com/a/196991
+function toTitleCase(str) {
+    if (!str)
+        return ""
+    return str.replace(
+        /\w\S*/g,
+        function(txt) {
+            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+        }
+    );
+}
 // const options = { frequency: 60, referenceFrame: "device" };
 // const sensor = new AbsoluteOrientationSensor(options);
 // Promise.all([

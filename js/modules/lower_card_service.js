@@ -22,7 +22,7 @@ const list_view_template = `<div data-ref="list-view">
 const list_item_template = `<li data-id="{{id}}">
                 <h1>{{title}}</h1>
                 <sub>{{sub}}</sub>
-                <div class="chevron">
+                <div class="chevron" data-infoID="{{infoID}}">
                     <i class="gg-chevron-right"></i>
                 </div>
             </li>`
@@ -30,8 +30,6 @@ String.prototype.fill_template = fill_template;
 function fill_template(obj) {
     let st = this;
     st = st.replace(/{{(.*?)}}/g, (match, key) => {
-        console.log(obj)
-        console.log(key)
         return obj[key] || match; // Replace with value if found, otherwise keep the placeholder
     });
     return st;

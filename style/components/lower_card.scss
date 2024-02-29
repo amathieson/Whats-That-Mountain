@@ -57,6 +57,9 @@ lower-card {
           grid-column: 1;
           text-align: left;
         }
+        .chevron[data-infoID="{{infoID}}"] {
+          display: none;
+        }
         .chevron {
           grid-column: 2;
           grid-row: 1 / 3;
@@ -68,6 +71,7 @@ lower-card {
           font-size: 1em;
           padding: 0;
           margin: 0;
+          line-height: 1.5em;
         }
         sub {
           font-size: 0.7em;
