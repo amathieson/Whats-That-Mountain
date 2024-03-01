@@ -43,6 +43,7 @@ function load_info_card(ev) {
     let el = ev.target;
     if (ev.target.nodeName !== "li")
         el = ev.target.parentElement;
+    page_transition("wiki",{});
     wiki_service.pull_data(el.getAttribute("data-infoID")).then((data)=>{
         page_transition("wiki", {
             title: data.title,
