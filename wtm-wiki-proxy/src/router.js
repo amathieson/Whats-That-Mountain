@@ -5,6 +5,10 @@ import { Ai } from '@cloudflare/ai';
 const { preflight, corsify } = createCors({
 	origins: ['*'],
 	methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+	maxAge: 864000,
+	headers: {
+		"cache-control": "public, max-age=864000",
+	}
 })
 
 // now let's create a router (note the lack of "new")
@@ -16,7 +20,7 @@ router.get('/api/wiki/:id', async (request, extras) => {
 	let wikidata = await (await fetch(`https://www.wikidata.org/w/rest.php/wikibase/v0/entities/items/${request.params.id}`, {headers: {"User-Agent":"Whats-That-Mountain Proxy"}})).json()
 	let wikipage = null;
 	let wikiimage = null;
-	if (wikidata.sitelinks) {
+	if (Object.keys(wikidata.sitelinks).length > 0) {
 		if (wikidata.sitelinks.enwiki)
 			wikipage = await (await fetch(`https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts|pageimages&exintro&explaintext&redirects=1&pilicense=free&piprop=original|name&indexpageids&titles=${wikidata.sitelinks.enwiki.title}`, {headers: {"User-Agent":"Whats-That-Mountain Proxy"}})).json()
 		else {
@@ -44,8 +48,8 @@ router.get('/api/wiki/:id', async (request, extras) => {
 		paragraph: wikipage?.query.pages[wikipage.query.pageids[0]].extract,
 		image: {
 			url: wikipage?.query.pages[wikipage.query.pageids[0]].original.source,
-			author: wikiimage?.query.pages['-1'].imageinfo.user,
-			commons: wikiimage?.query.pages['-1'].imageinfo.descriptionshorturl
+			author: wikiimage?.query.pages['-1'].imageinfo[0].user,
+			commons: wikiimage?.query.pages['-1'].imageinfo[0].descriptionshorturl
 		}
 	}));
 	res.headers.set('content-type', "application/json");

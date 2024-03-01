@@ -8,13 +8,16 @@ import wiki_service from "./wiki_service.js";
 let last_page = null;
 let last_page_type = null;
 const info_card_template = `<div data-ref="info-card">
+        <img src="{{image}}" alt="{{alt}}">
         <section>
             <h1>{{title}}</h1>
             <sub>{{type}}</sub>
         </section>
         <p>{{description}}</p>
-        <img src="{{image}}" alt="{{alt}}">
-        <footer>Information collected from <a href="{{src}}">Wikipedia</a></footer>
+        <footer>
+        Information collected from <a href="{{src}}">Wikipedia</a>
+        Image by <a href="{{commons}}">{{imageauthor}}</a>
+        </footer>
     </div>`
 
 const list_view_template = `<div data-ref="list-view">
@@ -51,7 +54,9 @@ function load_info_card(ev) {
             description: data.paragraph,
             image: data.image.url,
             alt: "",
-            src: data.link.url
+            src: data.link.url,
+            imageauthor: data.image.author,
+            commons: data.image.commons
         })
     });
 }
