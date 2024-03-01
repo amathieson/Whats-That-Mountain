@@ -1,0 +1,6 @@
+name = "wtm-wiki-proxy"
+main = "src/index.js"
+compatibility_date = "2024-02-23"
+
+[ai]
+binding = "AI"

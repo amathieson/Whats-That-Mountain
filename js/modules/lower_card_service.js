@@ -1,3 +1,5 @@
+import {toTitleCase} from "./util.js";
+
 export default {
     page_transition
 }
@@ -42,7 +44,14 @@ function load_info_card(ev) {
     if (ev.target.nodeName !== "li")
         el = ev.target.parentElement;
     wiki_service.pull_data(el.getAttribute("data-infoID")).then((data)=>{
-        console.log(data);
+        page_transition("wiki", {
+            title: data.title,
+            type: toTitleCase(data.subtitle),
+            description: data.paragraph,
+            image: data.image.url,
+            alt: "",
+            src: data.link.url
+        })
     });
 }
 

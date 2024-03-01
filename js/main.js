@@ -11,7 +11,7 @@ import lower_card from "./components/lower_card.js";
 import popup_list from "./components/popup_list.js";
 import {Quaternion} from "three";
 import geo_service from "./modules/geo_service.js";
-import {isiPad} from "./modules/util.js";
+import {isiPad, toTitleCase} from "./modules/util.js";
 import home_page from "./components/home_page.js";
 import calibrate_page from "./components/calibrate_page.js";
 
@@ -204,18 +204,6 @@ function Initialise_Modules() {
     if (last_canvas !== undefined)
         document.getElementById("app").removeChild(last_canvas);
     last_canvas = document.getElementById("app").appendChild(render_service.initialize());
-}
-
-//https://stackoverflow.com/a/196991
-function toTitleCase(str) {
-    if (!str)
-        return ""
-    return str.replace(
-        /\w\S*/g,
-        function(txt) {
-            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-        }
-    );
 }
 // const options = { frequency: 60, referenceFrame: "device" };
 // const sensor = new AbsoluteOrientationSensor(options);

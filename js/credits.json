@@ -43,5 +43,10 @@
     "element": "Additional PoI Data",
     "owner": "Wikipedia Contributors",
     "link": "https://en.wikipedia.org/"
+  },
+  {
+    "element": "Worker Template",
+    "owner": "Cloudflare",
+    "link":"https://cloudflare.com/"
   }
 ]
