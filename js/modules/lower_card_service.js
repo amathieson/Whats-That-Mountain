@@ -16,7 +16,7 @@ const info_card_template = `<div data-ref="info-card">
         <p>{{description}}</p>
         <footer>
         Information collected from <a href="{{src}}">Wikipedia</a>
-        Image by <a href="{{commons}}">{{imageauthor}}</a>
+        Image by <a href="{{commons}}">{{image_author}}</a>
         </footer>
     </div>`
 
@@ -55,7 +55,7 @@ function load_info_card(ev) {
             image: data.image.url,
             alt: "",
             src: data.link.url,
-            imageauthor: data.image.author,
+            image_author: data.image.author,
             commons: data.image.commons
         })
     });
