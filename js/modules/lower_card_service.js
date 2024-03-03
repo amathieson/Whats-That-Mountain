@@ -15,8 +15,12 @@ const info_card_template = `<div data-ref="info-card">
         </section>
         <p>{{description}}</p>
         <footer>
-        Information collected from <a href="{{src}}">Wikipedia</a>
-        Image by <a href="{{commons}}">{{image_author}}</a>
+        <p>
+            Information collected from <a href="{{src}}" target="_blank">Wikipedia</a>
+        </p>
+        <p>
+            Image by <a href="{{commons}}" target="_blank">{{image_author}}</a>
+        </p>
         </footer>
     </div>`
 
