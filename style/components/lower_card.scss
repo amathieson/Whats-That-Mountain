@@ -36,7 +36,7 @@ lower-card {
   //noinspection CssUnusedSymbol
   .container.open {
     height: 60vh;
-    overflow-y: auto;
+    //overflow-y: auto;
   }
 
   div {
@@ -81,8 +81,16 @@ lower-card {
         }
       }
     }
+    overflow-y: auto;
+    max-height: 60vh;
   }
   [data-ref="info-card"] {
+    width: calc(100vw - 2em);
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: top 150ms ease-in, left 150ms ease-in;
+    background: $dark;
     display: block;
     margin: 0.5em 1em;
     min-height: 100%;
@@ -119,5 +127,22 @@ lower-card {
       background-color: $white;
       color: $dark;
     }
+    [data-ref="info-card"] {
+      background: $white;
+    }
+  }
+
+  .off-screen-side-R {
+    left: 100vw;
+    top: 0;
+  }
+
+  .off-screen-side-B {
+    left: 0;
+    top: 100vh;
+  }
+  [visible] {
+    top: 0;
+    left: 0;
   }
 }

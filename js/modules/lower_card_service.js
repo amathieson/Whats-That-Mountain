@@ -7,7 +7,7 @@ import wiki_service from "./wiki_service.js";
 
 let last_page = null;
 let last_page_type = null;
-const info_card_template = `<div data-ref="info-card">
+const info_card_template = `<div data-ref="info-card" class="off-screen-side-R">
         <img src="{{image}}" alt="{{alt}}">
         <section>
             <h1>{{title}}</h1>
@@ -24,7 +24,7 @@ const info_card_template = `<div data-ref="info-card">
         </footer>
     </div>`
 
-const list_view_template = `<div data-ref="list-view">
+const list_view_template = `<div data-ref="list-view" class="off-screen-side-B">
         <ul>
             {{list}}
         </ul>
@@ -66,9 +66,13 @@ function load_info_card(ev) {
 }
 
 function page_transition(page, data) {
+    setTimeout(()=>{
+        document.querySelector("[data-ref='lower-card']>div>[visible]")?.remove();
+        document.querySelector("[data-ref='lower-card']>div>:not([visible])").setAttribute("visible", true);
+    }, 505)
     switch (page) {
         case "list":
-            document.querySelector("[data-ref='lower-card']>div").innerHTML = list_view_template.fill_template({
+            document.querySelector("[data-ref='lower-card']>div").innerHTML += list_view_template.fill_template({
                 list: (data.map(dict=>list_item_template.fill_template(dict)).join(''))
             })
             document.querySelectorAll("[data-infoID]").forEach((el)=>{
@@ -78,7 +82,7 @@ function page_transition(page, data) {
             })
             break;
         case "wiki":
-            document.querySelector("[data-ref='lower-card']>div").innerHTML = info_card_template.fill_template(data)
+            document.querySelector("[data-ref='lower-card']>div").innerHTML += info_card_template.fill_template(data)
             break;
     }
 }
