@@ -89,7 +89,8 @@ lower-card {
     position: absolute;
     top: 0;
     left: 0;
-    transition: top 150ms ease-in, left 150ms ease-in;
+    opacity: 1;
+    transition: top 150ms ease-in, left 150ms ease-in, opacity 150ms ease-in;
     background: $dark;
     display: block;
     margin: 0.5em 1em;
@@ -99,27 +100,53 @@ lower-card {
     section {
       h1 {
         line-height: 1;
-        margin: 0;
         font-size: 1.8em;
+        margin: 0 0 0.25em;
+        max-width: 70%;
       }
 
       sub {
         display: block;
+        max-width: 70%;
       }
     }
-    img {
+    .img {
       float: right;
       width: 30%;
       height: auto;
       max-height: 100%;
       object-fit: contain;
       margin: 0 0 0.25em 1em;
+      display: inline-block;
     }
     footer {
       padding-top: 0.25em;
       border-top: 1px solid adjust-color($tertiary, $saturation: -20%);
       text-align: center;
       padding-bottom: 1em;
+    }
+  }
+  .lazy[data-ref="info-card"] {
+    * {
+      pointer-events: none;
+      * {
+        pointer-events: none;
+      }
+    }
+    a, .img, p:not(footer>p), h1, sub {
+      background: radial-gradient(circle at center, rgba(64,64,64,0.5), rgba(128,128,128,0.5));
+      background-size: 200% 200%;
+      animation: lazyload 2s infinite ease;
+      color: transparent;
+      border-radius: 1em;
+    }
+    .img {
+      min-height: 11.45em;
+      border-left: 0.25em solid $dark;
+    }
+    p:not(footer>p) {
+      min-height: 7em;
+      max-width: 70%;
     }
   }
   @media (prefers-color-scheme: light) {
@@ -129,6 +156,11 @@ lower-card {
     }
     [data-ref="info-card"] {
       background: $white;
+    }
+    .lazy[data-ref="info-card"] {
+      .img {
+        border-left: 0.25em solid $white;
+      }
     }
   }
 
@@ -141,8 +173,24 @@ lower-card {
     left: 0;
     top: 100vh;
   }
+
+  .off-screen-fade {
+    opacity: 0;
+  }
   [visible] {
     top: 0;
     left: 0;
+    opacity: 1;
+  }
+}
+
+@keyframes lazyload {
+  0% {
+    background-position: -100% -100%;
+    //color: red;
+  }
+  100% {
+    background-position: 200% 200%;
+    //color: blue;
   }
 }

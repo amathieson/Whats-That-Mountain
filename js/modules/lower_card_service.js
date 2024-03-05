@@ -7,8 +7,8 @@ import wiki_service from "./wiki_service.js";
 
 let last_page = null;
 let last_page_type = null;
-const info_card_template = `<div data-ref="info-card" class="off-screen-side-R">
-        <img src="{{image}}" alt="{{alt}}">
+const info_card_template = `<div data-ref="info-card" class="off-screen-fade">
+        <img src="{{image}}" alt="{{alt}}" class="img">
         <section>
             <h1>{{title}}</h1>
             <sub>{{type}}</sub>
@@ -37,6 +37,23 @@ const list_item_template = `<li data-id="{{id}}" data-infoID="{{infoID}}">
                     <i class="gg-chevron-right"></i>
                 </div>
             </li>`
+
+const info_card_loading = `<div data-ref="info-card" class="off-screen-side-R lazy">
+        <div class="img"></div>
+        <section>
+            <h1>{{title}}</h1>
+            <sub>{{type}}</sub>
+        </section>
+        <p>{{description}}</p>
+        <footer>
+        <p>
+            Information collected from <a href="{{src}}" target="_blank">Wikipedia</a>
+        </p>
+        <p>
+            Image by <a href="{{commons}}" target="_blank">{{image_author}}</a>
+        </p>
+        </footer>
+    </div>`
 String.prototype.fill_template = fill_template;
 function fill_template(obj) {
     let st = this;
@@ -50,7 +67,7 @@ function load_info_card(ev) {
     let el = ev.target;
     if (ev.target.nodeName !== "li")
         el = ev.target.parentElement;
-    page_transition("wiki",{});
+    page_transition("wiki_loading",{});
     wiki_service.pull_data(el.getAttribute("data-infoID")).then((data)=>{
         page_transition("wiki", {
             title: data.title,
@@ -83,6 +100,9 @@ function page_transition(page, data) {
             break;
         case "wiki":
             document.querySelector("[data-ref='lower-card']>div").innerHTML += info_card_template.fill_template(data)
+            break;
+        case "wiki_loading":
+            document.querySelector("[data-ref='lower-card']>div").innerHTML += info_card_loading
             break;
     }
 }
