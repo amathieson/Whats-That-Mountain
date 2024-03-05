@@ -136,7 +136,7 @@ lower-card {
     a, .img, p:not(footer>p), h1, sub {
       background: radial-gradient(circle at center, rgba(64,64,64,0.5), rgba(128,128,128,0.5));
       background-size: 200% 200%;
-      animation: lazyload 2s infinite ease;
+      animation: lazyload 1.5s infinite ease-in;
       color: transparent;
       border-radius: 1em;
     }
@@ -186,11 +186,9 @@ lower-card {
 
 @keyframes lazyload {
   0% {
-    background-position: -100% -100%;
-    //color: red;
+    background-position: 0 0;
   }
   100% {
     background-position: 200% 200%;
-    //color: blue;
   }
 }
