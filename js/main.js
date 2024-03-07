@@ -112,6 +112,7 @@ screen.orientation.addEventListener("change", () =>{
                     quat.rotateZ(-Math.PI/2);
                     break;
             }
+            quat.rotateX(Math.PI);
         }
         if (!compass_service.getOrientation().isAbsolute() || north_Calibration_factor === Number.NaN) {
             let ev = compass_service.getOrientation().getLastRawEventData();
@@ -119,7 +120,7 @@ screen.orientation.addEventListener("change", () =>{
             //     console.log(`I HAVE A COMPASS!!!!!! ${ev.webkitCompassHeading} : ${ev.webkitCompassAccuracy}`)
             } else {
                 if (!calibrating) {
-                    // document.querySelector(`[data-ref="calibrate-modal"]`).setAttribute("visible", true);
+                    document.querySelector(`[data-ref="calibrate-modal"]`).setAttribute("visible", true);
                 }
             }
         }
