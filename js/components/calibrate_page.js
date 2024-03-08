@@ -227,7 +227,7 @@ export default {
             }, anim_time)
         })
         document.querySelector(`[data-ref="camera1"]`).addEventListener("click", ()=>{
-            compass_service.set_heading_offset(-(360-compass_service?.getOrientation().getScreenAdjustedEuler().alpha) + sun_pos(location_service.getLocation().coords).azimuth);
+            compass_service.set_heading_offset(-(360-compass_service?.getOrientation().getFixedFrameEuler().alpha) + sun_pos(location_service.getLocation().coords).azimuth);
 
             document.querySelector(`[data-ref="slide2"]`).setAttribute("visible", true)
             setTimeout(()=>{
@@ -242,6 +242,7 @@ export default {
         })
         document.querySelector(`[data-ref="camera2"]`).addEventListener("click", ()=>{
             // Calibrate Floor
+            compass_service.set_tilt_offset(compass_service?.getOrientation().getFixedFrameEuler().beta + 90);
 
             document.querySelector(`.calibrate-slider`).setAttribute("visible", false)
             setTimeout(()=>{

@@ -5,9 +5,13 @@ export default {
     initHandlers,
     getOrientation,
     getAdjustedQuat,
-    set_heading_offset: (off)=>{headingOffset = off}
+    set_heading_offset: (off)=>{headingOffset = off},
+    set_tilt_offset: (off)=>{tiltOffset = off},
+    getOffsets: ()=>{return{headingOffset,tiltOffset}},
+    getMatrix: ()=>deviceOrientation.getScreenAdjustedMatrix
 }
 let headingOffset = 0;
+let tiltOffset = 0;
 let deviceOrientation;
 function initHandlers() {
     logger.log("Starting Compass Service", "compass_service");
@@ -46,6 +50,8 @@ const RAD = Math.PI / 180
 function getAdjustedQuat() {
     let quat = deviceOrientation.getScreenAdjustedQuaternion();
     quat.rotateY(headingOffset*RAD);
+    // if (headingOffset !== 0)
+    // quat.rotateX(tiltOffset * RAD);
     return quat;
 }
 

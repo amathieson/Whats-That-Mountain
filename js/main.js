@@ -101,6 +101,7 @@ screen.orientation.addEventListener("change", () =>{
         output_compass.textContent =  `alpha: ${Math.round( euler.alpha*100)/100}\n`;
         output_compass.textContent += `beta : ${Math.round(euler.beta*100)/100}\n`;
         output_compass.textContent += `gamma: ${Math.round(euler.gamma*100)/100}\n`;
+        output_compass.textContent += `offsets: ${JSON.stringify(compass_service.getOffsets())}\n`;
         if (!isiPad) {
             switch (screen.orientation.type) {
                 case "portrait-primary":
@@ -112,15 +113,15 @@ screen.orientation.addEventListener("change", () =>{
                     quat.rotateZ(-Math.PI/2);
                     break;
             }
-            quat.rotateX(Math.PI);
         }
         if (!compass_service.getOrientation().isAbsolute() || north_Calibration_factor === Number.NaN) {
             let ev = compass_service.getOrientation().getLastRawEventData();
-            if (ev.webkitCompassHeading && ev.webkitCompassAccuracy < 7) {
+            output_compass2.textContent = `Head: ${ev.webkitCompassHeading}&degree;\nacc:${ev.webkitCompassAccuracy}`
+            if (ev.webkitCompassHeading && ev.webkitCompassAccuracy < 20) {
             //     console.log(`I HAVE A COMPASS!!!!!! ${ev.webkitCompassHeading} : ${ev.webkitCompassAccuracy}`)
             } else {
                 if (!calibrating) {
-                    document.querySelector(`[data-ref="calibrate-modal"]`).setAttribute("visible", true);
+                    // document.querySelector(`[data-ref="calibrate-modal"]`).setAttribute("visible", true);
                 }
             }
         }
