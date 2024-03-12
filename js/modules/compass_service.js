@@ -45,7 +45,7 @@ function getOrientation() {
     logger.warn("getOrientation is deprecated, use getAdjustedQuat from compass_service", "compass_service")
     return deviceOrientation;
 }
-const RAD = Math.PI / 180;
+const RAD = Math.PI / 180
 
 function getAdjustedQuat() {
     let quat = deviceOrientation.getScreenAdjustedQuaternion();
