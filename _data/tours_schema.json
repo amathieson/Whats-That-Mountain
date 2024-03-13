@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "location": {
+        "type": "object",
+        "properties": {
+          "lat": { "type": "number" },
+          "lon": { "type": "number" },
+          "radius": { "type": "number" }
+        },
+        "required": ["lat", "lon", "radius"]
+      },
+      "points": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": { "type": "string" },
+            "additional_info": { "type": "string" }
+          },
+          "required": ["id", "additional_info"]
+        }
+      },
+      "metadata": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "author": { "type": "string" },
+          "description": { "type": "string" },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "url": { "type": "string" },
+                "alt": { "type": "string" },
+                "purpose": {
+                  "type": "string",
+                  "enum": ["ICON", "GALLERY", "DESCRIPTION"]
+                }
+              },
+              "required": ["url", "alt", "purpose"]
+            }
+          }
+        },
+        "required": ["title", "author", "description", "images"]
+      }
+    },
+    "required": ["location", "points", "metadata"]
+  }
+}
