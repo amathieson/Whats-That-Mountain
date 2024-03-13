@@ -6,40 +6,75 @@
     "properties": {
       "location": {
         "type": "object",
+        "$comment": "Defines the area that this tour will be available within",
         "properties": {
-          "lat": { "type": "number" },
-          "lon": { "type": "number" },
-          "radius": { "type": "number" }
+          "lat": {
+            "type": "number",
+            "$comment": "Latitude of the central point of the tour area"
+          },
+          "lon": {
+            "type": "number",
+            "$comment": "Longitude of the central point of the tour area"
+          },
+          "radius": {
+            "type": "number",
+            "$comment": "Radius (in meters) around the central point defining the extent of the tour area"
+          }
         },
         "required": ["lat", "lon", "radius"]
       },
       "points": {
         "type": "array",
+        "$comment": "The points of interest to show on the tour along with a descriptor. These will be shown in the order of the array.",
         "items": {
           "type": "object",
           "properties": {
-            "id": { "type": "string" },
-            "additional_info": { "type": "string" }
+            "id": {
+              "type": "string",
+              "$comment": "Unique identifier for the point of interest"
+            },
+            "additional_info": {
+              "type": "string",
+              "$comment": "Additional descriptive information about the point of interest"
+            }
           },
           "required": ["id", "additional_info"]
         }
       },
       "metadata": {
         "type": "object",
+        "$comment": "All the metadata about the tour.",
         "properties": {
-          "title": { "type": "string" },
-          "author": { "type": "string" },
-          "description": { "type": "string" },
+          "title": {
+            "type": "string",
+            "$comment": "Title of the tour"
+          },
+          "author": {
+            "type": "string",
+            "$comment": "Author or creator of the tour"
+          },
+          "description": {
+            "type": "string",
+            "$comment": "Description of the tour"
+          },
           "images": {
             "type": "array",
+            "$comment": "Any images used to augment the display of the tour preview, such as an icon or a small gallery of images. Images are categorized by their purpose.",
             "items": {
               "type": "object",
               "properties": {
-                "url": { "type": "string" },
-                "alt": { "type": "string" },
+                "url": {
+                  "type": "string",
+                  "$comment": "URL of the image"
+                },
+                "alt": {
+                  "type": "string",
+                  "$comment": "Alternative text for the image"
+                },
                 "purpose": {
                   "type": "string",
-                  "enum": ["ICON", "GALLERY", "DESCRIPTION"]
+                  "enum": ["ICON", "GALLERY", "DESCRIPTION"],
+                  "$comment": "Purpose of the image: ICON for icon images, GALLERY for gallery images, DESCRIPTION for descriptive images"
                 }
               },
               "required": ["url", "alt", "purpose"]
