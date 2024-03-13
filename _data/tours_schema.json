@@ -6,6 +6,7 @@
     "properties": {
       "location": {
         "type": "object",
+        "$comment": "Defines the area that this tour will be available within",
         "properties": {
           "lat": { "type": "number" },
           "lon": { "type": "number" },
@@ -15,6 +16,7 @@
       },
       "points": {
         "type": "array",
+        "$comment": "The points of interest to show on the tour along with a descriptor, these will be shown in the order of the array.",
         "items": {
           "type": "object",
           "properties": {
@@ -26,12 +28,14 @@
       },
       "metadata": {
         "type": "object",
+        "$comment": "All the metadata about the tour.",
         "properties": {
           "title": { "type": "string" },
           "author": { "type": "string" },
           "description": { "type": "string" },
           "images": {
             "type": "array",
+            "$comment": "Any images used to augment the display of the tour preview, such as an icon or a small gallery of image, identified via the enums",
             "items": {
               "type": "object",
               "properties": {
