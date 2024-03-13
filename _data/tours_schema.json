@@ -25,7 +25,6 @@
       },
       "points": {
         "type": "array",
-        "$comment": "The points of interest to show on the tour along with a descriptor. These will be shown in the order of the array.",
         "items": {
           "type": "object",
           "properties": {
@@ -59,7 +58,6 @@
           },
           "images": {
             "type": "array",
-            "$comment": "Any images used to augment the display of the tour preview, such as an icon or a small gallery of images. Images are categorized by their purpose.",
             "items": {
               "type": "object",
               "properties": {
