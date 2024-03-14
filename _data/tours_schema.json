@@ -72,7 +72,7 @@
                 "purpose": {
                   "type": "string",
                   "enum": ["ICON", "GALLERY", "DESCRIPTION"],
-                  "$comment": "Purpose of the image: ICON for icon images, GALLERY for gallery images, DESCRIPTION for descriptive images"
+                  "$comment": "Purpose of the image: ICON for icon images, GALLERY for gallery images, DESCRIPTION for images to be shown inline with the text."
                 }
               },
               "required": ["url", "alt", "purpose"]
