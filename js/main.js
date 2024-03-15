@@ -93,7 +93,7 @@ document.addEventListener("resize", ()=>{
 screen.orientation.addEventListener("change", () =>{
     render_service.setSize(window.innerWidth, window.innerHeight);
 });
-
+const BYPASS_CALIBRATE = false;
 (function draw() {
     if (compass_service.getOrientation()) {
         let euler = compass_service.getOrientation().getScreenAdjustedEuler();
@@ -120,8 +120,8 @@ screen.orientation.addEventListener("change", () =>{
             if (ev.webkitCompassHeading && ev.webkitCompassAccuracy < 20) {
             //     console.log(`I HAVE A COMPASS!!!!!! ${ev.webkitCompassHeading} : ${ev.webkitCompassAccuracy}`)
             } else {
-                if (!calibrating) {
-                    // document.querySelector(`[data-ref="calibrate-modal"]`).setAttribute("visible", true);
+                if (!BYPASS_CALIBRATE && !calibrating) {
+                    document.querySelector(`[data-ref="calibrate-modal"]`).setAttribute("visible", true);
                 }
             }
         }
