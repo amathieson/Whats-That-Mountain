@@ -121,7 +121,7 @@ const BYPASS_CALIBRATE = false;
             //     console.log(`I HAVE A COMPASS!!!!!! ${ev.webkitCompassHeading} : ${ev.webkitCompassAccuracy}`)
             } else {
                 if (!BYPASS_CALIBRATE && !calibrating) {
-                    document.querySelector(`[data-ref="calibrate-modal"]`).setAttribute("visible", true);
+                    document.querySelector(`[data-ref="calibrate-modal"]`).setAttribute("visible", "true");
                 }
             }
         }
