@@ -33,7 +33,7 @@ calibrate_button.addEventListener("click", ()=>{
     calibrating = true;
     calibrate_page.init(compass_service, location_service);
     document.querySelector(`[data-ref="calibrate-modal"]`).removeAttribute("visible");
-    document.getElementsByClassName("calibrate-slider")[0].setAttribute("visible", true)
+    document.getElementsByClassName("calibrate-slider")[0].setAttribute("visible", "true")
 });
 let last_canvas = undefined;
 const debug_threshold = 1000;
@@ -193,7 +193,7 @@ function handleMainClick() {
         }
     }
 }
-document.querySelector(`[data-ref="authorise-modal"]`).setAttribute("visible", true);
+document.querySelector(`[data-ref="authorise-modal"]`).setAttribute("visible", "true");
 
 function Initialise_Modules() {
     document.querySelector(`[data-ref="authorise-modal"]`).removeAttribute("visible");
