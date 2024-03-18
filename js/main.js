@@ -207,29 +207,3 @@ function Initialise_Modules() {
         document.getElementById("app").removeChild(last_canvas);
     last_canvas = document.getElementById("app").appendChild(render_service.initialize());
 }
-// const options = { frequency: 60, referenceFrame: "device" };
-// const sensor = new AbsoluteOrientationSensor(options);
-// Promise.all([
-//     navigator.permissions.query({ name: "accelerometer" }),
-//     navigator.permissions.query({ name: "magnetometer" }),
-//     navigator.permissions.query({ name: "gyroscope" }),
-// ]).then((results) => {
-//     if (results.every((result) => result.state === "granted")) {
-//         sensor.start();
-//         console.log("Start")
-//     } else {
-//         console.log("No permissions to use AbsoluteOrientationSensor.");
-//     }
-// });
-// sensor.addEventListener("error", (error) => {
-//     if (event.error.name === "NotReadableError") {
-//         output_compass2.textContent = ("Sensor is not available.");
-//     }
-// });
-// sensor.addEventListener("reading", () => {
-//     console.log(sensor)
-//     // model is a Three.js object instantiated elsewhere.
-//     output_compass2.textContent = `alpha: ${Math.round( sensor.quaternion[0]*100)/100}\n`;
-//     output_compass2.textContent += `beta : ${Math.round(sensor.quaternion[1]*100)/100}\n`;
-//     output_compass2.textContent += `gamma: ${Math.round(sensor.quaternion[2]*100)/100}\n`;
-// });
