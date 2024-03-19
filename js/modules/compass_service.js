@@ -48,10 +48,23 @@ function getOrientation() {
 const RAD = Math.PI / 180
 
 function getAdjustedQuat() {
+    // Assuming deviceOrientation is your Full-Tilt object
     let quat = deviceOrientation.getScreenAdjustedQuaternion();
-    quat.rotateY(headingOffset*RAD);
-    // if (headingOffset !== 0)
-    // quat.rotateX(tiltOffset * RAD);
+
+    // Convert headingOffset to radians if necessary
+    let headingOffsetRad = headingOffset * RAD;
+
+    let off = new FULLTILT.Quaternion();
+    off.setFromEuler(new FULLTILT.Euler(0, headingOffsetRad, 0));
+    // Apply heading offset
+    quat = quat.multiply(off);
+
+    off.setFromEuler(new FULLTILT.Euler(tiltOffset * RAD, 0, 0));
+    // Apply heading offset
+    quat = quat.multiply(off);
+
+    // Normalize the quaternion to prevent drift
+    quat.normalize();
     return quat;
 }
 
