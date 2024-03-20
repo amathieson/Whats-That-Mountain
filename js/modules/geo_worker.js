@@ -1,5 +1,35 @@
 let lastRenderedPosition = [Number.MAX_VALUE,Number.MAX_VALUE];
 let tiles = {};
+const DB_Name = "WTM";
+const DB_Version = 1;
+const Store_Name = "Tile_Cache";
+const dbRequest = indexedDB.open(DB_Name, DB_Version);
+let db = null;
+
+
+dbRequest.onerror = function(event) {
+    console.error('Failed to open database:', event.target.errorCode);
+};
+
+dbRequest.onupgradeneeded = function(event) {
+    const db = event.target.result;
+
+    // Create object store with autoIncrement key
+    const store = db.createObjectStore(Store_Name, { autoIncrement: true });
+
+    // Create index for latitude and longitude
+    store.createIndex('latitude', 'latitude', { unique: false });
+    store.createIndex('longitude', 'longitude', { unique: false });
+};
+
+dbRequest.onsuccess = function(event) {
+    db = event.target.result;
+};
+
+function dist(lat1, lon1, lat2, lon2) {
+    return Math.sqrt(Math.pow(lat1-lat2, 2) + Math.pow(lon1-lon2, 2))
+}
+
 
 onmessage = function(e) {
     if (e.data.method === undefined) {
@@ -9,7 +39,7 @@ onmessage = function(e) {
 
     switch (e.data.method) {
         case "POS_UPDATE":
-            if (Math.abs(lastRenderedPosition[0] - e.data.data[0]) > 0.25 || Math.abs(lastRenderedPosition[1] - e.data.data[1]) > 0.25) {
+            if (dist(lastRenderedPosition[0], lastRenderedPosition[1], e.data.data[0], e.data.data[1]) > 0.25) {
                 reRender(e.data.data);
             }
             return;
@@ -28,7 +58,49 @@ function latlon2ne(lat, lon) {
         ("00" + Math.abs(lonRound)).slice(-3);
 }
 
-function reRender(pos) {
+function queryLocationsByProximity(latitude, longitude, maxDistance) {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(Store_Name, 'readonly');
+        const store = transaction.objectStore(Store_Name);
+
+        // Create a range based on bounding box
+        const range = IDBKeyRange.bound([latitude - maxDistance, longitude - maxDistance],
+            [latitude + maxDistance, longitude + maxDistance]);
+
+        // Open cursor within the range
+        const request = store.index('latitude').openCursor();
+
+        const results = [];
+
+        request.onsuccess = function(event) {
+            const cursor = event.target.result;
+            if (cursor) {
+                // Check if the location is within the maxDistance
+                const location = cursor.value;
+                const distance = dist(latitude, longitude, location.latitude, location.longitude);
+                if (distance <= maxDistance) {
+                    results.push(location);
+                }
+                cursor.continue();
+            } else {
+                // All results processed
+                resolve(results);
+            }
+        };
+
+        request.onerror = function(event) {
+            reject('Error querying locations: ' + event.target.error);
+        };
+    });
+}
+
+
+
+async function reRender(pos) {
+    if (db !== null) {
+        let res = await queryLocationsByProximity(pos[0], pos[1], 0.25);
+    }
+
     let tiles_to_load = [];
     let tile_radius = .5;
 
@@ -94,7 +166,7 @@ function reRender(pos) {
     if (tiles_to_load.every(id =>
         tiles[id] !== undefined && (tiles[id].loaded || tiles[id].available === false))) {
         let outCanvas = new OffscreenCanvas(Tile_Dim, Tile_Dim);
-        let ctx = outCanvas.getContext("2d");
+        let ctx = outCanvas.getContext("2d", {willReadFrequently: true});
         let pois = [];
 
         {
@@ -145,6 +217,26 @@ function reRender(pos) {
                     .forEach(point => pois.push(point));
 
         })
+
+        if (db !== null) {
+            const transaction = db.transaction(Store_Name, 'readwrite');
+            const store = transaction.objectStore(Store_Name);
+
+            const location = {latitude: pos[0], longitude: pos[1], tile_data:{
+                    canvas:ctx.getImageData(0,0,Tile_Dim, Tile_Dim),
+                    points_of_interest: pois,
+                    tile_origin: [pos[0],pos[1]]
+                }};
+            // const request = store.add(location);
+            //
+            // request.onsuccess = function (event) {
+            //     console.log('Location added successfully');
+            // };
+            //
+            // request.onerror = function (event) {
+            //     console.error('Failed to add location:', event.target.error);
+            // };
+        }
 
         postMessage({
             method:"UPDATE_TERRAIN",
