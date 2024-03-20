@@ -68,24 +68,14 @@ function queryLocationsByProximity(latitude, longitude, maxDistance) {
             [latitude + maxDistance, longitude + maxDistance]);
 
         // Open cursor within the range
-        const request = store.index('latitude').openCursor();
-
-        const results = [];
-
+        const request = store.index('latitude').getAll();
         request.onsuccess = function(event) {
-            const cursor = event.target.result;
-            if (cursor) {
-                // Check if the location is within the maxDistance
-                const location = cursor.value;
+            const allLocations = event.target.result;
+            const results = allLocations.filter(location => {
                 const distance = dist(latitude, longitude, location.latitude, location.longitude);
-                if (distance <= maxDistance) {
-                    results.push(location);
-                }
-                cursor.continue();
-            } else {
-                // All results processed
-                resolve(results);
-            }
+                return distance <= maxDistance;
+            });
+            resolve(results);
         };
 
         request.onerror = function(event) {
@@ -99,6 +89,15 @@ function queryLocationsByProximity(latitude, longitude, maxDistance) {
 async function reRender(pos) {
     if (db !== null) {
         let res = await queryLocationsByProximity(pos[0], pos[1], 0.25);
+        if (res.length > 0) {
+            console.log("Tile Served From Cache!")
+            postMessage({
+                method:"UPDATE_TERRAIN",
+                data: res[0].tile_data
+            })
+            lastRenderedPosition = res[0].tile_data.tile_origin;
+            return;
+        }
     }
 
     let tiles_to_load = [];
@@ -227,17 +226,18 @@ async function reRender(pos) {
                     points_of_interest: pois,
                     tile_origin: [pos[0],pos[1]]
                 }};
-            // const request = store.add(location);
-            //
-            // request.onsuccess = function (event) {
-            //     console.log('Location added successfully');
-            // };
-            //
-            // request.onerror = function (event) {
-            //     console.error('Failed to add location:', event.target.error);
-            // };
+            const request = store.add(location);
+
+            request.onsuccess = function (event) {
+                console.log('Location added successfully');
+            };
+
+            request.onerror = function (event) {
+                console.error('Failed to add location:', event.target.error);
+            };
         }
 
+        console.log("Tile Freshly Generated!")
         postMessage({
             method:"UPDATE_TERRAIN",
             data: {

@@ -29,7 +29,7 @@ export default {
         <h1>Compass Calibration</h1>
         Your device does not appear to contain a magnetic compass. Please tap Calibrate to continue.
         <div class="button-group">
-            <button>Cancel</button>
+<!--            <button>Cancel</button>-->
             <button data-ref="calibrate-button">Calibrate</button>
         </div>
     </modal>
