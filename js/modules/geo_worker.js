@@ -63,10 +63,6 @@ function queryLocationsByProximity(latitude, longitude, maxDistance) {
         const transaction = db.transaction(Store_Name, 'readonly');
         const store = transaction.objectStore(Store_Name);
 
-        // Create a range based on bounding box
-        const range = IDBKeyRange.bound([latitude - maxDistance, longitude - maxDistance],
-            [latitude + maxDistance, longitude + maxDistance]);
-
         // Open cursor within the range
         const request = store.index('latitude').getAll();
         request.onsuccess = function(event) {
@@ -227,10 +223,6 @@ async function reRender(pos) {
                     tile_origin: [pos[0],pos[1]]
                 }};
             const request = store.add(location);
-
-            request.onsuccess = function (event) {
-                console.log('Location added successfully');
-            };
 
             request.onerror = function (event) {
                 console.error('Failed to add location:', event.target.error);

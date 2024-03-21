@@ -89,6 +89,20 @@ function initialize() {
 
     let els = [renderer.domElement, labelRenderer.domElement];
 
+
+    let passiveSupported = false;
+
+    try {
+        const options = Object.defineProperty({}, 'passive', {
+            get() {
+                passiveSupported = true;
+            }
+        });
+
+        window.addEventListener('test', null, options);
+    } catch (err) {
+        // Passive events not supported
+    }
 els.forEach((el)=>{
     el.addEventListener("touchstart", (e)=> {
         if (e.touches.length === 2) {
@@ -99,7 +113,7 @@ els.forEach((el)=>{
                 e.touches[0].pageX / w - e.touches[1].pageX / w,
                 e.touches[0].pageY / h - e.touches[1].pageY / h)
         }
-    })
+    }, passiveSupported ? {passive: true} : false)
     el.addEventListener("touchmove", (e) =>{
         if (pinching) {
             let w = window.innerWidth;
@@ -111,10 +125,10 @@ els.forEach((el)=>{
             camera.setFocalLength(Math.max(5,camera.getFocalLength() + delta * 50));
             dist = d;
         }
-    })
+    }, passiveSupported ? {passive: true} : false)
     el.addEventListener("touchend", ()=>{
         pinching = false;
-    })
+    }, passiveSupported ? {passive: true} : false)
 })
 
 
