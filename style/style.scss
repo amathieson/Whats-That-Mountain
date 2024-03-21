@@ -180,16 +180,17 @@ button.secondary:active {
 }
 
 
-.loading-scroller {
+.loading-scroller, .error-modal {
   position: absolute;
-  top: -1.5em;
+  top: -5em;
   left: 0;
   width: 100vw;
-  height: 1.5em;
-  background: adjust-color($dark, $alpha: -0.1);
+  min-height: 1.5em;
   color: $white;
   z-index: 999;
   transition: top ease-in 150ms;
+  max-height: 5em;
+  padding-bottom: 0.5em;
 
   /* Use pseudo-element for gradient border */
   &::before {
@@ -200,13 +201,28 @@ button.secondary:active {
     width: 100%;
     height: 8px;
     background-size: 100vw 100vw;
-    background-image:
-            conic-gradient(from calc(calc(calc(var(--loading-width2) / 2) * -1)), $secondary var(--loading-width2), transparent 0deg),
-            conic-gradient(from calc(calc(var(--loading-width) / 2) * -1), $primary var(--loading-width), $secondary 0deg);
     animation: borderGradientAnimation 1s infinite ease;
   }
 }
-.loading-scroller[visible] {
+.error-modal {
+  z-index: 9999;
+  background: $red;
+  font-weight: bold;
+  &::before {
+    background-image:
+            conic-gradient(from calc(calc(calc(var(--loading-width2) / 2) * -1)), $red var(--loading-width2), transparent 0deg),
+            conic-gradient(from calc(calc(var(--loading-width) / 2) * -1), $white var(--loading-width), $red 0deg);
+  }
+}
+.loading-scroller {
+  background: adjust-color($dark, $alpha: -0.1);
+  &::before {
+    background-image:
+  conic-gradient(from calc(calc(calc(var(--loading-width2) / 2) * -1)), $secondary var(--loading-width2), transparent 0deg),
+  conic-gradient(from calc(calc(var(--loading-width) / 2) * -1), $primary var(--loading-width), $secondary 0deg);
+  }
+}
+.loading-scroller[visible],.error-modal[visible] {
   top: 8px;
 }
 
