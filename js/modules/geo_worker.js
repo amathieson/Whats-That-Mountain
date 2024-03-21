@@ -1,4 +1,5 @@
 let lastRenderedPosition = [Number.MAX_VALUE,Number.MAX_VALUE];
+let rendering = [Number.MAX_VALUE,Number.MAX_VALUE];
 let tiles = {};
 const DB_Name = "WTM";
 const DB_Version = 1;
@@ -39,8 +40,14 @@ onmessage = function(e) {
 
     switch (e.data.method) {
         case "POS_UPDATE":
-            if (dist(lastRenderedPosition[0], lastRenderedPosition[1], e.data.data[0], e.data.data[1]) > 0.25) {
-                reRender(e.data.data);
+            if (dist(lastRenderedPosition[0], lastRenderedPosition[1], e.data.data[0], e.data.data[1]) > 0.25 &&
+                (rendering[0] !== e.data.data[0] || rendering[1] !== e.data.data[1])) {
+                rendering = e.data.data;
+                reRender(e.data.data).then(()=>{
+                    rendering = [Number.MAX_VALUE,Number.MAX_VALUE]
+                }).catch(()=>{
+                    rendering = [Number.MAX_VALUE,Number.MAX_VALUE]
+                })
             }
             return;
         default:
@@ -264,7 +271,10 @@ async function fetch_tile(ne) {
                 peak = Math.max(peak, tmp[i]);
                 valley = Math.min(valley, tmp[i]);
             }
-            let pois = await (await fetch(`${CDN_Route}/markers/${ne}.json`)).json()
+            let pois = [];
+            let poisResp = await fetch(`${CDN_Route}/markers/${ne}.json`);
+            if (poisResp.status === 200)
+                pois = await poisResp.json()
 
             return {"peak": peak, "valley": valley, "data": tmp, "pois": pois};
         }

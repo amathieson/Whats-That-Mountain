@@ -158,7 +158,7 @@ function initialize() {
     }
 }
 function update(position) {
-    if (Math.abs(lastUpdate - Date.now()) > 500) {
+    if (Math.abs(lastUpdate - Date.now()) > 1000) {
         lastUpdate = Date.now();
         worker.postMessage({
             method: "POS_UPDATE",
