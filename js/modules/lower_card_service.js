@@ -8,7 +8,7 @@ import wiki_service from "./wiki_service.js";
 let last_page = null;
 let last_page_type = null;
 const info_card_template = `<div data-ref="info-card" class="off-screen-fade">
-        <img src="{{image}}" alt="{{alt}}" class="img">
+        <img src="{{image}}" alt="{{alt}}" class="img" visible="{{img_present}}">
         <section>
             <h1>{{title}}</h1>
             <sub>{{type}}</sub>
@@ -18,7 +18,7 @@ const info_card_template = `<div data-ref="info-card" class="off-screen-fade">
         <p>
             Information collected from <a href="{{src}}" target="_blank">Wikipedia</a>
         </p>
-        <p>
+        <p visible="{{img_present}}">
             Image by <a href="{{commons}}" target="_blank">{{image_author}}</a>
         </p>
         </footer>
@@ -77,7 +77,8 @@ function load_info_card(ev) {
             alt: "",
             src: data.link.url,
             image_author: data.image.author,
-            commons: data.image.commons
+            commons: data.image.commons,
+            img_present: data.image.author !== undefined
         })
     });
 }

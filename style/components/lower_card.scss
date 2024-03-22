@@ -97,6 +97,10 @@ lower-card {
     min-height: 100%;
     text-align: left;
     padding-top: 1em;
+    visibility: unset;
+    [visible='{{img_present}}'] {
+      visibility: hidden;
+    }
     section {
       h1 {
         line-height: 1;

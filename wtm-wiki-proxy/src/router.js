@@ -36,7 +36,7 @@ router.get('/api/wiki/:id', async (request, extras) => {
 
 		}
 	}
-	if (wikipage && wikipage.query.pageids && wikipage.query.pages[wikipage.query.pageids[0]]) {
+	if (wikipage && wikipage.query.pageids && wikipage.query.pages[wikipage.query.pageids[0]] && wikipage.query.pages[wikipage.query.pageids[0]].pageimage) {
 		wikiimage = await (await fetch(`https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts|imageinfo&iilimit=50&iiprop=timestamp|user|url|parsedcomment|commonmetadata&explaintext&redirects=1&titles=File:${wikipage.query.pages[wikipage.query.pageids[0]].pageimage}`, {headers: {"User-Agent":"Whats-That-Mountain Proxy"}})).json()
 	}
 
@@ -47,9 +47,9 @@ router.get('/api/wiki/:id', async (request, extras) => {
 		link: wikidata.sitelinks.enwiki ? wikidata.sitelinks.enwiki : wikidata.sitelinks[Object.keys(wikidata.sitelinks)[0]],
 		paragraph: wikipage?.query.pages[wikipage.query.pageids[0]].extract,
 		image: {
-			url: wikipage?.query.pages[wikipage.query.pageids[0]].original.source,
-			author: wikiimage?.query.pages['-1'].imageinfo[0].user,
-			commons: wikiimage?.query.pages['-1'].imageinfo[0].descriptionshorturl
+			url: wikipage?.query.pages[wikipage.query.pageids[0]]?.original?.source,
+			author: wikiimage?.query.pages['-1']?.imageinfo[0].user,
+			commons: wikiimage?.query.pages['-1']?.imageinfo[0].descriptionshorturl
 		}
 	}));
 	res.headers.set('content-type', "application/json");
