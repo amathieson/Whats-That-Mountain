@@ -12,6 +12,13 @@
   syntax: "<angle>";
 }
 
+
+@property --warn-anim {
+  inherits: false;
+  initial-value: 0deg;
+  syntax: "<angle>";
+}
+
 @property --bg-size {
   inherits: false;
   initial-value: 11%;
@@ -182,15 +189,16 @@ button.secondary:active {
 
 .loading-scroller, .error-modal {
   position: absolute;
-  top: -5em;
+  top: -5.5em;
   left: 0;
-  width: 100vw;
+  width: calc( 100vw - 1em);
   min-height: 1.5em;
   color: $white;
   z-index: 999;
-  transition: top ease-in 150ms;
+  transition: all ease-in 150ms;
   max-height: 5em;
-  padding-bottom: 0.5em;
+  overflow-y: hidden;
+  padding: 0 0.5em 0.5em;
 
   /* Use pseudo-element for gradient border */
   &::before {
@@ -209,11 +217,22 @@ button.secondary:active {
   background: $red;
   font-weight: bold;
   &::before {
+    background-size: 100vw 500vw;
     background-image:
-            conic-gradient(from calc(calc(calc(var(--loading-width2) / 2) * -1)), $red var(--loading-width2), transparent 0deg),
-            conic-gradient(from calc(calc(var(--loading-width) / 2) * -1), $white var(--loading-width), $red 0deg);
+            repeating-conic-gradient(from var(--warn-anim) at 50% 50%, $red 0%, $red .5%, $white .5%, $white 1%);
+    animation: 60s linear infinite rot;
   }
 }
+
+@keyframes rot {
+  0% {
+    --warn-anim: 0deg;
+  }
+  100% {
+    --warn-anim: 360deg;
+  }
+}
+
 .loading-scroller {
   background: adjust-color($dark, $alpha: -0.1);
   &::before {
@@ -224,6 +243,8 @@ button.secondary:active {
 }
 .loading-scroller[visible],.error-modal[visible] {
   top: 8px;
+  max-height: unset;
+  overflow-y: visible;
 }
 
 @keyframes borderGradientAnimation {

@@ -47,7 +47,7 @@ export default {
 <popup-list data-ref="more-popup" pos="0,0">
     <ul>
         <li>Credits</li>
-        <li>Tourist Board</li>
+        <li><a href="https://visitdundee.com/" target="_blank">Tourism Board</a></li>
     </ul>
 </popup-list>
 
@@ -55,8 +55,7 @@ export default {
     Loading Tile..
 </div>
 
-<div class="error-modal">
-    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nemo nihil quidem quis repellendus voluptates. Accusantium, architecto blanditiis cupiditate delectus eligendi eos expedita harum id natus omnis quae tenetur ut vitae?
+<div class="error-modal" onclick="this.removeAttribute('visible')">
 </div>
 `
 }

@@ -1,3 +1,5 @@
+import logger from "../modules/logger.js";
+
 export default {
     NorthOff:Number.NaN,
     content: `
@@ -196,7 +198,7 @@ export default {
 
                         if (promise !== undefined) {
                             promise.catch(error => {
-                                console.log(error)
+                                logger.error(error, "CALIBRATION_PAGE")
                                 // Auto-play was prevented
                                 // Show a UI element to let the user manually start playback
                             }).then(() => {
@@ -209,7 +211,7 @@ export default {
 
                         if (promise !== undefined) {
                             promise.catch(error => {
-                                console.log(error)
+                                logger.error(error, "CALIBRATION_PAGE")
                                 // Auto-play was prevented
                                 // Show a UI element to let the user manually start playback
                             }).then(() => {
@@ -219,7 +221,7 @@ export default {
                 })
                 .catch((err) => {
                     // always check for errors at the end.
-                    console.error(`${err.name}: ${err.message}`);
+                    logger.error(err, "CALIBRATION_PAGE")
                 });
 
             setTimeout(()=>{
@@ -248,7 +250,7 @@ export default {
             setTimeout(()=>{
                 const video = document.querySelector(`[data-ref="camera1"]`);
                 const video2 = document.querySelector(`[data-ref="camera2"]`);
-                cameraStream.getTracks().forEach(function(track) {
+                cameraStream?.getTracks().forEach(function(track) {
                     track.stop();
                 });
                 video.srcObject = null;

@@ -9,7 +9,7 @@ let db = null;
 
 
 dbRequest.onerror = function(event) {
-    console.error('Failed to open database:', event.target.errorCode);
+    console.error('[GEO_WORKER] - Failed to open database:', event.target.errorCode);
 };
 
 dbRequest.onupgradeneeded = function(event) {
@@ -93,7 +93,6 @@ async function reRender(pos) {
     if (db !== null) {
         let res = await queryLocationsByProximity(pos[0], pos[1], 0.25);
         if (res.length > 0) {
-            console.log("Tile Served From Cache!")
             postMessage({
                 method:"UPDATE_TERRAIN",
                 data: res[0].tile_data
@@ -232,11 +231,10 @@ async function reRender(pos) {
             const request = store.add(location);
 
             request.onerror = function (event) {
-                console.error('Failed to add location:', event.target.error);
+                console.error('[GEO_WORKER] - Failed to cache tile:', event.target.error);
             };
         }
 
-        console.log("Tile Freshly Generated!")
         postMessage({
             method:"UPDATE_TERRAIN",
             data: {
@@ -281,7 +279,7 @@ async function fetch_tile(ne) {
         if (d.status === 404)
             return {error:"NOT_FOUND"}
     } catch (e) {
-        console.error(e)
+        console.error("[GEO_WORKER] - ", e)
     }
 }
 

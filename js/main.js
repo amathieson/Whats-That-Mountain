@@ -94,6 +94,7 @@ screen.orientation.addEventListener("change", () =>{
     render_service.setSize(window.innerWidth, window.innerHeight);
 });
 const BYPASS_CALIBRATE = false;
+let should_calibrate = false;
 (function draw() {
     if (compass_service.getOrientation()) {
         let euler = compass_service.getOrientation().getScreenAdjustedEuler();
@@ -101,7 +102,7 @@ const BYPASS_CALIBRATE = false;
         output_compass.textContent =  `alpha: ${Math.round( euler.alpha*100)/100}\n`;
         output_compass.textContent += `beta : ${Math.round(euler.beta*100)/100}\n`;
         output_compass.textContent += `gamma: ${Math.round(euler.gamma*100)/100}\n`;
-        output_compass.textContent += `offsets: ${JSON.stringify(compass_service.getOffsets())}\n`;
+        output_compass.textContent += `offsets: ${JSON.stringify(compass_service.getOffsets(), null, true)}\n`;
         if (!isiPad) {
             switch (screen.orientation.type) {
                 case "portrait-primary":
@@ -117,13 +118,7 @@ const BYPASS_CALIBRATE = false;
         if (!compass_service.getOrientation().isAbsolute() || north_Calibration_factor === Number.NaN) {
             let ev = compass_service.getOrientation().getLastRawEventData();
             output_compass2.textContent = `Head: ${ev.webkitCompassHeading}&degree;\nacc:${ev.webkitCompassAccuracy}`
-            if (ev.webkitCompassHeading && ev.webkitCompassAccuracy < 20) {
-            //     console.log(`I HAVE A COMPASS!!!!!! ${ev.webkitCompassHeading} : ${ev.webkitCompassAccuracy}`)
-            } else {
-                if (!BYPASS_CALIBRATE && !calibrating) {
-                    document.querySelector(`[data-ref="calibrate-modal"]`).setAttribute("visible", "true");
-                }
-            }
+            should_calibrate = !(ev.webkitCompassHeading && ev.webkitCompassAccuracy < 20);
         }
         render_service.setCameraRotation(new Quaternion(quat.x, quat.y, quat.z, quat.w));
     }
@@ -146,6 +141,10 @@ const BYPASS_CALIBRATE = false;
 
 
         geo_service.update([location.coords.latitude, location.coords.longitude]);
+
+        if (should_calibrate && !BYPASS_CALIBRATE && !calibrating) {
+            document.querySelector(`[data-ref="calibrate-modal"]`).setAttribute("visible", "true");
+        }
     }
     render_service.animate();
     let objs = render_service.visibleObjects();

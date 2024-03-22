@@ -13,18 +13,22 @@ const levels = {
 };
 
 function error(message, module="") {
-    if (logLevel <= 2)
-        console.error(`[${module}] ` + ((typeof message === 'string' || message instanceof String) ? message : JSON.stringify(message)));
+    if (logLevel <= 2) {
+        console.error(`[${module}] - `, message);
+        document.querySelector(".error-modal").innerText = `[${module}] ` + ((typeof message === 'string' || message instanceof String) ? message :
+            (message.message ? message.message : JSON.stringify(message)));
+        document.querySelector(".error-modal").setAttribute("visible", "true")
+    }
 }
 
 function warn(message, module="") {
     if (logLevel <= 1)
-        console.warn(`[${module}] ` + ((typeof message === 'string' || message instanceof String) ? message : JSON.stringify(message)));
+        console.warn(`[${module}] - `, message);
 }
 
 function log(message, module="") {
     if (logLevel <= 0)
-        console.log(`[${module}] ` + ((typeof message === 'string' || message instanceof String) ? message : JSON.stringify(message)));
+        console.log(`[${module}] - `, message);
 }
 
 function setLogLevel(level = "VERBOSE") {

@@ -36,7 +36,7 @@ function getLocation() {
     return deviceLocation;
 }
 
-function dist2point(lat, lon) {
+export function dist2point(lat, lon) {
     let coords = this.getLocation().coords
     return measure(lat, lon, coords.latitude, coords.longitude);
 }
