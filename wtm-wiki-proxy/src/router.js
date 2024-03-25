@@ -22,10 +22,10 @@ router.get('/api/wiki/:id', async (request, extras) => {
 	let wikiimage = null;
 	if (Object.keys(wikidata.sitelinks).length > 0) {
 		if (wikidata.sitelinks.enwiki)
-			wikipage = await (await fetch(`https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts|pageimages&exintro&explaintext&redirects=1&pilicense=free&piprop=original|name&indexpageids&titles=${wikidata.sitelinks.enwiki.title}`, {headers: {"User-Agent":"Whats-That-Mountain Proxy"}})).json()
+			wikipage = await (await fetch(`https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts|pageimages&exintro&explaintext&redirects=1&pilicense=free&piprop=original|name&indexpageids&titles=${encodeURI(wikidata.sitelinks.enwiki.title)}`, {headers: {"User-Agent":"Whats-That-Mountain Proxy"}})).json()
 		else {
 			let or = (new URL(wikidata.sitelinks[Object.keys(wikidata.sitelinks)[0]].url)).origin
-			wikipage = await (await fetch(`${or}/w/api.php?format=json&action=query&prop=extracts|pageimages&exintro&explaintext&redirects=1&pilicense=free&piprop=original|name&indexpageids&titles=${wikidata.sitelinks[Object.keys(wikidata.sitelinks)[0]].title}`, {headers: {"User-Agent":"Whats-That-Mountain Proxy"}})).json()
+			wikipage = await (await fetch(`${or}/w/api.php?format=json&action=query&prop=extracts|pageimages&exintro&explaintext&redirects=1&pilicense=free&piprop=original|name&indexpageids&titles=${encodeURI(wikidata.sitelinks[Object.keys(wikidata.sitelinks)[0]].title)}`, {headers: {"User-Agent":"Whats-That-Mountain Proxy"}})).json()
 
 			const ai = new Ai(extras.AI);
 
@@ -35,9 +35,11 @@ router.get('/api/wiki/:id', async (request, extras) => {
 			)).response);
 
 		}
+		console.log(wikipage)
 	}
 	if (wikipage && wikipage.query.pageids && wikipage.query.pages[wikipage.query.pageids[0]] && wikipage.query.pages[wikipage.query.pageids[0]].pageimage) {
-		wikiimage = await (await fetch(`https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts|imageinfo&iilimit=50&iiprop=timestamp|user|url|parsedcomment|commonmetadata&explaintext&redirects=1&titles=File:${wikipage.query.pages[wikipage.query.pageids[0]].pageimage}`, {headers: {"User-Agent":"Whats-That-Mountain Proxy"}})).json()
+		wikiimage = await (await fetch(`https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts|imageinfo&iilimit=50&iiprop=timestamp|user|url|parsedcomment|commonmetadata&explaintext&redirects=1&titles=File:${encodeURI(wikipage.query.pages[wikipage.query.pageids[0]].pageimage)}`, {headers: {"User-Agent":"Whats-That-Mountain Proxy"}})).json()
+		console.log("D")
 	}
 
 	let res = new Response(JSON.stringify({

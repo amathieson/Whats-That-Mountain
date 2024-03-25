@@ -73,11 +73,11 @@ function load_info_card(ev) {
             title: data.title,
             type: toTitleCase(data.subtitle),
             description: data.paragraph,
-            image: data.image.url,
+            image: data.image?.url,
             alt: "",
-            src: data.link.url,
-            image_author: data.image.author,
-            commons: data.image.commons,
+            src: data.link?.url,
+            image_author: data.image?.author,
+            commons: data.image?.commons,
             img_present: data.image.author !== undefined
         })
     });
