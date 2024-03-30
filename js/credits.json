@@ -48,5 +48,10 @@
     "element": "Worker Template",
     "owner": "Cloudflare",
     "link":"https://cloudflare.com/"
+  },
+  {
+    "element": "Random Readable String Lib",
+    "owner": "Arno Cellarier",
+    "link":"https://github.com/arnoclr/random-readable-string"
   }
 ]
