@@ -50,8 +50,7 @@ export default {
 };
 
 
-
-
+// The following is the RRS lib by Arno Cl. Credits listed in credits.json
 
 const VOWELS = [
 	'a', 'an', 'ai', 'au',
