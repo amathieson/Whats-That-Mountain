@@ -9,7 +9,9 @@ export default {
     setCameraPosition,
     setMeshData,
     setSize,
-    visibleObjects
+    visibleObjects,
+    pushMeshData,
+    computeHeightAtPoint
 }
 
 function visibleObjects() {
@@ -143,6 +145,13 @@ function setMeshData(meshs) {
     })
 }
 
+
+function pushMeshData(meshs) {
+    meshs.forEach((el)=>{
+        scene.add(el);
+    })
+}
+
 function setSize(width, height) {
     if (renderer) {
         renderer.setSize(width, height);
@@ -150,5 +159,28 @@ function setSize(width, height) {
 
         camera.updateProjectionMatrix();
         labelRenderer.setSize(width, height)
+    }
+}
+
+const raycaster = new THREE.Raycaster();
+function computeHeightAtPoint(x, y) {
+    console.log("Point to check:", x, y);
+
+    // Set up the raycaster
+    raycaster.far = 250000;
+    raycaster.near = 100;
+    // Set the raycaster origin at the specified point (x, y) and a high z value
+    raycaster.set(new THREE.Vector3(x, y, 10000), new THREE.Vector3(0, 0, -1));
+
+    // Intersect the ray with objects in the scene
+    let intersects = raycaster.intersectObjects(scene.children, true);
+
+    // Return the height (or 0 if no intersections)
+    if (intersects.length > 0) {
+        console.log("Intersection results:", intersects);
+        return intersects[0].point.z; // Assuming y-coordinate represents height
+    } else {
+        console.log("No intersection found.");
+        return 0;
     }
 }

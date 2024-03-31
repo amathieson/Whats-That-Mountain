@@ -155,7 +155,7 @@ let recorded_frames = 0;
         output_gps.textContent += `Acc: ${Math.round(location.coords.accuracy*100)/100}m/${Math.round(
             location.coords.altitudeAccuracy*100)/100}m`;
         let [x,y] = geo_service.gps2XY(location.coords.latitude, location.coords.longitude);
-        render_service.setCameraPosition({x:x,y:y,z:500})
+        render_service.setCameraPosition({x:x,y:y,z:render_service.computeHeightAtPoint(x,y)})
 
 
         geo_service.update([location.coords.latitude, location.coords.longitude]);

@@ -52,7 +52,6 @@ function initialize() {
                         displacementMap: tex,
                         displacementScale: peak-valley,
                         displacementBias: valley,
-                        // map: tex,
                         color: primaryColor,
                     } );
 
@@ -61,77 +60,12 @@ function initialize() {
                     mesh.position.set(posx,posy,0)
                     mesh.rotateZ(-Math.PI/2);
                     tiles.push(mesh);
-                    //
-                    // data.points_of_interest.push({
-                    //     location: {
-                    //         lat: lat,
-                    //         lon: lon,
-                    //     },
-                    //     tags: {
-                    //         name: "🟢 _CENTRE"
-                    //     }
-                    // })
-                    //
-                    // data.points_of_interest.push({
-                    //     location: {
-                    //         lat: lat + 0.2,
-                    //         lon: lon,
-                    //     },
-                    //     tags: {
-                    //         name: "🔴 +0.2 LAT - NORTH"
-                    //     }
-                    // })
-                    //
-                    // data.points_of_interest.push({
-                    //     location: {
-                    //         lat: lat - 0.2,
-                    //         lon: lon,
-                    //     },
-                    //     tags: {
-                    //         name: "🔵 -0.2 LAT - SOUTH"
-                    //     }
-                    // })
-                    //
-                    // data.points_of_interest.push({
-                    //     location: {
-                    //         lat: lat,
-                    //         lon: lon + 0.2,
-                    //     },
-                    //     tags: {
-                    //         name: "🔴 +0.2 LON - EAST"
-                    //     }
-                    // })
-                    //
-                    // data.points_of_interest.push({
-                    //     location: {
-                    //         lat: lat,
-                    //         lon: lon - 0.2,
-                    //     },
-                    //     tags: {
-                    //         name: "🔵 -0.2 LON - WEST"
-                    //     }
-                    // })
-                    data.points_of_interest.forEach((point)=>{
-                        const label = document.createElement( 'div' );
-                        label.className = 'label';
-                        label.textContent = point.tags.name;
-
-                        const labelObj = new CSS2DObject( label );
-                        labelObj.userData = point;
-                        let [x,y] = gps2XY(point.location.lat, point.location.lon)
-
-                        labelObj.position.set( x, y, 900 );
-                        labelObj.center.set( 0, 1 );
-
-                        tiles.push(labelObj);
-                    })
 
                     const material2 = new THREE.MeshStandardMaterial( { wireframe: true,
                         side: THREE.FrontSide,
                         displacementMap: tex,
                         displacementScale: peak-valley,
                         displacementBias: valley,
-                        // map: tex,
                         color: secondaryColor,
                     } );
 
@@ -141,9 +75,28 @@ function initialize() {
                     tiles.push(mesh2);
 
                     render_service.setMeshData(tiles);
+                    requestAnimationFrame(()=>{
+                        tiles = [];
+                        data.points_of_interest.forEach((point)=>{
+                            const label = document.createElement( 'div' );
+                            label.className = 'label';
+                            label.textContent = point.tags.name;
 
-                    document.getElementsByClassName("loading-scroller")[0].removeAttribute("visible");
-                    document.querySelector("[data-ref=\"main_canvas\"]").setAttribute("data-ready", "true")
+                            const labelObj = new CSS2DObject( label );
+                            labelObj.userData = point;
+                            let [x,y] = gps2XY(point.location.lat, point.location.lon)
+
+                            labelObj.position.set( x, y, render_service.computeHeightAtPoint(x,y) );
+                            labelObj.center.set( 0, 1 );
+                            // labelObj.layers.set(4)
+
+                            tiles.push(labelObj);
+                        })
+                        render_service.pushMeshData(tiles);
+
+                        document.getElementsByClassName("loading-scroller")[0].removeAttribute("visible");
+                        document.querySelector("[data-ref=\"main_canvas\"]").setAttribute("data-ready", "true")
+                    })
                     return;
                 case "LOADING_TILES":
                     document.getElementsByClassName("loading-scroller")[0].setAttribute("visible", "true");
