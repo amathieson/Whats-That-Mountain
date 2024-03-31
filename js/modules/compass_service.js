@@ -8,11 +8,13 @@ export default {
     set_heading_offset: (off)=>{headingOffset = off},
     set_tilt_offset: (off)=>{tiltOffset = off},
     getOffsets: ()=>{return{headingOffset,tiltOffset}},
-    getMatrix: ()=>deviceOrientation.getScreenAdjustedMatrix
+    getMatrix: ()=>deviceOrientation.getScreenAdjustedMatrix,
+    get_compass_support: ()=>{return compass_support}
 }
 let headingOffset = 0;
 let tiltOffset = 0;
 let deviceOrientation;
+let compass_support = false;
 function initHandlers() {
     logger.log("Starting Compass Service", "compass_service");
     try {
@@ -21,6 +23,7 @@ function initHandlers() {
             FULLTILT.getDeviceOrientation({'type': 'world'})
                 .then(function(controller) {
                     deviceOrientation = controller;
+                    compass_support = true;
                 })
                 .catch(function(message) {
                     logger.error(message, "compass_service");
@@ -33,6 +36,7 @@ function initHandlers() {
         FULLTILT.getDeviceOrientation({'type': 'world'})
             .then(function(controller) {
                 deviceOrientation = controller;
+                compass_support = true;
             })
             .catch(function(message) {
                 logger.error(message, "compass_service");

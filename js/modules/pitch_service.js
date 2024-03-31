@@ -3,15 +3,18 @@ import logger from "./logger.js";
 export default {
     initHandlers,
     getOrientation,
-    getPitch
+    getPitch,
+    get_gravity_support: ()=>{return gravity_support}
 }
 let deviceOrientation;
+let gravity_support = false;
 function initHandlers() {
     logger.log("Starting Pitch Service", "pitch_service");
     try {
         let gravitySensor = new GravitySensor({frequency: 60});
 
         gravitySensor.addEventListener("reading", (_) => {
+            gravity_support = true;
             deviceOrientation = {
                 euler: {
                     alpha: gravitySensor.x,

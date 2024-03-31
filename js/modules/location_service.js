@@ -3,11 +3,13 @@ import logger from "./logger.js";
 export default {
     initHandlers,
     getLocation,
-    dist2point
+    dist2point,
+    get_location_support: ()=>{return loc_support}
 }
 let age = 0;
 let deviceLocation;
 let watchID;
+let loc_support = false;
 function initHandlers() {
     logger.log("Starting Location Service", "location_service");
 
@@ -27,6 +29,7 @@ function initHandlers() {
 function success(position) {
     deviceLocation = position;
     age = Date.now();
+    loc_support = true;
 }
 function error() {
     logger.error("Unable to locate device.", "location_service");

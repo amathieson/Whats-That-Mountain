@@ -1,7 +1,9 @@
 import logger from "../modules/logger.js";
 
+let camera_support = false;
 export default {
     NorthOff:Number.NaN,
+    get_camera_support: ()=>{return camera_support},
     content: `
 <div class="slide-container calibrate-slider">
     <div visible="true"  data-ref="slide1">
@@ -202,7 +204,7 @@ export default {
                                 // Auto-play was prevented
                                 // Show a UI element to let the user manually start playback
                             }).then(() => {
-                                // Auto-play started
+                                camera_support = true;
                             });
                         }        };
                     video2.srcObject = cameraStream;
@@ -215,7 +217,7 @@ export default {
                                 // Auto-play was prevented
                                 // Show a UI element to let the user manually start playback
                             }).then(() => {
-                                // Auto-play started
+                                camera_support = true;
                             });
                         }        };
                 })

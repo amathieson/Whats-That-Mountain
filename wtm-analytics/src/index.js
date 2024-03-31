@@ -24,11 +24,11 @@ export default {
 						"sensors":[],
 						"timestamp": Date.now()
 					}));
-					return new Response(JSON.stringify({id}), { status: 200 });
+					return new Response(JSON.stringify({id}), { status: 200, headers: {"Access-Control-Allow-Origin": "*"} });
 				}
 				attempts--;
 			}
-			return new Response("Failed to assign an id", { status: 500 });
+			return new Response("Failed to assign an id", { status: 500, headers: {"Access-Control-Allow-Origin": "*"} });
 
 		}
 		if (path.startsWith("/update_session/")) {
@@ -41,9 +41,9 @@ export default {
 				data.framerate = url.searchParams.get("framerate")
 				data.sensors = url.searchParams.getAll("sensors[]")
 				await env.WTM_USER_TESTING.put(id, JSON.stringify(data));
-				return new Response(await env.WTM_USER_TESTING.get(id), { status: 200 });
+				return new Response(await env.WTM_USER_TESTING.get(id), { status: 200, headers: {"Access-Control-Allow-Origin": "*"} });
 			}
-			return new Response("Unknown Session", { status: 403 });
+			return new Response("Unknown Session", { status: 403, headers: {"Access-Control-Allow-Origin": "*"} });
 
 		}
 	},

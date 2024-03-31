@@ -14,6 +14,7 @@ import geo_service from "./modules/geo_service.js";
 import {isiPad, toTitleCase} from "./modules/util.js";
 import home_page from "./components/home_page.js";
 import calibrate_page from "./components/calibrate_page.js";
+import user_test_service from "./modules/user_test_service.js";
 
 document.getElementById("app").innerHTML = home_page.content;
 document.getElementById("app").innerHTML += calibrate_page.content;
@@ -28,6 +29,21 @@ let more_popup = document.querySelector("[data-ref=more-popup]");
 let authorise_button = document.querySelector("[data-ref=authorise-button]");
 authorise_button.addEventListener("click", Initialise_Modules);
 let calibrate_button = document.querySelector("[data-ref=calibrate-button]");
+let showing_code = false;
+document.querySelector("[data-ref=user-test-button]").onclick = ()=>{
+    if (!showing_code)
+        user_test_service.init_handler(compass_service, location_service, pitch_service, calibrate_page).then((d)=>{
+            document.querySelector("[data-ref=user-test-modal]>modal").innerText = `Your session code is: '${d}' - Tap to dismiss`
+            showing_code = true;
+            document.querySelector(`[data-ref="user-test-modal"]`).onclick = ()=>{        document.querySelector(`[data-ref="user-test-modal"]`).removeAttribute("visible");
+            }
+        })
+    else
+        document.querySelector(`[data-ref="user-test-modal"]`).removeAttribute("visible");
+}
+document.querySelector("[data-ref=user-test-cancel]").onclick = ()=>{
+    document.querySelector(`[data-ref="user-test-modal"]`).removeAttribute("visible");
+}
 let calibrating = false;
 calibrate_button.addEventListener("click", ()=>{
     calibrating = true;
@@ -95,6 +111,8 @@ screen.orientation.addEventListener("change", () =>{
 });
 const BYPASS_CALIBRATE = false;
 let should_calibrate = false;
+let cumulative_total_fps = 0;
+let recorded_frames = 0;
 (function draw() {
     if (compass_service.getOrientation()) {
         let euler = compass_service.getOrientation().getScreenAdjustedEuler();
@@ -149,7 +167,12 @@ let should_calibrate = false;
     render_service.animate();
     let objs = render_service.visibleObjects();
     output_fps.textContent = `${Math.round(1000/(Date.now()-lastFrame) * 10) / 10} FPS\n${objs !== undefined ? objs.length : 0} Objects`;
+
+    cumulative_total_fps += 1000/(Date.now()-lastFrame);
+    recorded_frames++;
     lastFrame = Date.now();
+
+    user_test_service.update_frames(cumulative_total_fps / recorded_frames)
 
     // Execute function on each browser animation frame
     requestAnimationFrame(draw);
@@ -196,6 +219,7 @@ document.querySelector(`[data-ref="authorise-modal"]`).setAttribute("visible", "
 
 function Initialise_Modules() {
     document.querySelector(`[data-ref="authorise-modal"]`).removeAttribute("visible");
+    document.querySelector(`[data-ref="user-test-modal"]`).setAttribute("visible", "true");
     document.getElementsByClassName("loading-scroller")[0].setAttribute("visible", "true");
     document.getElementsByClassName("loading-scroller")[0].innerText = "Loading Tiles...";
     compass_service.initHandlers();

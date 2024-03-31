@@ -35,6 +35,17 @@ export default {
     </modal>
 </div>
 
+<div class="modal-container" data-ref="user-test-modal">
+    <modal>
+        <h1>User Testing</h1>
+Are you currently participating in a User Testing Survey provided by the project's developer?
+        <div class="button-group">
+            <button data-ref="user-test-cancel">No</button>
+            <button data-ref="user-test-button">Yes</button>
+        </div>
+    </modal>
+</div>
+
 <div class="label-container">
     <section data-ref="label-container"></section>
 </div>
