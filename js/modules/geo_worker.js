@@ -2,7 +2,7 @@ let lastRenderedPosition = [Number.MAX_VALUE,Number.MAX_VALUE];
 let rendering = [Number.MAX_VALUE,Number.MAX_VALUE];
 let tiles = {};
 const DB_Name = "WTM";
-const DB_Version = 1;
+const DB_Version = 2;
 const Store_Name = "Tile_Cache";
 const dbRequest = indexedDB.open(DB_Name, DB_Version);
 let db = null;
@@ -87,9 +87,16 @@ function queryLocationsByProximity(latitude, longitude, maxDistance) {
     });
 }
 
-
+const Earth_Radius = 6371000;
+const gps2XY = (lat, lon) => {
+    return [
+        Earth_Radius * -Math.cos(lat*(Math.PI/180)) * Math.cos(lon*(Math.PI/180)),
+        Earth_Radius * -Math.cos(lat*(Math.PI/180)) * Math.sin(lon*(Math.PI/180))
+    ];
+};
 
 async function reRender(pos) {
+    console.log("GEO_Worker", "Starting Render")
     if (db !== null) {
         let res = await queryLocationsByProximity(pos[0], pos[1], 0.25);
         if (res.length > 0) {
@@ -133,14 +140,11 @@ async function reRender(pos) {
             }
         })
         let tile_canvas = {
-            canvas: new OffscreenCanvas(Tile_Dim, Tile_Dim),
-            ctx: null,
             pois:[],
             loaded:false,
             available: null,
             imageData: null
         }
-        tile_canvas.ctx = tile_canvas.canvas.getContext("2d", {willReadFrequently:true});
         tiles[id] = tile_canvas;
 
         fetch_tile(id).then((data)=>{
@@ -148,69 +152,85 @@ async function reRender(pos) {
                 tile_canvas.available = false;
                 return;
             }
-            const imageData = tile_canvas.ctx.createImageData(Tile_Dim, Tile_Dim);
-            for (let i = 0; i < data.data.length; i++) {
-                let v = ((data.data[i] - data.valley) / (data.peak - data.valley)) * 255;
-                let index = i * 4;
-
-                imageData.data[index] = imageData.data[index + 1] = imageData.data[index + 2] = v;
-                imageData.data[index + 3] = 255;
-            }
-            tile_canvas.ctx.putImageData(imageData, 0, 0);
-            tile_canvas.imageData = imageData;
             tile_canvas.pois = data.pois;
             tile_canvas.loaded = true;
             tile_canvas.available = true;
+            tile_canvas.data = data.data;
+            console.log("GEO_Worker", "Fetched Tile", id)
         });
     })
 
     if (tiles_to_load.every(id =>
         tiles[id] !== undefined && (tiles[id].loaded || tiles[id].available === false))) {
-        let outCanvas = new OffscreenCanvas(Tile_Dim, Tile_Dim);
-        let ctx = outCanvas.getContext("2d", {willReadFrequently: true});
+        let new_heightmap = new Int16Array(Tile_Dim * Tile_Dim);
         let pois = [];
+        // for (let i = 0; i < Tile_Dim; i++)
+        //     for (let j = 0; j < Tile_Dim; j++)
+        //         new_heightmap[i*Tile_Dim + j] = 500 + 500 * Math.sin(j/Tile_Dim * 100)
 
         {
-
+            console.log("GEO_Worker", "Generating Top Left")
             // Top Left
             let tile_id = corner_tiles[0];
             if (tiles[tile_id].available) {
-                let x = frac(corners[0][1]) * Tile_Dim;
-                let y = (1-frac(corners[0][0])) * Tile_Dim;
-                if (x < Tile_Dim && y < Tile_Dim)
-                    ctx.putImageData(tiles[tile_id].ctx.getImageData(x,y,Tile_Dim - x,Tile_Dim - y),0,0);
+                let x = Math.round(frac(corners[0][1]) * Tile_Dim);
+                let y = Math.round((1-frac(corners[0][0])) * Tile_Dim);
+                if (x < Tile_Dim && y < Tile_Dim) {
+                    for (let readY = 0; readY < (Tile_Dim - y); readY++) {
+                        for (let readX = 0; readX < (Tile_Dim - x); readX++) {
+                            new_heightmap[(readY) * Tile_Dim + (readX)] = tiles[tile_id].data[(readY + y) * Tile_Dim + (readX + x)];
+                        }
+                    }
+                }
             }
 
+            console.log("GEO_Worker", "Generating Top Right")
             // Top Right
             tile_id = corner_tiles[1];
             if (frac(corners[0][1]) !== 0 && tiles[tile_id].available) {
-                let width = frac(corners[1][1]) * Tile_Dim;
-                let y = (1-frac(corners[1][0])) * Tile_Dim;
-                if (width > 0 && y < Tile_Dim)
-                    ctx.putImageData(tiles[tile_id].ctx.getImageData(0,y,width,Tile_Dim - y),Tile_Dim - width,0);
+                let width = Math.round(frac(corners[1][1]) * Tile_Dim);
+                let y = Math.round((1-frac(corners[1][0])) * Tile_Dim);
+                if (width > 0 && y < Tile_Dim) {
+                    for (let readY = 0; readY < (Tile_Dim - y); readY++) {
+                        for (let readX = 0; readX < width; readX++) {
+                            new_heightmap[(readY) * Tile_Dim + (readX + (Tile_Dim-width))] = tiles[tile_id].data[(readY + y) * Tile_Dim + (readX)];
+                        }
+                    }
+                }
             }
 
+            console.log("GEO_Worker", "Generating Bottom Left")
             // Bottom Left
             tile_id = corner_tiles[2];
             if (frac(corners[0][0]) !== 0 && tiles[tile_id].available) {
-                let x = frac(corners[2][1]) * Tile_Dim;
-                let height = (1-frac(corners[2][0])) * Tile_Dim;
-                if (height > 0 && x < Tile_Dim)
-                    ctx.putImageData(tiles[tile_id].ctx.getImageData(x,0,Tile_Dim - x,height),0,Tile_Dim-height);
+                let x = Math.round(frac(corners[2][1]) * Tile_Dim);
+                let height = Math.round((1-frac(corners[2][0])) * Tile_Dim);
+                if (height > 0 && x < Tile_Dim) {
+                    for (let readY = 0; readY < height; readY++) {
+                        for (let readX = 0; readX < (Tile_Dim - x); readX++) {
+                            new_heightmap[(readY + (Tile_Dim-height)) * Tile_Dim + (readX)] = tiles[tile_id].data[(readY) * Tile_Dim + (readX + x)];
+                        }
+                    }
+                }
             }
 
+            console.log("GEO_Worker", "Generating Bottom Right")
             // Bottom Right
             tile_id = corner_tiles[3];
             if (frac(corners[0][1]) !== 0 && frac(corners[0][0]) !== 0 && tiles[tile_id].available) {
-                let width = frac(corners[3][1]) * Tile_Dim;
-                let height = (1-frac(corners[3][0])) * Tile_Dim;
-                if (height > 0 && 0 < width)
-                    ctx.putImageData(tiles[tile_id].ctx.getImageData(0,0,width,height),Tile_Dim - width,Tile_Dim-height);
+                let width = Math.round(frac(corners[3][1]) * Tile_Dim);
+                let height = Math.round((1-frac(corners[3][0])) * Tile_Dim);
+                if (height > 0 && 0 < width) {
+                    for (let readY = 0; readY < height; readY++) {
+                        for (let readX = 0; readX < width; readX++) {
+                            new_heightmap[(readY + (Tile_Dim-height)) * Tile_Dim + (readX + (Tile_Dim - width))] = tiles[tile_id].data[(readY) * Tile_Dim + (readX)];
+                        }
+                    }
+                }
             }
-
-
         }
 
+        console.log("GEO_Worker", "Computing POI Distances")
         tiles_to_load.forEach((id)=>{
             if (tiles[id].available)
                 // Push the PoIs that are within range to the array
@@ -224,9 +244,9 @@ async function reRender(pos) {
             const store = transaction.objectStore(Store_Name);
 
             const location = {latitude: pos[0], longitude: pos[1], tile_data:{
-                    canvas:ctx.getImageData(0,0,Tile_Dim, Tile_Dim),
                     points_of_interest: pois,
-                    tile_origin: [pos[0],pos[1]]
+                    tile_origin: [pos[0],pos[1]],
+                    new_heightmap
                 }};
             const request = store.add(location);
 
@@ -235,12 +255,13 @@ async function reRender(pos) {
             };
         }
 
+
         postMessage({
             method:"UPDATE_TERRAIN",
             data: {
-                canvas:ctx.getImageData(0,0,Tile_Dim, Tile_Dim),
                 points_of_interest: pois,
-                tile_origin: [pos[0],pos[1]]
+                tile_origin: [pos[0],pos[1]],
+                new_heightmap
             }
         })
 
