@@ -17,9 +17,7 @@ const peak = 5000;
 const Tile_Dim = 3601;
 function initialize() {
     if (window.Worker && worker == null) {
-        worker = new Worker(new URL('./geo_worker.js', import.meta.url), {
-            type: 'module'
-        });
+        worker = new Worker(new URL('./geo_worker.js', import.meta.url));
         worker.onmessage = function(e) {
             if (e.data.method === undefined) {
                 logger.error("Command Missing Method", "GEO_SERVICE")
