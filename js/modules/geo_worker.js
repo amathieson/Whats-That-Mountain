@@ -5,6 +5,9 @@ const DB_Name = "WTM";
 const DB_Version = 2;
 const Store_Name = "Tile_Cache";
 const dbRequest = indexedDB.open(DB_Name, DB_Version);
+const CDN_Route = "https://cdn.whats-that-mountain.site";
+const Tile_Dim = 3601;
+const TILE_RES = 256;
 let db = null;
 
 
@@ -87,16 +90,7 @@ function queryLocationsByProximity(latitude, longitude, maxDistance) {
     });
 }
 
-const Earth_Radius = 6371000;
-const gps2XY = (lat, lon) => {
-    return [
-        Earth_Radius * -Math.cos(lat*(Math.PI/180)) * Math.cos(lon*(Math.PI/180)),
-        Earth_Radius * -Math.cos(lat*(Math.PI/180)) * Math.sin(lon*(Math.PI/180))
-    ];
-};
-
 async function reRender(pos) {
-    console.log("GEO_Worker", "Starting Render")
     if (db !== null) {
         let res = await queryLocationsByProximity(pos[0], pos[1], 0.25);
         if (res.length > 0) {
@@ -156,7 +150,6 @@ async function reRender(pos) {
             tile_canvas.loaded = true;
             tile_canvas.available = true;
             tile_canvas.data = data.data;
-            console.log("GEO_Worker", "Fetched Tile", id)
         });
     })
 
@@ -164,12 +157,8 @@ async function reRender(pos) {
         tiles[id] !== undefined && (tiles[id].loaded || tiles[id].available === false))) {
         let new_heightmap = new Int16Array(Tile_Dim * Tile_Dim);
         let pois = [];
-        // for (let i = 0; i < Tile_Dim; i++)
-        //     for (let j = 0; j < Tile_Dim; j++)
-        //         new_heightmap[i*Tile_Dim + j] = 500 + 500 * Math.sin(j/Tile_Dim * 100)
 
         {
-            console.log("GEO_Worker", "Generating Top Left")
             // Top Left
             let tile_id = corner_tiles[0];
             if (tiles[tile_id].available) {
@@ -184,7 +173,6 @@ async function reRender(pos) {
                 }
             }
 
-            console.log("GEO_Worker", "Generating Top Right")
             // Top Right
             tile_id = corner_tiles[1];
             if (frac(corners[0][1]) !== 0 && tiles[tile_id].available) {
@@ -199,7 +187,6 @@ async function reRender(pos) {
                 }
             }
 
-            console.log("GEO_Worker", "Generating Bottom Left")
             // Bottom Left
             tile_id = corner_tiles[2];
             if (frac(corners[0][0]) !== 0 && tiles[tile_id].available) {
@@ -214,7 +201,6 @@ async function reRender(pos) {
                 }
             }
 
-            console.log("GEO_Worker", "Generating Bottom Right")
             // Bottom Right
             tile_id = corner_tiles[3];
             if (frac(corners[0][1]) !== 0 && frac(corners[0][0]) !== 0 && tiles[tile_id].available) {
@@ -230,12 +216,16 @@ async function reRender(pos) {
             }
         }
 
-        console.log("GEO_Worker", "Computing POI Distances")
+
         tiles_to_load.forEach((id)=>{
-            if (tiles[id].available)
+            if (tiles[id].available) {
                 // Push the PoIs that are within range to the array
                 tiles[id].pois.filter(point => Math.hypot(pos[0] - point.location.lat, pos[1] - point.location.lon) < tile_radius)
-                    .forEach(point => pois.push(point));
+                    .forEach((point) => {
+                        point.location.alt = new_heightmap[Math.round((point.location.lat - corners[0][0]) * Tile_Dim) + Math.round((point.location.lon - corners[0][1]) * Tile_Dim) * Tile_Dim] + 100
+                        pois.push(point)
+                    });
+            }
 
         })
 
@@ -268,10 +258,6 @@ async function reRender(pos) {
         lastRenderedPosition = pos;
     }
 }
-
-
-const CDN_Route = "https://cdn.whats-that-mountain.site";
-const Tile_Dim = 3601;
 
 async function fetch_tile(ne) {
     const pako = await import("pako");

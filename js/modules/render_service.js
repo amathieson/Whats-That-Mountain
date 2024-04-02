@@ -164,7 +164,6 @@ function setSize(width, height) {
 
 const raycaster = new THREE.Raycaster();
 function computeHeightAtPoint(x, y) {
-    // return 10000
     // Set up the raycaster
     raycaster.far = 250000;
     raycaster.near = 100;
@@ -176,7 +175,7 @@ function computeHeightAtPoint(x, y) {
 
     // Return the height (or 0 if no intersections)
     if (intersects.length > 0) {
-        return intersects[0].point.z; // Assuming y-coordinate represents height
+        return intersects[0].point.z + 100; // Assuming y-coordinate represents height
     } else {
         return 0;
     }

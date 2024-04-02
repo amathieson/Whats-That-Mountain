@@ -32,7 +32,6 @@ function initialize() {
                     let tex = new THREE.CanvasTexture(canvas);
                     requestAnimationFrame(()=>{
                         tex.needsUpdate = true;
-
                         let tiles = [];
                         const rootStyles = getComputedStyle(document.documentElement);
                         const primaryColor = Number("0x" + standardize_color(rootStyles.getPropertyValue('--primary-color')).substring(1));
@@ -52,7 +51,6 @@ function initialize() {
                                     Math.round(mountainGeom.attributes.uv.array[index * 2] * (Tile_Dim-1)) + Math.round(mountainGeom.attributes.uv.array[index * 2 + 1] * (Tile_Dim-1)) * Tile_Dim
                                         ];
                         }
-                        console.log(mountainGeom);
                         const material = new THREE.MeshStandardMaterial( { wireframe: false,
                             side: THREE.FrontSide,
                             displacementMap: tex,
@@ -60,12 +58,6 @@ function initialize() {
                             displacementBias: valley,
                             color: primaryColor,
                         } );
-
-                        const mesh = new THREE.Mesh(mountainGeom, material);
-                        let [posx,posy] = gps2XY(lat,lon);
-                        mesh.position.set(posx,posy,0)
-                        mesh.rotateZ(-Math.PI/2);
-                        tiles.push(mesh);
 
                         const material2 = new THREE.MeshStandardMaterial( { wireframe: true,
                             side: THREE.FrontSide,
@@ -75,32 +67,41 @@ function initialize() {
                             color: secondaryColor,
                         } );
 
+
+                        const mesh = new THREE.Mesh(mountainGeom, material);
+                        let [posx,posy] = gps2XY(lat,lon);
+                        mesh.position.set(posx,posy,0)
+                        mesh.rotateZ(-Math.PI/2);
+                        tiles.push(mesh);
+
                         const mesh2 = new THREE.Mesh(mountainGeom, material2);
                         mesh2.position.set(posx,posy,0)
                         mesh2.rotateZ(-Math.PI/2);
                         tiles.push(mesh2);
 
+
                         render_service.setMeshData(tiles);
                         requestAnimationFrame(()=>{
-                            tiles = [];
-                            data.points_of_interest.forEach((point)=>{
-                                const label = document.createElement( 'div' );
-                                label.className = 'label';
-                                label.textContent = point.tags.name;
+                            (async () => {
+                                tiles = [];
+                                data.points_of_interest.forEach((point)=>{
+                                    const label = document.createElement( 'div' );
+                                    label.className = 'label';
+                                    label.textContent = point.tags.name;
 
-                                const labelObj = new CSS2DObject( label );
-                                labelObj.userData = point;
-                                let [x,y] = gps2XY(point.location.lat, point.location.lon)
+                                    const labelObj = new CSS2DObject( label );
+                                    labelObj.userData = point;
+                                    let [x,y] = gps2XY(point.location.lat, point.location.lon)
+                                    // render_service.computeHeightAtPoint(x,y)
+                                    labelObj.position.set( x, y, point.location.alt );
+                                    labelObj.center.set( 0, 1 );
 
-                                labelObj.position.set( x, y, render_service.computeHeightAtPoint(x,y) );
-                                labelObj.center.set( 0, 1 );
-
-                                tiles.push(labelObj);
-                            })
-                            render_service.pushMeshData(tiles);
-
-                            document.getElementsByClassName("loading-scroller")[0].removeAttribute("visible");
-                            document.querySelector("[data-ref=\"main_canvas\"]").setAttribute("data-ready", "true")
+                                    tiles.push(labelObj);
+                                })
+                                render_service.pushMeshData(tiles);
+                                document.getElementsByClassName("loading-scroller")[0].removeAttribute("visible");
+                                document.querySelector("[data-ref=\"main_canvas\"]").setAttribute("data-ready", "true")
+                            })()
                         })
 
                     })
