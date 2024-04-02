@@ -113,10 +113,17 @@ const BYPASS_CALIBRATE = false;
 let should_calibrate = false;
 let cumulative_total_fps = 0;
 let recorded_frames = 0;
+let alt = Number.MAX_VALUE;
+let lastLoc = [Number.MAX_VALUE,Number.MAX_VALUE];
+let lastRaycast = 0;
+let last_compass = 0;
+let last_compass_delta = 0;
 (function draw() {
     if (compass_service.getOrientation()) {
         let euler = compass_service.getOrientation().getScreenAdjustedEuler();
         let quat = compass_service.getAdjustedQuat()
+        last_compass_delta = last_compass - (euler.alpha + euler.beta + euler.gamma);
+        last_compass = (euler.alpha + euler.beta + euler.gamma);
         output_compass.textContent =  `alpha: ${Math.round( euler.alpha*100)/100}\n`;
         output_compass.textContent += `beta : ${Math.round(euler.beta*100)/100}\n`;
         output_compass.textContent += `gamma: ${Math.round(euler.gamma*100)/100}\n`;
@@ -155,7 +162,12 @@ let recorded_frames = 0;
         output_gps.textContent += `Acc: ${Math.round(location.coords.accuracy*100)/100}m/${Math.round(
             location.coords.altitudeAccuracy*100)/100}m`;
         let [x,y] = geo_service.gps2XY(location.coords.latitude, location.coords.longitude);
-        render_service.setCameraPosition({x:x,y:y,z:render_service.computeHeightAtPoint(x,y)})
+        if (Math.abs(last_compass_delta) < 1 && (Math.abs(x - lastLoc[0]) > 0.5 || Math.abs(y - lastLoc[1]) > 0.5 || Math.abs(lastRaycast - Date.now()) > 1000)) {
+            lastLoc = [x,y]
+            lastRaycast = Date.now();
+            alt = render_service.computeHeightAtPoint(x,y);
+        }
+        render_service.setCameraPosition({x:x,y:y,z:alt})
 
 
         geo_service.update([location.coords.latitude, location.coords.longitude]);
