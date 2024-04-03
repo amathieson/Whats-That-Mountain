@@ -15,6 +15,7 @@ import {isiPad, toTitleCase} from "./modules/util.js";
 import home_page from "./components/home_page.js";
 import calibrate_page from "./components/calibrate_page.js";
 import user_test_service from "./modules/user_test_service.js";
+const WTM_DEPLOYMENT_ID = "{{WTM_DEPLOYMENT_ID}}"
 
 document.getElementById("app").innerHTML = home_page.content;
 document.getElementById("app").innerHTML += calibrate_page.content;
@@ -32,7 +33,7 @@ let calibrate_button = document.querySelector("[data-ref=calibrate-button]");
 let showing_code = false;
 document.querySelector("[data-ref=user-test-button]").onclick = ()=>{
     if (!showing_code)
-        user_test_service.init_handler(compass_service, location_service, pitch_service, calibrate_page).then((d)=>{
+        user_test_service.init_handler(WTM_DEPLOYMENT_ID, compass_service, location_service, pitch_service, calibrate_page).then((d)=>{
             document.querySelector("[data-ref=user-test-modal]>modal").innerText = `Your session code is: '${d}' - Tap to dismiss`
             showing_code = true;
             document.querySelector(`[data-ref="user-test-modal"]`).onclick = ()=>{        document.querySelector(`[data-ref="user-test-modal"]`).removeAttribute("visible");

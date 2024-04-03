@@ -39,6 +39,7 @@ export default {
 				data.last_update = Date.now()
 				data.user_agent = url.searchParams.get("user-agent")
 				data.framerate = url.searchParams.get("framerate")
+				data.deployment = url.searchParams.get("deployment")
 				data.sensors = url.searchParams.getAll("sensors[]")
 				await env.WTM_USER_TESTING.put(id, JSON.stringify(data));
 				return new Response(await env.WTM_USER_TESTING.get(id), { status: 200, headers: {"Access-Control-Allow-Origin": "*"} });

@@ -2,6 +2,7 @@ on:
   push:
     branches:
       - main
+
 jobs:
   # Build job
   build:
@@ -13,10 +14,18 @@ jobs:
           node-version: 18
       - run: npm ci
       - run: npm run build
+
+      # Inject deployment ID into JavaScript file
+      - name: Inject deployment ID
+        run: |
+          deployment_id=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+                          "https://api.github.com/repos/${GITHUB_REPOSITORY}/deployments" \
+                          | jq -r '.[0].id')
+          sed -i "s|{{WTM_DEPLOYMENT_ID}}|${deployment_id}|g" dist/bundle.js
+
       - uses: actions/upload-pages-artifact@v2.0.0
         with:
           path: "dist/"
-  # At a minimum this job should upload artifacts using actions/upload-pages-artifact
 
   # Deploy job
   deploy:
