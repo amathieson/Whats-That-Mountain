@@ -21,7 +21,8 @@ jobs:
           deployment_id=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
                           "https://api.github.com/repos/${GITHUB_REPOSITORY}/deployments" \
                           | jq -r '.[0].id')
-          sed -i "s|{{WTM_DEPLOYMENT_ID}}|${deployment_id}|g" dist/bundle.js
+          file=$(find dist -type f -name 'app-*.js')
+          sed -i "s|{{WTM_DEPLOYMENT_ID}}|${deployment_id}|g" $file
 
       - uses: actions/upload-pages-artifact@v2.0.0
         with:
