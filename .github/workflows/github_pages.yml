@@ -18,11 +18,9 @@ jobs:
       # Inject deployment ID into JavaScript file
       - name: Inject deployment ID
         run: |
-          deployment_id=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-                          "https://api.github.com/repos/${GITHUB_REPOSITORY}/deployments" \
-                          | jq -r '.[0].id')
+          commit_id=$(git rev-parse HEAD)
           file=$(find dist -type f -name 'app-*.js')
-          sed -i "s|{{WTM_DEPLOYMENT_ID}}|${deployment_id}|g" $file
+          sed -i "s|{{WTM_DEPLOYMENT_ID}}|${commit_id}|g" $file
 
       - uses: actions/upload-pages-artifact@v2.0.0
         with:
