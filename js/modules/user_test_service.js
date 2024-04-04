@@ -15,7 +15,7 @@ async function init_handler(WTM_DEPLOYMENT_ID, compass_service, location_service
     setInterval(()=>{
         fetch("https://wtm-analytics.adam-0c5.workers.dev/update_session/" + session_id +
             "?framerate=" + framerate +
-            "&deployment" + WTM_DEPLOYMENT_ID +
+            "&deployment=" + WTM_DEPLOYMENT_ID +
             "&user-agent=" + encodeURIComponent(navigator.userAgent) +
             (compass_service.get_compass_support() ? "&sensors[]=compass" : "") +
             (location_service.get_location_support() ? "&sensors[]=location" : "") +
