@@ -57,7 +57,7 @@ Are you currently participating in a User Testing Survey provided by the project
 
 <popup-list data-ref="more-popup" pos="0,0">
     <ul>
-        <li>Credits</li>
+        <li>Credits</li> <!--Might need to add a modal for this-->
         <li><a href="https://visitdundee.com/" target="_blank">Tourism Board</a></li>
     </ul>
 </popup-list>
