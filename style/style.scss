@@ -31,7 +31,7 @@
 }
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: Urbanist, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -66,7 +66,7 @@
 }
 
 @supports (font-variation-settings: normal) {
-  :root { font-family: 'Inter var', system-ui, Avenir, Helvetica, Arial, sans-serif; }
+  :root { font-family: Urbanist, system-ui, Avenir, Helvetica, Arial, sans-serif; }
 }
 
 a {
@@ -181,7 +181,7 @@ button.secondary:active {
 
 .label {
   color: #FFF;
-  font-family: sans-serif;
+  font-family: Urbanist, sans-serif;
   padding: 2px;
   background: rgba( 0, 0, 0, .6 );
 }
