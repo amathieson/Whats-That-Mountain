@@ -262,13 +262,17 @@ async function reRender(pos) {
 async function fetch_tile(ne) {
     const pako = await import("pako");
     try {
+        // Attempt to fetch the tile from the CDN
         let d = await fetch(`${CDN_Route}/${ne}.hgt.gz`)
         if (d.ok) {
+            // On Success inflate the received data
             let data = await d.arrayBuffer();
             let decompression = pako.inflate(data);
             const tmp = new Int16Array(decompression.length / 2);
             let peak = -32767;
             let valley = 32767;
+            // Iterate over all the data flipping the bytes and appending them to a typed array,
+            // computing the minima and maxima at the same time.
             for (let i = 0; i < tmp.length; i++) {
                 const byte1 = decompression[i * 2];
                 const byte2 = decompression[i * 2 + 1];
@@ -276,11 +280,12 @@ async function fetch_tile(ne) {
                 peak = Math.max(peak, tmp[i]);
                 valley = Math.min(valley, tmp[i]);
             }
+            // Fetch the points of interest for the tile
             let pois = [];
             let poisResp = await fetch(`${CDN_Route}/markers/${ne}.json`);
             if (poisResp.status === 200)
                 pois = await poisResp.json()
-
+            // Return a struct of all the tile's computed data
             return {"peak": peak, "valley": valley, "data": tmp, "pois": pois};
         }
         if (d.status === 404)
