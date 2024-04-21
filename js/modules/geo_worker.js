@@ -1,38 +1,35 @@
-let lastRenderedPosition = [Number.MAX_VALUE,Number.MAX_VALUE];
-let rendering = [Number.MAX_VALUE,Number.MAX_VALUE];
-let tiles = {};
 const DB_Name = "WTM";
 const DB_Version = 2;
 const Store_Name = "Tile_Cache";
-const dbRequest = indexedDB.open(DB_Name, DB_Version);
 const CDN_Route = "https://cdn.whats-that-mountain.site";
 const Tile_Dim = 3601;
-const TILE_RES = 256;
+
+let lastRenderedPosition = [Number.MAX_VALUE,Number.MAX_VALUE];
+let rendering = [Number.MAX_VALUE,Number.MAX_VALUE];
+let tiles = {};
 let db = null;
 
+(()=>{
+    const dbRequest = indexedDB.open(DB_Name, DB_Version);
+    dbRequest.onerror = function (event) {
+        console.error('[GEO_WORKER] - Failed to open database:', event.target.errorCode);
+    };
 
-dbRequest.onerror = function(event) {
-    console.error('[GEO_WORKER] - Failed to open database:', event.target.errorCode);
-};
+    dbRequest.onupgradeneeded = function (event) {
+        const db = event.target.result;
 
-dbRequest.onupgradeneeded = function(event) {
-    const db = event.target.result;
+        // Create object store with autoIncrement key
+        const store = db.createObjectStore(Store_Name, {autoIncrement: true});
 
-    // Create object store with autoIncrement key
-    const store = db.createObjectStore(Store_Name, { autoIncrement: true });
+        // Create index for latitude and longitude
+        store.createIndex('latitude', 'latitude', {unique: false});
+        store.createIndex('longitude', 'longitude', {unique: false});
+    };
 
-    // Create index for latitude and longitude
-    store.createIndex('latitude', 'latitude', { unique: false });
-    store.createIndex('longitude', 'longitude', { unique: false });
-};
-
-dbRequest.onsuccess = function(event) {
-    db = event.target.result;
-};
-
-function dist(lat1, lon1, lat2, lon2) {
-    return Math.sqrt(Math.pow(lat1-lat2, 2) + Math.pow(lon1-lon2, 2))
-}
+    dbRequest.onsuccess = function (event) {
+        db = event.target.result;
+    };
+})()
 
 
 onmessage = function(e) {
@@ -60,37 +57,13 @@ onmessage = function(e) {
     }
 }
 
-
-function latlon2ne(lat, lon) {
-    let latRound = Math.floor(lat);
-    let lonRound = Math.floor(lon);
-    return (latRound < 0 ? 's' : 'n') + ("0" + Math.abs(latRound)).slice(-2) + (lonRound < 0 ? 'w' : 'e') +
-        ("00" + Math.abs(lonRound)).slice(-3);
-}
-
-function queryLocationsByProximity(latitude, longitude, maxDistance) {
-    return new Promise((resolve, reject) => {
-        const transaction = db.transaction(Store_Name, 'readonly');
-        const store = transaction.objectStore(Store_Name);
-
-        // Open cursor within the range
-        const request = store.index('latitude').getAll();
-        request.onsuccess = function(event) {
-            const allLocations = event.target.result;
-            const results = allLocations.filter(location => {
-                const distance = dist(latitude, longitude, location.latitude, location.longitude);
-                return distance <= maxDistance;
-            });
-            resolve(results);
-        };
-
-        request.onerror = function(event) {
-            reject('Error querying locations: ' + event.target.error);
-        };
-    });
-}
-
+/**
+ * Generate the meta tiles based on a position, checking with the cache for existing tiles
+ * @param {[number,number]} pos
+ * @return {Promise<void>}
+ */
 async function reRender(pos) {
+    // If DB is available, check for cached tiles at the same location, return the cached one if possible
     if (db !== null) {
         let res = await queryLocationsByProximity(pos[0], pos[1], 0.25);
         if (res.length > 0) {
@@ -103,11 +76,14 @@ async function reRender(pos) {
         }
     }
 
+    // If Not, generate a new meta-tile
+
+
     let tiles_to_load = [];
-    let tile_radius = .5;
+    const tile_radius = .5;
 
-
-
+    // Select the tiles to render based upon the 4 corners of a 1deg square around the user
+    // at most 4 tiles will be selected
     let corners = [
         [pos[0] + tile_radius, pos[1] - tile_radius], // top left
         [pos[0] + tile_radius, pos[1] + tile_radius], // top right
@@ -124,15 +100,19 @@ async function reRender(pos) {
 
     tiles_to_load = corner_tiles;
 
+    // Iterate over each tile attempt to fetch the tile from the CDN, de-duplicating the requests and respecting the browser's caching policies
     tiles_to_load.forEach((id)=>{
         if (tiles[id]?.loaded || tiles[id]?.available === false || tiles[id]?.available === null)
             return;
+        // Keep the user informed
         postMessage({
             method:"LOADING_TILES",
             data: {
                 tiles: tiles_to_load
             }
         })
+
+        // New Tile object
         let tile_canvas = {
             pois:[],
             loaded:false,
@@ -259,11 +239,16 @@ async function reRender(pos) {
     }
 }
 
-async function fetch_tile(ne) {
+/**
+ * Fetch a tile and it's data from the CDN as well as do any byte order conversions.
+ * @param {string} tile_id
+ * @return {Promise<{data: Int16Array, valley: number, peak: number, pois: *[]}|{error: string}>}
+ */
+async function fetch_tile(tile_id) {
     const pako = await import("pako");
     try {
         // Attempt to fetch the tile from the CDN
-        let d = await fetch(`${CDN_Route}/${ne}.hgt.gz`)
+        let d = await fetch(`${CDN_Route}/${tile_id}.hgt.gz`)
         if (d.ok) {
             // On Success inflate the received data
             let data = await d.arrayBuffer();
@@ -282,7 +267,7 @@ async function fetch_tile(ne) {
             }
             // Fetch the points of interest for the tile
             let pois = [];
-            let poisResp = await fetch(`${CDN_Route}/markers/${ne}.json`);
+            let poisResp = await fetch(`${CDN_Route}/markers/${tile_id}.json`);
             if (poisResp.status === 200)
                 pois = await poisResp.json()
             // Return a struct of all the tile's computed data
@@ -295,7 +280,67 @@ async function fetch_tile(ne) {
     }
 }
 
-
+/**
+ * Return the fractional part of a number
+ * @param {number} value
+ * @return {number}
+ */
 function frac(value) {
     return value - Math.floor(value);
+}
+
+/**
+ * Convert latitude and longitude into SRTM-style tile identifiers
+ * @param {number} latitude
+ * @param {number} longitude
+ * @return {string}
+ */
+function latlon2ne(latitude, longitude) {
+    let latRound = Math.floor(latitude);
+    let lonRound = Math.floor(longitude);
+    return (latRound < 0 ? 's' : 'n') + ("0" + Math.abs(latRound)).slice(-2) + (lonRound < 0 ? 'w' : 'e') +
+        ("00" + Math.abs(lonRound)).slice(-3);
+}
+
+/**
+ * Query the IndexDB for any tiles that would qualify for use at the current location
+ * @param {number} latitude
+ * @param {number} longitude
+ * @param {number} maxDistance
+ * @return {Promise<[{data: Int16Array, valley: number, peak: number, pois: *[]}]|{error: string}>}
+ */
+function queryLocationsByProximity(latitude, longitude, maxDistance) {
+    return new Promise((resolve, reject) => {
+        // Initialise the Database Connection
+        const transaction = db.transaction(Store_Name, 'readonly');
+        const store = transaction.objectStore(Store_Name);
+
+        // Open cursor within the range
+        const request = store.index('latitude').getAll();
+        request.onsuccess = function(event) {
+            const allLocations = event.target.result;
+            // Iterate over the points in the database, testing for the distance of each of them deemed fast enough given the typically small number of tiles on end user devices.
+            const results = allLocations.filter(location => {
+                const distance = dist(latitude, longitude, location.latitude, location.longitude);
+                return distance <= maxDistance;
+            });
+            resolve(results);
+        };
+
+        request.onerror = function(event) {
+            reject('Error querying locations: ' + event.target.error);
+        };
+    });
+}
+
+/**
+ * Distance between two coordinates
+ * @param {number} lat1
+ * @param {number} lon1
+ * @param {number} lat2
+ * @param {number} lon2
+ * @return {number}
+ */
+function dist(lat1, lon1, lat2, lon2) {
+    return Math.sqrt(Math.pow(lat1-lat2, 2) + Math.pow(lon1-lon2, 2))
 }
