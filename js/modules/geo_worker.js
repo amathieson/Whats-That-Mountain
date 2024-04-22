@@ -121,6 +121,7 @@ async function reRender(pos) {
         }
         tiles[id] = tile_canvas;
 
+        // Fetch the tiles, check it didn't fail, and add it to the object.
         fetch_tile(id).then((data)=>{
             if (data === undefined || data.error !== undefined) {
                 tile_canvas.available = false;
@@ -133,6 +134,7 @@ async function reRender(pos) {
         });
     })
 
+    // Check all tiles have loaded and merge the data from each of them into one heightmap
     if (tiles_to_load.every(id =>
         tiles[id] !== undefined && (tiles[id].loaded || tiles[id].available === false))) {
         let new_heightmap = new Int16Array(Tile_Dim * Tile_Dim);
@@ -196,7 +198,7 @@ async function reRender(pos) {
             }
         }
 
-
+        // Iterate over each of the PoIs pushing them if they are within the distance requested, computing their altitude at the same time
         tiles_to_load.forEach((id)=>{
             if (tiles[id].available) {
                 // Push the PoIs that are within range to the array
@@ -209,6 +211,7 @@ async function reRender(pos) {
 
         })
 
+        // If IndexDB is available, cache the result
         if (db !== null) {
             const transaction = db.transaction(Store_Name, 'readwrite');
             const store = transaction.objectStore(Store_Name);
@@ -226,6 +229,7 @@ async function reRender(pos) {
         }
 
 
+        // Send the results back to the main thread.
         postMessage({
             method:"UPDATE_TERRAIN",
             data: {
