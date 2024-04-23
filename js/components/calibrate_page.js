@@ -203,6 +203,7 @@ export default {
                                 logger.error(error, "CALIBRATION_PAGE")
                                 // Auto-play was prevented
                                 // Show a UI element to let the user manually start playback
+                                video.setAttribute("controls", "true");
                             }).then(() => {
                                 camera_support = true;
                             });
@@ -216,6 +217,7 @@ export default {
                                 logger.error(error, "CALIBRATION_PAGE")
                                 // Auto-play was prevented
                                 // Show a UI element to let the user manually start playback
+                                video.setAttribute("controls", "true");
                             }).then(() => {
                                 camera_support = true;
                             });
