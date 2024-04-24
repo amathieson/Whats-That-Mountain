@@ -1,0 +1,33 @@
+{
+  "name": "Whats That Mountain",
+  "short_name": "WTM",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "description": "An app that helps identify mountains you see.",
+  "icons": [
+    {
+      "src": "/branding/72w/Small.png",
+      "sizes": "72x72",
+      "type": "image/png"
+    },
+    {
+      "src": "/branding/192w/Large.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/branding/512w/Large.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#3A506B",
+  "screenshots": [
+    {
+      "src": "/landscape.png",
+      "sizes": "1442x2562",
+      "type": "image/png"
+    }
+  ]
+}
